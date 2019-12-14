@@ -1,0 +1,9 @@
+/github/
+/linux-unpacked/
+/win-unpacked/
+/mac/
+/electron-builder.yaml
+/__appImage-x64/
+/builder-effective-config.yaml
+camo-banano*
+latest-*

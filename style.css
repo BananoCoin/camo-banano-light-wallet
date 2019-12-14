@@ -1,0 +1,251 @@
+body {
+  background-image: url("artwork/bg-hero.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #DBA250;
+  margin: 0;
+  height: 100%;
+}
+
+select, input {
+  background-color: #FBDD11;
+}
+
+FBDD11
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+table, tr, td, th {
+  font-family: monospace;
+  font-size: 12px;
+}
+
+p {
+  margin: 0px;
+}
+
+.no_pad {
+  margin: 0px;
+  padding: 0px;
+}
+
+.monospace {
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.outlined {
+  outline: solid;
+  outline-width: thin;
+}
+
+.tabcontainer {
+  outline: solid;
+  outline-width: thin;
+  padding: 5px;
+  width: 775px;
+  height: 570px;
+}
+
+.tabcontent {
+  width: 775px;
+  height: 515px;
+}
+
+.break_all {
+  word-break: break-all;
+}
+
+.w800h600px {
+  width: 750px;
+  height: 520px;
+}
+
+.h20px {
+  height: 20px;
+}
+
+.h120px {
+  height: 120px;
+}
+
+.h200px {
+  height: 200px;
+}
+
+.h225px {
+  height: 225px;
+}
+
+.h470px {
+  height: 440px;
+}
+
+.w200px {
+  width: 200px;
+}
+
+.w626px {
+  width: 600px;
+}
+
+.w595px {
+  width: 500px;
+}
+
+.w100pct {
+  width: 100%;
+}
+
+.yellow_on_brown {
+  background-color: rgba(130, 67, 13, 0.63);
+  color: #FAFBFD;
+}
+
+.yellow_on_brown_with_hover {
+  background-color: rgba(130, 67, 13, 0.63);
+  color: #FAFBFD;
+}
+
+.yellow_on_brown_with_hover:hover {
+  background-color: rgba(130, 67, 13, 0.63);
+  color: #FAFBFD;
+}
+
+.yellow_on_black {
+  background-color: black;
+  color: #FBDD11;
+}
+
+.yellow_on_black {
+  background-color: black;
+  color: #FBDD11;
+}
+
+.yellow_on_pink {
+  background-color: pink;
+  color: #FBDD11;
+}
+
+.yellow_on_black:hover {
+  background-color: gray;
+  color: #FBDD11;
+  border-color: black;
+}
+
+.rounded {
+  border-radius: 15px;
+}
+
+.darkgray_border {
+  border-color: #979797;
+}
+
+.gray_border {
+  border-color: gray;
+}
+
+.valign_top {
+  vertical-align: top;
+}
+
+.valign_middle {
+  vertical-align: middle;
+}
+
+.text_align_center {
+  text-align: center;
+}
+
+.no_padding {
+  padding: 0px 0px;
+}
+
+.padding_5px {
+  padding: 5px 5px;
+}
+
+.no_border {
+  border: none;
+}
+
+.bordered {
+  border-style: solid;
+  border-width: 0.5px;
+}
+
+.display_inline_block {
+  display: inline-block;
+}
+
+.float_right {
+  float: right;
+}
+
+.float_left {
+  float: left;
+}
+
+.image_centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fake_button {
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+
+.user_select_none {
+  user-select: none;
+}
+
+.user_select_none:hover {
+  cursor: default;
+}
+
+.branding_container {
+  float: left;
+  width: 490px;
+}
+
+.branding_image {
+  position: absolute;
+  top: 0;
+}
+
+.whitespace_nowrap {
+  white-space: nowrap;
+}
+
+.overflow_auto {
+  overflow: auto;
+}
