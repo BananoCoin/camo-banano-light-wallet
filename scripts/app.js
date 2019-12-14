@@ -90,6 +90,7 @@ mainConsole.log('Console Logging Enabled.');
 
 const getCleartextConfig = () => {
   const conf = new Conf({
+    projectName: 'camo-banano-light-wallet',
     configName: 'cleartext-config',
     clearInvalidConfig: false,
   });
