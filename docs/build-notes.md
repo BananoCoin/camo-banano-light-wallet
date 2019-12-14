@@ -1,13 +1,13 @@
 # camo-banano-light-wallet
 
     macOS:
-    openssl dgst -sha256 &lt;App.dmg>
+    openssl dgst -sha256 [App.dmg]
 
     Windows:
-    certUtil -hashfile "&lt;App.exe>" SHA256
+    certUtil -hashfile "[App.exe]" SHA256
 
     Linux AppImage:
-    sha256sum &lt;App.AppImage>
+    sha256sum [App.AppImage]
 
 # To build a release:
 
