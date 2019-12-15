@@ -1,6 +1,6 @@
 {
   "name": "camo-banano-light-wallet",
-  "version": "1.0.0-ALPHA3",
+  "version": "1.0.0-ALPHA4",
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
