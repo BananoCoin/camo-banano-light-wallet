@@ -672,27 +672,31 @@ const getAccountAsCamoAccount = (banAccount) => {
 
 const getAccountBook = () => {
   const book = [];
-
-  accountData.forEach((accountDataElt) => {
-    book.push({
-      readOnly: true,
-      n: book.length,
-      account: accountDataElt.account,
-      balance: accountDataElt.balance,
-      seedIx: accountDataElt.seedIx,
-      camoAccount: getAccountAsCamoAccount(accountDataElt.account),
+  try {
+    accountData.forEach((accountDataElt) => {
+      book.push({
+        readOnly: true,
+        n: book.length,
+        account: accountDataElt.account,
+        balance: accountDataElt.balance,
+        seedIx: accountDataElt.seedIx,
+        camoAccount: getAccountAsCamoAccount(accountDataElt.account),
+      });
     });
-  });
-  accountBook.forEach((bookAccount) => {
-    book.push({
-      readOnly: false,
-      n: book.length,
-      account: bookAccount,
-      balance: undefined,
-      seedIx: undefined,
-      camoAccount: getAccountAsCamoAccount(bookAccount),
+    accountBook.forEach((bookAccount) => {
+      book.push({
+        readOnly: false,
+        n: book.length,
+        account: bookAccount,
+        balance: undefined,
+        seedIx: undefined,
+        camoAccount: getAccountAsCamoAccount(bookAccount),
+      });
     });
-  });
+  } catch (error) {
+    alert(JSON.stringify(error));
+    mainConsole.debug('getAccountBook error', error);
+  }
   return book;
 };
 
