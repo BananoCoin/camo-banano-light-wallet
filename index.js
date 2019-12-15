@@ -38,6 +38,8 @@ app.on( 'window-all-closed', function() {
 } );
 
 const createMenu = () => {
+  const isMac = process.platform === 'darwin'
+
   const application = {
     label: 'Application',
     submenu: [
@@ -53,6 +55,13 @@ const createMenu = () => {
         accelerator: 'Command+Q',
         click: () => {
           app.quit();
+        },
+      },
+      {
+        label: 'Open Dev Tools',
+        accelerator: 'Command+D',
+        click: () => {
+          mainWindow.webContents.openDevTools();
         },
       },
     ],
