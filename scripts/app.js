@@ -664,19 +664,19 @@ const showAccountBook = () => {
 
 const getAccountAsCamoAccount = (banAccount) => {
   if (banAccount) {
-    mainConsole.log('getAccountAsCamoAccount banAccount', banAccount);
+    mainConsole.debug('getAccountAsCamoAccount banAccount', banAccount);
     const camoAccountValid = bananojs.getCamoAccountValidationInfo(banAccount);
-    mainConsole.log('getAccountAsCamoAccount camoAccountValid', camoAccountValid);
+    mainConsole.debug('getAccountAsCamoAccount camoAccountValid', camoAccountValid);
     if (camoAccountValid.valid) {
-      mainConsole.log('getAccountAsCamoAccount retval[1]', banAccount);
+      mainConsole.debug('getAccountAsCamoAccount retval[1]', banAccount);
       return banAccount;
     }
     const accountValid = bananojs.getAccountValidationInfo(banAccount);
-    mainConsole.log('getAccountAsCamoAccount accountValid', accountValid);
+    mainConsole.debug('getAccountAsCamoAccount accountValid', accountValid);
     if (accountValid.valid) {
       const publicKey = bananojs.getAccountPublicKey(banAccount);
       const camoAccount = bananojs.getCamoAccount(publicKey);
-      mainConsole.log('getAccountAsCamoAccount retval[2]', camoAccount);
+      mainConsole.debug('getAccountAsCamoAccount retval[2]', camoAccount);
       return camoAccount;
     }
   }
