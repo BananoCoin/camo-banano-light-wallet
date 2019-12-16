@@ -147,9 +147,9 @@ p {
   color: #FBDD11;
 }
 
-.yellow_on_pink {
-  background-color: pink;
-  color: #FBDD11;
+.black_on_gray {
+  background-color: gray;
+  color: black;
 }
 
 .yellow_on_black:hover {
@@ -220,6 +220,13 @@ p {
 .fake_button {
   touch-action: manipulation;
   cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+
+.fake_button_disabled {
+  touch-action: none;
+  cursor: not-allowed;
   user-select: none;
   text-decoration: none;
 }

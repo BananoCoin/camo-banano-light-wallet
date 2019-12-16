@@ -664,9 +664,21 @@ const showAccountBook = () => {
 
 const getAccountAsCamoAccount = (banAccount) => {
   if (banAccount) {
-    const publicKey = bananojs.getAccountPublicKey(banAccount);
-    const camoAccount = bananojs.getCamoAccount(publicKey);
-    return camoAccount;
+    mainConsole.log('getAccountAsCamoAccount banAccount', banAccount);
+    const camoAccountValid = bananojs.getCamoAccountValidationInfo(banAccount);
+    mainConsole.log('getAccountAsCamoAccount camoAccountValid', camoAccountValid);
+    if (camoAccountValid.valid) {
+      mainConsole.log('getAccountAsCamoAccount retval[1]', banAccount);
+      return banAccount;
+    }
+    const accountValid = bananojs.getAccountValidationInfo(banAccount);
+    mainConsole.log('getAccountAsCamoAccount accountValid', accountValid);
+    if (accountValid.valid) {
+      const publicKey = bananojs.getAccountPublicKey(banAccount);
+      const camoAccount = bananojs.getCamoAccount(publicKey);
+      mainConsole.log('getAccountAsCamoAccount retval[2]', camoAccount);
+      return camoAccount;
+    }
   }
 };
 
@@ -683,26 +695,27 @@ const getAccountBook = () => {
         camoAccount: getAccountAsCamoAccount(accountDataElt.account),
       });
     });
-    accountBook.forEach((bookAccount) => {
+    accountBook.forEach((bookAccount, bookAccountIx) => {
       book.push({
         readOnly: false,
         n: book.length,
         account: bookAccount,
         balance: undefined,
         seedIx: undefined,
+        bookAccountIx: bookAccountIx,
         camoAccount: getAccountAsCamoAccount(bookAccount),
       });
     });
   } catch (error) {
-    alert(JSON.stringify(error));
-    mainConsole.debug('getAccountBook error', error);
+    alert(JSON.stringify(error.message));
+    mainConsole.log('getAccountBook error', error);
   }
   return book;
 };
 
 const deleteAccountFromBook = (ix) => {
   const bookAccount = accountBook[ix];
-  const confirmDelete = confirm(`Delete ${bookAccount}`);
+  const confirmDelete = confirm(`Delete [${ix} of ${accountBook.length}] ${bookAccount}`);
   if (confirmDelete) {
     accountBook.splice(ix, 1);
     const store = getCleartextConfig();
@@ -714,10 +727,15 @@ const deleteAccountFromBook = (ix) => {
 const addAccountToBook = () => {
   const newBookAccountElt = get('newBookAccount');
   const newBookAccount = newBookAccountElt.value;
-  accountBook.push(newBookAccount);
-  const store = getCleartextConfig();
-  store.set('accountBook', accountBook);
-  renderApp();
+  const accountValid = bananojs.getAccountValidationInfo(newBookAccount);
+  if (!accountValid.valid) {
+    alert(accountValid.message);
+  } else {
+    accountBook.push(newBookAccount);
+    const store = getCleartextConfig();
+    store.set('accountBook', accountBook);
+    renderApp();
+  }
 };
 
 const showSeedEntry = () => {
@@ -994,6 +1012,7 @@ const requestPending = async () => {
           const pendingBlock = {};
           pendingBlock.n = pendingBlocks.length + 1;
           pendingBlock.hash = hash;
+          pendingBlock.detailsUrl = 'https://creeper.banano.cc/explorer/block/' + hash;
           pendingBlock.seedIx = accountDataElt.seedIx;
           pendingBlock.banano = bananoParts.banano;
           pendingBlock.banoshi = bananoParts.banoshi;

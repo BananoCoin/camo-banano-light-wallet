@@ -43,7 +43,7 @@ const UseLedgerButton = () => {
     : false) {
     return (<div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => getPublicKeyFromLedger()}>Use Ledger</div>);
   } else {
-    return (<div className="yellow_on_pink bordered display_inline_block float_right fake_button rounded padding_5px">Use Ledger</div>);
+    return (<div className="black_on_gray bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Use Ledger</div>);
   }
   return (<div/>);
 }
@@ -87,9 +87,9 @@ const SendToAccountField = () => {
           {
             accountBook.map((item, index) => {
               let skip = false;
-              if(item.balance === undefined) {
-                skip = true;
-              }
+              // if(item.balance === undefined) {
+                // skip = true;
+              // }
               if(item.seedIx !== undefined) {
                 if(item.seedIx > 0) {
                   skip = true;
@@ -122,7 +122,7 @@ const DeleteAccountFromBookButton = (props) => {
     return (<div/>);
   } else {
     return (
-      <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.deleteAccountFromBook(item.n-1)}>X</div>
+      <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.deleteAccountFromBook(item.bookAccountIx)}>X</div>
     );
   }
 }
@@ -132,7 +132,7 @@ const UseCamoButton = () => {
     return (
       <div>
         <div className="gray_on_yellow">Using Camo To Send Transaction</div>
-        <div className="yellow_on_pink gray_border bordered display_inline_block float_right fake_button rounded padding_5px">Enable Camo</div>
+        <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Enable Camo</div>
         <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.setUseCamo(false)}>Disable Camo</div>
         <div className="gray_on_yellow">Shared Account</div>
         <p>{app.getCamoSharedAccountData().account}</p>
@@ -151,7 +151,7 @@ const UseCamoButton = () => {
       <div>
         <div className="gray_on_yellow">Sending Regular Transaction</div>
         <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.setUseCamo(true)}>Enable Camo</div>
-        <div className="yellow_on_pink gray_border bordered display_inline_block float_right fake_button rounded padding_5px">Disable Camo</div>
+        <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Disable Camo</div>
       </div>
     );
   }
@@ -365,7 +365,9 @@ class App extends React.Component {
                             app.getPending().map((item, index) => {
                               return (<tr key={index}>
                                 <td className="no_border no_padding">{item.n}</td>
-                                <td className="no_border no_padding">{item.hash}</td>
+                                <td className="no_border no_padding">
+                                  <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
+                                </td>
                                 <td className="no_border no_padding">{item.banano}</td>
                                 <td className="no_border no_padding">{item.banoshi}</td>
                                 <td className="no_border no_padding">{item.raw}</td>
