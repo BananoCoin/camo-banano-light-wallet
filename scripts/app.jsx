@@ -130,20 +130,42 @@ const DeleteAccountFromBookButton = (props) => {
 const UseCamoButton = () => {
   if (app.getUseCamo()) {
     return (
-      <div>
+      <div className="h310px overflow_auto">
         <div className="gray_on_yellow">Using Camo To Send Transaction</div>
         <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Enable Camo</div>
         <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.setUseCamo(false)}>Disable Camo</div>
-        <div className="gray_on_yellow">Shared Account</div>
-        <p>{app.getCamoSharedAccountData().account}</p>
-        <div className="gray_on_yellow">Shared Account Balance</div>
-        <p>{app.getCamoSharedAccountData().balance}</p>
         <div className="gray_on_yellow">First Account With No Transactions</div>
         <p>{app.getAccountNoHistory()}</p>
-          <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
-            onClick={(e) => app.sendSharedAccountBalanceToFirstAccountWithNoTransactions()}>
-          Send Shared Account Balance To First Account With No Transactions
-          </div>
+        {
+          app.getCamoSharedAccountData().map((item, index) => {
+            let skip = false;
+            if(item.balance === undefined) {
+              skip = true;
+            } else {
+              if(item.balance === '0') {
+                skip = true;
+              }
+            }
+            if(skip) {
+              return null;
+            } else {
+              return (
+                <div key={index} className="h90px">
+                  <hr/>
+                  <div className="gray_on_yellow">Shared Account</div>
+                  <p>{item.account}</p>
+                  <div className="gray_on_yellow">Shared Account Balance</div>
+                  <p>{item.balance}</p>
+                  <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
+                    onClick={(e) => app.sendSharedAccountBalanceToFirstAccountWithNoTransactions(index)}>
+                  Send Shared Account Balance To First Account With No Transactions
+                  </div>
+                  <p></p>
+                </div>
+              )
+            }
+          })
+        }
       </div>
     );
   } else {
@@ -396,7 +418,7 @@ class App extends React.Component {
                                 <td className="no_border no_padding">
                                   <div
                                     className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                                    onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.hash, item.totalRaw)}>
+                                    onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}>
                                   Receive
                                   </div>
                                 </td>
@@ -455,7 +477,7 @@ class App extends React.Component {
                       <div className="float_right display_inline_block">{app.getBlockchainState().count + ' '}
                         Blocks</div>
                       <p></p>
-                      <div className="h470px overflow_auto">
+                      <div className="h440px overflow_auto">
                         <table className="w100pct no_border whitespace_nowrap">
                           <tbody>
                             {
@@ -554,7 +576,7 @@ class App extends React.Component {
                   </tr>
                   <tr id="account-book">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="h470px overflow_auto">
+                      <div className="h440px overflow_auto">
                       <div className="gray_on_yellow">Account Book</div>
                       <br/>
                         <table className="w100pct no_border whitespace_nowrap">
