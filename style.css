@@ -114,6 +114,10 @@ p {
   height: 440px;
 }
 
+.w20px {
+  width: 20px;
+}
+
 .w200px {
   width: 200px;
 }

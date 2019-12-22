@@ -192,6 +192,18 @@ const UseCamoButton = () => {
   return (<div/>);
 }
 
+const CamoIcon = (props) => {
+  const item = props.item;
+  if (!(item)) {
+    return (<div/>);
+  }
+  if (item.checkCamoPending) {
+    return (<img className="w20px h20px" src="artwork/camo.png"/>);
+  } else {
+    return (<div/>);
+  }
+}
+
 const TransactionHistoryElementIcon = (props) => {
   const item = props.item;
   if (!(item)) {
@@ -599,6 +611,7 @@ class App extends React.Component {
                             <tr>
                               <td className="no_border no_padding">N</td>
                               <td className="no_border no_padding">Account</td>
+                              <td className="no_border no_padding">Camo</td>
                               <td className="no_border no_padding">Delete</td>
                             </tr>
                             {
@@ -606,6 +619,9 @@ class App extends React.Component {
                                 return (<tr key={index}>
                                   <td className="no_border no_padding">{item.n}</td>
                                   <td className="no_border no_padding">{item.account}</td>
+                                  <td className="no_border no_padding">{item.checkCamoPending}
+                                    <CamoIcon item={item}/>
+                                  </td>
                                   <td className="no_border no_padding">
                                     <DeleteAccountFromBookButton item={item}/>
                                   </td>

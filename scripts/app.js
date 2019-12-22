@@ -11,6 +11,8 @@ const bananojs = require('@bananocoin/bananojs');
 const Store = require('electron-store');
 const Conf = require('conf');
 
+const accountUtil = require('./util/account-util.js');
+
 /** modules */
 const mainConsole = new mainConsoleLib.Console(process.stdout, process.stderr);
 mainConsole.debug = () => {};
@@ -271,26 +273,7 @@ const requestBlockchainDataAndShowHome = async () => {
 };
 
 const setAccountDataFromSeed = async () => {
-  bananojs.setBananodeApiUrl(getRpcUrl());
-  let hasMoreHistory = true;
-  let seedIx = 0;
-  while (hasMoreHistory) {
-    // console.log('setAccountDataFromSeed', seedIx);
-    const accountDataElt = {};
-    accountDataElt.seedIx = seedIx;
-    accountDataElt.privateKey = bananojs.getPrivateKey(seed, accountDataElt.seedIx);
-    accountDataElt.publicKey = bananojs.getPublicKey(accountDataElt.privateKey);
-    accountDataElt.account = bananojs.getAccount(accountDataElt.publicKey);
-    accountData.push(accountDataElt);
-    const accountHistory = await bananojs.getAccountHistory(accountDataElt.account, 1);
-    if (accountHistory.history) {
-      accountDataElt.hasHistory = true;
-    } else {
-      accountDataElt.hasHistory = false;
-      hasMoreHistory = false;
-    }
-    seedIx++;
-  }
+  await accountUtil.setAccountDataFromSeed(getRpcUrl(), seed, accountData);
 };
 
 const getAccountDataFromSeed = async () => {
@@ -694,6 +677,7 @@ const getAccountBook = () => {
         account: accountDataElt.account,
         balance: accountDataElt.balance,
         seedIx: accountDataElt.seedIx,
+        checkCamoPending: accountDataElt.seedIx == 0,
         camoAccount: getAccountAsCamoAccount(accountDataElt.account),
       });
     });
@@ -705,6 +689,7 @@ const getAccountBook = () => {
         balance: undefined,
         seedIx: undefined,
         bookAccountIx: bookAccountIx,
+        checkCamoPending: true,
         camoAccount: getAccountAsCamoAccount(bookAccount),
       });
     });
@@ -938,9 +923,16 @@ const requestCamoPending = async () => {
   updatePleaseWaitStatus('getting camo pending.');
   camoPendingBlocks.length = 0;
 
-  const accountBook = getAccountBook();
-  for (let accountBookIx = 0; accountBookIx < accountBook.length; accountBookIx++) {
-    const accountBookElt = accountBook[accountBookIx];
+  const fullAccountBook = getAccountBook();
+  const pendingAccountBook = [];
+  for (let accountBookIx = 0; accountBookIx < fullAccountBook.length; accountBookIx++) {
+    const accountBookElt = fullAccountBook[accountBookIx];
+    if (accountBookElt.checkCamoPending) {
+      pendingAccountBook.push(accountBookElt);
+    }
+  }
+  for (let accountBookIx = 0; accountBookIx < pendingAccountBook.length; accountBookIx++) {
+    const accountBookElt = pendingAccountBook[accountBookIx];
     const sendToAccount = accountBookElt.camoAccount;
     if (sendToAccount) {
       mainConsole.debug('requestCamoPending sendToAccount', sendToAccount);
@@ -948,7 +940,7 @@ const requestCamoPending = async () => {
         const accountDataElt = accountData[accountDataIx];
 
         updatePleaseWaitStatus('getting camo pending:' +
-        `book account ${accountBookIx+1} of ${accountBook.length},` +
+        `book account ${accountBookIx+1} of ${pendingAccountBook.length},` +
         `seed account ${accountDataIx+1} of ${accountData.length}.` );
 
         mainConsole.debug('requestCamoPending request', seed, accountDataElt.seedIx, sendToAccount);

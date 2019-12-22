@@ -1,12 +1,12 @@
 {
   "name": "camo-banano-light-wallet",
-  "version": "1.0.0-ALPHA5",
+  "version": "1.0.0-ALPHA6",
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
   "scripts": {
     "start": "check-node-version --node 12 --npm 6 && electron . --enable-logging --remote-debugging-port=9222",
-    "test": "check-node-version --node 12 --npm 6 && ./node_modules/mocha/bin/mocha test",
+    "test": "check-node-version --node 12 --npm 6 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist-all": "electron-builder -mwl",
