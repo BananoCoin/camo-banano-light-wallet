@@ -363,11 +363,13 @@ const clearSendData = () => {
 
   if (sendToAccountElt) {
     if (getUseCamo()) {
-      const accountBook = getAccountBook();
-      if (accountBook[0]) {
-        sendToAccountElt.value = accountBook[0].camoAccount;
-      } else {
-        sendToAccountElt.value = '';
+      if (sendToAccountElt.value == '') {
+        const accountBook = getAccountBook();
+        if (accountBook[0]) {
+          sendToAccountElt.value = accountBook[0].camoAccount;
+        } else {
+          sendToAccountElt.value = '';
+        }
       }
     } else {
       sendToAccountElt.value = '';

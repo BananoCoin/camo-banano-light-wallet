@@ -53,7 +53,6 @@ const SendFromSeedIxField = () => {
   if(accountBook[0]) {
     return (
       <select id="sendFromSeedIx"
-        defaultValue = {accountBook[0].seedIx}
         onChange={(e) => app.updateCamoSharedAccount()}>
         {
           accountBook.map((item, index) => {
@@ -82,7 +81,6 @@ const SendToAccountField = () => {
     if(accountBook[0]) {
       return (
         <select id="sendToAccount"
-          defaultValue = {accountBook[0].camoAccount}
           onChange = {(e) => app.updateCamoSharedAccount()}>
           {
             accountBook.map((item, index) => {
