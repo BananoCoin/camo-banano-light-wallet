@@ -136,6 +136,7 @@ const UseCamoButton = () => {
         <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.setUseCamo(false)}>Disable Camo</div>
         <div className="gray_on_yellow">First Account With No Transactions</div>
         <p>{app.getAccountNoHistory()}</p>
+        <div className="gray_on_yellow">Shared Account Information {app.getCamoSharedAccountData().length} rows.</div>
         {
           app.getCamoSharedAccountData().map((item, index) => {
             let skip = false;
@@ -147,15 +148,28 @@ const UseCamoButton = () => {
               }
             }
             if(skip) {
-              return null;
+              return (
+                <div key={index} className="h20px">
+                  <hr/>
+                  <div className="gray_on_yellow">
+                  Account &nbsp;
+                  {item.account} &nbsp;
+                  0
+                  BAN
+                  </div>
+                </div>
+              )
             } else {
               return (
                 <div key={index} className="h90px">
                   <hr/>
-                  <div className="gray_on_yellow">Shared Account</div>
-                  <p>{item.account}</p>
-                  <div className="gray_on_yellow">Shared Account Balance</div>
-                  <p>{item.balance}</p>
+                  <div className="gray_on_yellow">
+                  Account &nbsp;
+                  {item.account} &nbsp;
+                  {item.balance} &nbsp;
+                  BAN
+                  </div>
+                  <p></p>
                   <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
                     onClick={(e) => app.sendSharedAccountBalanceToFirstAccountWithNoTransactions(index)}>
                   Send Shared Account Balance To First Account With No Transactions
@@ -182,13 +196,16 @@ const UseCamoButton = () => {
 
 const TransactionHistoryElementIcon = (props) => {
   const item = props.item;
-  if (item.type == 'input') {
-    return (<img src="artwork/receive.svg"/>);
+  if (!(item)) {
+    return (<div/>);
   }
-  if (item.type == 'output') {
-    return (<img src="artwork/send.svg"/>);
+  if (item.type == 'receive') {
+    return (<img className="svg" src="artwork/receive.svg"/>);
   }
-  return (<div/>);
+  if (item.type == 'send') {
+    return (<img className="svg" src="artwork/send.svg"/>);
+  }
+  return (<img className="svg" src="artwork/{item.type}.svg"/>);
 }
 
 const onLinkClick = (event) => {
@@ -230,32 +247,32 @@ class App extends React.Component {
                   </tr>
                   <tr>
                     <td id='home' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showHome()}>
-                      <img className="valign_middle" src="artwork/home.svg"></img>
+                      <img className="valign_middle svg" src="artwork/home.svg"></img>&nbsp;
                       Home</td>
                   </tr>
                   <tr>
                     <td id='send' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showSend()}>
-                      <img className="valign_middle" src="artwork/send.svg"></img>
+                      <img className="valign_middle svg" src="artwork/send.svg"></img>&nbsp;
                       Send</td>
                   </tr>
                   <tr>
                     <td id='receive' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showReceive()}>
-                      <img className="valign_middle" src="artwork/receive.svg"></img>
+                      <img className="valign_middle svg" src="artwork/receive.svg"></img>&nbsp;
                       Receive</td>
                   </tr>
                   <tr>
                     <td id='transactions' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showTransactions()}>
-                      <img className="valign_middle" src="artwork/transactions.svg"></img>
+                      <img className="valign_middle svg" src="artwork/transactions.svg"></img>&nbsp;
                       Transactions</td>
                   </tr>
                   <tr>
                     <td id='representatives' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showRepresentatives()}>
-                      <img className="valign_middle" src="artwork/representatives.svg"></img>
+                      <img className="valign_middle svg" src="artwork/representatives.svg"></img>&nbsp;
                       Representative</td>
                   </tr>
                   <tr>
                     <td id='accounts' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showAccountBook()}>
-                      <img className="valign_middle" src="artwork/accounts.svg"></img>
+                      <img className="valign_middle svg" src="artwork/accounts.svg"></img>&nbsp;
                       Account Book</td>
                   </tr>
                   <tr>

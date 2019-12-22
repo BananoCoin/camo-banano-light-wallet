@@ -264,3 +264,8 @@ p {
 .overflow_auto {
   overflow: auto;
 }
+
+.svg {
+  width: 15px;
+  height: 15px;
+}
