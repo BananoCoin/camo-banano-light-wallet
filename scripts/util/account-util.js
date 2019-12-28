@@ -1,4 +1,3 @@
-
 'use strict';
 
 // libraries
@@ -15,6 +14,7 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
   bananojs.setBananodeApiUrl(rpcUrl);
   let hasMoreHistory = true;
   let seedIx = 0;
+  accountData.length = 0;
   while (hasMoreHistory) {
     // console.log('setAccountDataFromSeed', seedIx);
     const accountDataElt = {};
@@ -33,5 +33,6 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
     seedIx++;
   }
 };
+
 // exports
 exports.setAccountDataFromSeed = setAccountDataFromSeed;

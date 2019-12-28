@@ -53,7 +53,8 @@ const SendFromSeedIxField = () => {
   if(accountBook[0]) {
     return (
       <select id="sendFromSeedIx"
-        onChange={(e) => app.updateCamoSharedAccount()}>
+        onChange={(e) => app.updateCamoSharedAccount()}
+        disabled={app.isUpdateInProgress()}>
         {
           accountBook.map((item, index) => {
             if(item.seedIx !== undefined) {
@@ -81,7 +82,8 @@ const SendToAccountField = () => {
     if(accountBook[0]) {
       return (
         <select id="sendToAccount"
-          onChange = {(e) => app.updateCamoSharedAccount()}>
+          onChange = {(e) => app.updateCamoSharedAccount()}
+          disabled={app.isUpdateInProgress()}>
           {
             accountBook.map((item, index) => {
               let skip = false;
@@ -114,6 +116,24 @@ const SendToAccountField = () => {
   }
 }
 
+const DisableableButton = (props) => {
+  const name = props.name;
+  const onClick = props.onClick;
+  if(app.isUpdateInProgress()) {
+    return (
+      <div className="black_on_gray bordered display_inline_block float_right fake_button rounded padding_5px"
+      >{name}</div>
+    )
+  } else {
+    return (
+      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+        onClick={(e) => {
+          onClick();
+        }}>{name}</div>
+    )
+  }
+}
+
 const DeleteAccountFromBookButton = (props) => {
   const item = props.item;
   if(item.readOnly) {
@@ -131,7 +151,9 @@ const UseCamoButton = () => {
       <div className="h310px overflow_auto">
         <div className="gray_on_yellow">Using Camo To Send Transaction</div>
         <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Enable Camo</div>
-        <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.setUseCamo(false)}>Disable Camo</div>
+        <DisableableButton
+          name="Disable Camo"
+          onClick={(e) => app.setUseCamo(false)}/>
         <div className="gray_on_yellow">First Account With No Transactions</div>
         <p>{app.getAccountNoHistory()}</p>
         <div className="gray_on_yellow">Shared Account Information {app.getCamoSharedAccountData().length} rows.</div>
@@ -168,10 +190,9 @@ const UseCamoButton = () => {
                   BAN
                   </div>
                   <p></p>
-                  <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
-                    onClick={(e) => app.sendSharedAccountBalanceToFirstAccountWithNoTransactions(index)}>
-                  Send Shared Account Balance To First Account With No Transactions
-                  </div>
+                  <DisableableButton
+                    name="Send Shared Account Balance To First Account With No Transactions"
+                    onClick={(e) => app.sendSharedAccountBalanceToFirstAccountWithNoTransactions(index)}/>
                   <p></p>
                 </div>
               )
@@ -184,7 +205,9 @@ const UseCamoButton = () => {
     return (
       <div>
         <div className="gray_on_yellow">Sending Regular Transaction</div>
-        <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.setUseCamo(true)}>Enable Camo</div>
+        <DisableableButton
+          name="Enable Camo"
+          onClick={(e) => app.setUseCamo(true)}/>
         <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Disable Camo</div>
       </div>
     );
@@ -245,9 +268,11 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px no_border"></td>
                   </tr>
                   <tr>
-                    <td id='home' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showHome()}>
+                    <td>
                       Network
-                      <select value={app.currentNetworkIx} name="network" onChange={(e) => changeNetwork(e)}>
+                      <select value={app.currentNetworkIx} name="network"
+                        onChange={(e) => changeNetwork(e)}
+                        disabled={app.isUpdateInProgress()}>
                         <option value="0">{app.NETWORKS[0].NAME}</option>
                       </select>
                     </td>
@@ -256,32 +281,38 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px no_border"></td>
                   </tr>
                   <tr>
-                    <td id='home' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showHome()}>
+                    <td id='home' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showHome()}>
                       <img className="valign_middle svg" src="artwork/home.svg"></img>&nbsp;
                       Home</td>
                   </tr>
                   <tr>
-                    <td id='send' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showSend()}>
+                    <td id='send' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showSend()}>
                       <img className="valign_middle svg" src="artwork/send.svg"></img>&nbsp;
                       Send</td>
                   </tr>
                   <tr>
-                    <td id='receive' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showReceive()}>
+                    <td id='receive' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showReceive()}>
                       <img className="valign_middle svg" src="artwork/receive.svg"></img>&nbsp;
                       Receive</td>
                   </tr>
                   <tr>
-                    <td id='transactions' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showTransactions()}>
+                    <td id='transactions' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showTransactions()}>
                       <img className="valign_middle svg" src="artwork/transactions.svg"></img>&nbsp;
                       Transactions</td>
                   </tr>
                   <tr>
-                    <td id='representatives' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showRepresentatives()}>
+                    <td id='representatives' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showRepresentatives()}>
                       <img className="valign_middle svg" src="artwork/representatives.svg"></img>&nbsp;
                       Representative</td>
                   </tr>
                   <tr>
-                    <td id='accounts' className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showAccountBook()}>
+                    <td id='accounts' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showAccountBook()}>
                       <img className="valign_middle svg" src="artwork/accounts.svg"></img>&nbsp;
                       Account Book</td>
                   </tr>
@@ -289,13 +320,16 @@ class App extends React.Component {
                     <td className="yellow_on_brown h200px no_border"></td>
                   </tr>
                   <tr>
-                    <td className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.requestAllBlockchainData()}>Refresh</td>
+                    <td className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.requestAllBlockchainData()}>Refresh</td>
                   </tr>
                   <tr>
-                    <td className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showLogin()}>Logout</td>
+                    <td className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showLogin()}>Logout</td>
                   </tr>
                   <tr>
-                    <td className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => openDevTools()}>Show Dev Tools</td>
+                    <td className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => openDevTools()}>Show Dev Tools</td>
                   </tr>
                 </tbody>
               </table>
@@ -324,14 +358,15 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow">Seed</div>
                       <p>Enter seed manually.</p>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.showSeedEntry()}>Enter Seed</div>
+                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+                        onClick={(e) => app.showSeedEntry()}>Enter Seed</div>
                     </td>
                   </tr>
                   <tr id="seed-reuse">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow">Reuse Stored Seed</div>
                       <p>Reuse a seed that you have stored previously.</p>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.showSeedReuse()}>Reuse Seed</div>
+                      <DisableableButton name="Reuse Seed" onClick={(e) => app.showSeedReuse()} />
                     </td>
                   </tr>
                   <tr id="seed-reuse-entry">
@@ -341,7 +376,8 @@ class App extends React.Component {
                       <br/>
                       <input className="monospace no_pad" type="password" size="66" maxLength="64" id="reuseSeedPassword" placeholder="Storage Password (Optional)"></input>
                       <br/>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.reuseSeed()}>Reuse Seed</div>
+                      <br/>
+                      <DisableableButton name="Reuse Stored Seed" onClick={(e) => app.reuseSeed()} />
                     </td>
                   </tr>
                   <tr id="seed-entry">
@@ -358,14 +394,16 @@ class App extends React.Component {
                       <br/>
                       <input className="monospace no_pad" type="password" size="66" maxLength="64" id="storeSeedPassword" placeholder="Storage Password (Optional)"></input>
                       <br/>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.getAccountDataFromSeed()}>Use Seed</div>
+                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+                        onClick={(e) => app.getAccountDataFromSeed()}>Use Seed</div>
                     </td>
                   </tr>
                   <tr id="private-key-generate">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow">Generate New Seed</div>
                       <p>Generate a new seed, to be used in this wallet.</p>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.showGenerateNewSeed()}>Generate Seed</div>
+                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+                        onClick={(e) => app.showGenerateNewSeed()}>Generate Seed</div>
                     </td>
                   </tr>
                   <tr id="private-key-generator">
@@ -373,9 +411,11 @@ class App extends React.Component {
                       <div className="gray_on_yellow">New Seed</div>
                       {app.getGeneratedSeedHex()}
                       <br/>
-                      <div className="yellow_on_black bordered display_inline_block float_left fake_button rounded padding_5px" onClick={(e) => app.copyToClipboard()}>Copy</div>
+                      <div className="yellow_on_black bordered display_inline_block float_left fake_button rounded padding_5px"
+                        onClick={(e) => app.copyToClipboard()}>Copy</div>
                       <br/>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.showLogin()}>Done</div>
+                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+                        onClick={(e) => app.showLogin()}>Done</div>
                     </td>
                   </tr>
                   <tr id="your-account">
@@ -401,7 +441,8 @@ class App extends React.Component {
                       <br/>
                       <input className="monospace no_pad" type="text" size="67" maxLength="65" id="newRepresentative" placeholder="Representative"></input>
                       <hr/>
-                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.updateRepresentative()}>Update Representative</div>
+                      <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+                        onClick={(e) => app.updateRepresentative()}>Update Representative</div>
                     </td>
                   </tr>
                   <tr id="pending">
@@ -421,7 +462,9 @@ class App extends React.Component {
                                 <td className="no_border no_padding">{item.banoshi}</td>
                                 <td className="no_border no_padding">{item.raw}</td>
                                 <td className="no_border no_padding">
-                                  <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.receivePending(item.hash, item.seedIx)}>Receive</div>
+                                  <DisableableButton
+                                    name="Receive"
+                                    onClick={(e) => app.receivePending(item.hash, item.seedIx)}/>
                                 </td>
                               </tr>)
                             })
@@ -443,11 +486,9 @@ class App extends React.Component {
                                 <td className="no_border no_padding">{item.banoshi}</td>
                                 <td className="no_border no_padding">{item.raw}</td>
                                 <td className="no_border no_padding">
-                                  <div
-                                    className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                                    onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}>
-                                  Receive
-                                  </div>
+                                  <DisableableButton
+                                    name="Receive"
+                                    onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}/>
                                 </td>
                               </tr>)
                             })
@@ -593,7 +634,9 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow">Confirm</div>
                       <p></p>
-                      <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.sendAmountToAccount()}>Confirm</div>
+                      <DisableableButton
+                        name="Confirm"
+                        onClick={(e) =>app.sendAmountToAccount()}/>
                     </td>
                   </tr>
                   <tr id="to-account-is-camo">
@@ -636,7 +679,8 @@ class App extends React.Component {
                             fontFamily: 'monospace'
                           }} type="text" size="65" id="newBookAccount" placeholder="New Account"></input>
                         <p></p>
-                        <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.addAccountToBook()}>Add Account To Book</div>
+                        <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
+                          onClick={(e) => app.addAccountToBook()}>Add Account To Book</div>
                       </div>
                     </td>
                   </tr>

@@ -12,6 +12,7 @@ const Store = require('electron-store');
 const Conf = require('conf');
 
 const accountUtil = require('./util/account-util.js');
+const backgroundUtil = require('./util/background-util.js');
 
 /** modules */
 const mainConsole = new mainConsoleLib.Console(process.stdout, process.stderr);
@@ -79,7 +80,6 @@ let transactionHistoryStatus = 'No History Requested Yet';
 
 let blockchainStatus = 'No Blockchain State Requested Yet';
 
-let pleaseWaitStatus = '';
 
 const blockchainState = {
   count: 0,
@@ -100,6 +100,17 @@ const getCleartextConfig = () => {
 };
 
 const init = () => {
+  backgroundUtil.setApp(
+      {
+        hide: hide,
+        show: show,
+        renderApp: () => {
+          renderApp();
+        },
+        log: mainConsole.log,
+        debug: mainConsole.debug,
+      },
+  );
   const conf = getCleartextConfig();
   // mainConsole.log('getCleartextConfig', conf);
   if (conf.has('useCamo')) {
@@ -183,6 +194,10 @@ const formatDate = (date) => {
 };
 
 const requestAllBlockchainData = async () => {
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
   await requestTransactionHistory();
   await requestBalanceAndRepresentative();
   await requestBlockchainState();
@@ -273,7 +288,9 @@ const requestBlockchainDataAndShowHome = async () => {
 };
 
 const setAccountDataFromSeed = async () => {
+  backgroundUtil.updatePleaseWaitStatus('getting account data.');
   await accountUtil.setAccountDataFromSeed(getRpcUrl(), seed, accountData);
+  backgroundUtil.updatePleaseWaitStatus();
 };
 
 const getAccountDataFromSeed = async () => {
@@ -304,18 +321,12 @@ const getAccountDataFromSeed = async () => {
   await requestBlockchainDataAndShowHome();
 };
 
-const updatePleaseWaitStatus = (status) => {
-  pleaseWaitStatus = status;
-  if (status == undefined) {
-    hide('please-wait');
-  } else {
-    show('please-wait');
-  }
-  renderApp();
-};
-
 const reuseSeed = async () => {
-  updatePleaseWaitStatus('opening secure storage.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('opening secure storage.');
   const reuseSeedPasswordElt = appDocument.getElementById('reuseSeedPassword');
   const reuseSeedPassword = reuseSeedPasswordElt.value;
   try {
@@ -328,14 +339,13 @@ const reuseSeed = async () => {
     useLedgerFlag = false;
     isLoggedIn = true;
     show('seed');
-    updatePleaseWaitStatus('getting account data.');
-    await setAccountDataFromSeed();
-    updatePleaseWaitStatus('getting blockchain data.');
-    await requestBlockchainDataAndShowHome();
   } catch (error) {
     console.trace(error);
     alert('cannot open seed storage, check that password is correct.');
   }
+  backgroundUtil.updatePleaseWaitStatus();
+  await setAccountDataFromSeed();
+  await requestBlockchainDataAndShowHome();
 };
 
 const clearSendData = () => {
@@ -394,7 +404,11 @@ const updateAmountAndRenderApp = () => {
 };
 
 const sendAmountToAccount = async () => {
-  updatePleaseWaitStatus('sending amount to account.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('sending amount to account.');
   updateAmount();
 
   const sendToAccountElt = appDocument.getElementById('sendToAccount');
@@ -426,7 +440,7 @@ const sendAmountToAccount = async () => {
 
   mainConsole.debug('sendAmountToAccount', message);
   sendToAccountStatuses.push(message);
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   alert(message);
   renderApp();
 };
@@ -436,7 +450,11 @@ const getTransactionHistoryByAccount = () => {
 };
 
 const requestTransactionHistory = async () => {
-  updatePleaseWaitStatus('getting transaction history.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('getting transaction history.');
   bananojs.setBananodeApiUrl(getRpcUrl());
   parsedTransactionHistoryByAccount.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
@@ -462,13 +480,17 @@ const requestTransactionHistory = async () => {
       });
     }
   }
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   // mainConsole.log('parsedTransactionHistoryByAccount', parsedTransactionHistoryByAccount);
   renderApp();
 };
 
 const requestBalanceAndRepresentative = async () => {
-  updatePleaseWaitStatus('getting account info.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('getting account info.');
   bananojs.setBananodeApiUrl(getRpcUrl());
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
@@ -486,17 +508,21 @@ const requestBalanceAndRepresentative = async () => {
       accountDataElt.representative = accountInfo.representative;
     }
   }
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   renderApp();
 };
 
 const requestBlockchainState = async () => {
-  updatePleaseWaitStatus('getting blockchain state.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('getting blockchain state.');
   const blockCount = await bananojs.getBlockCount();
   blockchainState.count = blockCount.count;
   blockchainStatus = 'Success';
   mainConsole.debug('blockchainState', blockchainState);
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   renderApp();
 };
 
@@ -669,9 +695,16 @@ const getAccountAsCamoAccount = (banAccount) => {
 
 const getAccountBook = () => {
   const book = [];
+  const accountBookAccountSet = new Set();
+  const pushToBook = (bookElt) => {
+    if (!accountBookAccountSet.has(bookElt.account)) {
+      accountBookAccountSet.add(bookElt.account);
+      book.push(bookElt);
+    }
+  };
   try {
     accountData.forEach((accountDataElt) => {
-      book.push({
+      pushToBook({
         readOnly: true,
         n: book.length,
         account: accountDataElt.account,
@@ -682,7 +715,7 @@ const getAccountBook = () => {
       });
     });
     accountBook.forEach((bookAccount, bookAccountIx) => {
-      book.push({
+      pushToBook({
         readOnly: false,
         n: book.length,
         account: bookAccount,
@@ -842,45 +875,55 @@ const getCamoSharedAccountData = () => {
 };
 
 const requestCamoSharedAccount = async () => {
-  updatePleaseWaitStatus('getting camo shared account.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('getting camo shared account.');
   const sendToAccountElt = appDocument.getElementById('sendToAccount');
   const sendToAccount = sendToAccountElt.value;
   mainConsole.debug('requestCamoSharedAccount sendToAccount', sendToAccount);
   camoSharedAccountData.length = 0;
-  if (seed) {
-    if (sendToAccount) {
-      let hasMoreHistory = true;
-      const seedIx = 0;
-      let sharedSeedIx = 0;
-      while (hasMoreHistory) {
-        const newCamoSharedAccountData = await bananojs.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
-        mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountData);
-        if (newCamoSharedAccountData) {
-          const camoSharedAccountDataElt = {};
-          camoSharedAccountDataElt.account = newCamoSharedAccountData.sharedAccount;
-          camoSharedAccountDataElt.seed = newCamoSharedAccountData.sharedSeed;
-          camoSharedAccountDataElt.seedIx = sharedSeedIx;
-          camoSharedAccountDataElt.privateKey = newCamoSharedAccountData.sharedPrivateKey;
-          camoSharedAccountDataElt.publicKey = newCamoSharedAccountData.sharedPublicKey;
-          camoSharedAccountData.push(camoSharedAccountDataElt);
-          mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountDataElt);
-          const accountHistory = await bananojs.getAccountHistory(newCamoSharedAccountData.sharedAccount, 1);
-          if (!(accountHistory.history)) {
+  if (useCamo) {
+    if (seed) {
+      if (sendToAccount) {
+        let hasMoreHistory = true;
+        const seedIx = 0;
+        let sharedSeedIx = 0;
+        while (hasMoreHistory) {
+          const newCamoSharedAccountData = await bananojs.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
+          mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountData);
+          if (newCamoSharedAccountData) {
+            const camoSharedAccountDataElt = {};
+            camoSharedAccountDataElt.account = newCamoSharedAccountData.sharedAccount;
+            camoSharedAccountDataElt.seed = newCamoSharedAccountData.sharedSeed;
+            camoSharedAccountDataElt.seedIx = sharedSeedIx;
+            camoSharedAccountDataElt.privateKey = newCamoSharedAccountData.sharedPrivateKey;
+            camoSharedAccountDataElt.publicKey = newCamoSharedAccountData.sharedPublicKey;
+            camoSharedAccountData.push(camoSharedAccountDataElt);
+            mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountDataElt);
+            const accountHistory = await bananojs.getAccountHistory(newCamoSharedAccountData.sharedAccount, 1);
+            if (!(accountHistory.history)) {
+              hasMoreHistory = false;
+            }
+          } else {
             hasMoreHistory = false;
           }
-        } else {
-          hasMoreHistory = false;
+          sharedSeedIx++;
         }
-        sharedSeedIx++;
       }
     }
   }
   // mainConsole.trace('requestCamoSharedAccount');
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
 };
 
 const requestCamoSharedAccountBalance = async () => {
-  updatePleaseWaitStatus('getting camo shared account balance.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('getting camo shared account balance.');
   mainConsole.debug('requestCamoSharedAccountBalance camoSharedAccountData', camoSharedAccountData);
   for (let camoSharedAccountDataIx = 0; camoSharedAccountDataIx < camoSharedAccountData.length; camoSharedAccountDataIx++) {
     const camoSharedAccountDataElt = camoSharedAccountData[camoSharedAccountDataIx];
@@ -902,7 +945,7 @@ const requestCamoSharedAccountBalance = async () => {
       }
     }
   }
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
 };
 
 const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => {
@@ -920,91 +963,96 @@ const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => 
 };
 
 const requestCamoPending = async () => {
-  updatePleaseWaitStatus('getting camo pending.');
-  camoPendingBlocks.length = 0;
-
-  const fullAccountBook = getAccountBook();
-  const pendingAccountBook = [];
-  for (let accountBookIx = 0; accountBookIx < fullAccountBook.length; accountBookIx++) {
-    const accountBookElt = fullAccountBook[accountBookIx];
-    if (accountBookElt.checkCamoPending) {
-      pendingAccountBook.push(accountBookElt);
-    }
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
   }
-  for (let accountBookIx = 0; accountBookIx < pendingAccountBook.length; accountBookIx++) {
-    const accountBookElt = pendingAccountBook[accountBookIx];
-    const sendToAccount = accountBookElt.camoAccount;
-    if (sendToAccount) {
-      mainConsole.debug('requestCamoPending sendToAccount', sendToAccount);
-      for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
-        const accountDataElt = accountData[accountDataIx];
+  backgroundUtil.updatePleaseWaitStatus('getting camo pending.');
+  camoPendingBlocks.length = 0;
+  if (useCamo) {
+    const fullAccountBook = getAccountBook();
+    const pendingAccountBook = [];
+    for (let accountBookIx = 0; accountBookIx < fullAccountBook.length; accountBookIx++) {
+      const accountBookElt = fullAccountBook[accountBookIx];
+      if (accountBookElt.checkCamoPending) {
+        pendingAccountBook.push(accountBookElt);
+      }
+    }
+    for (let accountBookIx = 0; accountBookIx < pendingAccountBook.length; accountBookIx++) {
+      const accountBookElt = pendingAccountBook[accountBookIx];
+      const sendToAccount = accountBookElt.camoAccount;
+      if (sendToAccount) {
+        mainConsole.debug('requestCamoPending sendToAccount', sendToAccount);
+        for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
+          const accountDataElt = accountData[accountDataIx];
 
-        updatePleaseWaitStatus('getting camo pending:' +
+          backgroundUtil.updatePleaseWaitStatus('getting camo pending:' +
         `book account ${accountBookIx+1} of ${pendingAccountBook.length},` +
         `seed account ${accountDataIx+1} of ${accountData.length}.` );
 
-        mainConsole.debug('requestCamoPending request', seed, accountDataElt.seedIx, sendToAccount);
-        let hasMoreHistoryOrPending = true;
-        let sharedSeedIx = 0;
-        while (hasMoreHistoryOrPending) {
-          const camoSharedAccountData = await bananojs.getCamoSharedAccountData(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx);
-          mainConsole.debug('requestCamoPending camoSharedAccountData', camoSharedAccountData);
-          let hasHistory = false;
-          if (camoSharedAccountData) {
-            const accountHistory = await bananojs.getAccountHistory(camoSharedAccountData.sharedAccount, 1);
-            if (accountHistory.history) {
-              hasHistory = true;
+          mainConsole.debug('requestCamoPending request', seed, accountDataElt.seedIx, sendToAccount);
+          let hasMoreHistoryOrPending = true;
+          let sharedSeedIx = 0;
+          while (hasMoreHistoryOrPending) {
+            const camoSharedAccountData = await bananojs.getCamoSharedAccountData(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx);
+            mainConsole.debug('requestCamoPending camoSharedAccountData', camoSharedAccountData);
+            let hasHistory = false;
+            if (camoSharedAccountData) {
+              const accountHistory = await bananojs.getAccountHistory(camoSharedAccountData.sharedAccount, 1);
+              if (accountHistory.history) {
+                hasHistory = true;
+              } else {
+                hasMoreHistoryOrPending = false;
+              }
             } else {
               hasMoreHistoryOrPending = false;
             }
-          } else {
-            hasMoreHistoryOrPending = false;
-          }
-          mainConsole.debug('requestCamoPending hasHistory', hasHistory);
-          const response = await bananojs.camoGetAccountsPending(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx, 10);
-          mainConsole.debug('requestCamoPending response', response);
-          if (response) {
-            if (response.blocks) {
-              const responseAccounts = [...Object.keys(response.blocks)];
-              responseAccounts.forEach((responseAccount) => {
-                const hashMap = response.blocks[responseAccount];
-                mainConsole.debug('requestCamoPending hashMap', hashMap);
-                if (hashMap) {
-                  const hashes = [...Object.keys(hashMap)];
-                  mainConsole.debug('requestCamoPending hashes', hashes);
-                  if (hashes.length > 0) {
-                    hasMoreHistoryOrPending = true;
+            mainConsole.debug('requestCamoPending hasHistory', hasHistory);
+            const response = await bananojs.camoGetAccountsPending(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx, 10);
+            mainConsole.debug('requestCamoPending response', response);
+            if (response) {
+              if (response.blocks) {
+                const responseAccounts = [...Object.keys(response.blocks)];
+                responseAccounts.forEach((responseAccount) => {
+                  const hashMap = response.blocks[responseAccount];
+                  mainConsole.debug('requestCamoPending hashMap', hashMap);
+                  if (hashMap) {
+                    const hashes = [...Object.keys(hashMap)];
+                    mainConsole.debug('requestCamoPending hashes', hashes);
+                    if (hashes.length > 0) {
+                      hasMoreHistoryOrPending = true;
+                    }
+                    hashes.forEach((hash) => {
+                      const raw = hashMap[hash];
+                      const bananoParts = bananojs.getBananoPartsFromRaw(raw);
+                      const camoPendingBlock = {};
+                      camoPendingBlock.n = camoPendingBlocks.length + 1;
+                      camoPendingBlock.hash = hash;
+                      camoPendingBlock.banano = bananoParts.banano;
+                      camoPendingBlock.banoshi = bananoParts.banoshi;
+                      camoPendingBlock.raw = bananoParts.raw;
+                      camoPendingBlock.totalRaw = raw;
+                      camoPendingBlock.detailsUrl = 'https://creeper.banano.cc/explorer/block/' + hash;
+                      camoPendingBlock.seedIx = accountDataElt.seedIx;
+                      camoPendingBlock.sharedSeedIx = sharedSeedIx;
+                      camoPendingBlock.sendToAccount = sendToAccount;
+                      camoPendingBlock.sharedAccount = camoSharedAccountData.sharedAccount;
+                      camoPendingBlocks.push(camoPendingBlock);
+                      mainConsole.debug('camoPendingBlocks camoPendingBlock', camoPendingBlock);
+                    });
                   }
-                  hashes.forEach((hash) => {
-                    const raw = hashMap[hash];
-                    const bananoParts = bananojs.getBananoPartsFromRaw(raw);
-                    const camoPendingBlock = {};
-                    camoPendingBlock.n = camoPendingBlocks.length + 1;
-                    camoPendingBlock.hash = hash;
-                    camoPendingBlock.banano = bananoParts.banano;
-                    camoPendingBlock.banoshi = bananoParts.banoshi;
-                    camoPendingBlock.raw = bananoParts.raw;
-                    camoPendingBlock.totalRaw = raw;
-                    camoPendingBlock.detailsUrl = 'https://creeper.banano.cc/explorer/block/' + hash;
-                    camoPendingBlock.seedIx = accountDataElt.seedIx;
-                    camoPendingBlock.sharedSeedIx = sharedSeedIx;
-                    camoPendingBlock.sendToAccount = sendToAccount;
-                    camoPendingBlock.sharedAccount = camoSharedAccountData.sharedAccount;
-                    camoPendingBlocks.push(camoPendingBlock);
-                    mainConsole.debug('camoPendingBlocks camoPendingBlock', camoPendingBlock);
-                  });
-                }
-              });
+                });
+              }
             }
+            sharedSeedIx++;
+            mainConsole.debug('requestCamoPending hasMoreHistoryOrPending', hasMoreHistoryOrPending);
           }
-          sharedSeedIx++;
-          mainConsole.debug('requestCamoPending hasMoreHistoryOrPending', hasMoreHistoryOrPending);
+          mainConsole.debug('requestCamoPending camoPendingBlocks', camoPendingBlocks);
         }
-        mainConsole.debug('requestCamoPending camoPendingBlocks', camoPendingBlocks);
       }
     }
   }
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   renderApp();
 };
 
@@ -1044,7 +1092,11 @@ const getCamoAccount = () => {
 };
 
 const requestPending = async () => {
-  updatePleaseWaitStatus('getting account pending.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('getting account pending.');
   pendingBlocks.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
@@ -1071,17 +1123,17 @@ const requestPending = async () => {
       }
     }
   }
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   mainConsole.debug('requestPending pendingBlocks', pendingBlocks);
   renderApp();
 };
 
-const getPleaseWaitStatus = () => {
-  return pleaseWaitStatus;
-};
-
 const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
-  updatePleaseWaitStatus('Sending Shared Account Balance To First Account With No Transactions.');
+  if (backgroundUtil.isUpdateInProgress()) {
+    backgroundUtil.showUpdateInProgressAlert();
+    return;
+  }
+  backgroundUtil.updatePleaseWaitStatus('Sending Shared Account Balance To First Account With No Transactions.');
   const sendFromSeed = camoSharedAccountData[ix].seed;
   const sendFromSeedIx = camoSharedAccountData[ix].seedIx;
   const sendToAccount = getAccountNoHistory();
@@ -1096,15 +1148,16 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
   }
 
   mainConsole.debug('sendSharedAccountBalanceToFirstAccountWithNoTransactions', message);
-  updatePleaseWaitStatus('Refreshing Account Data.');
+  backgroundUtil.updatePleaseWaitStatus('Refreshing Account Data.');
   await setAccountDataFromSeed();
   await requestBlockchainDataAndShowHome();
-  updatePleaseWaitStatus();
+  backgroundUtil.updatePleaseWaitStatus();
   alert(message);
   renderApp();
 };
 
-exports.getPleaseWaitStatus = getPleaseWaitStatus;
+exports.isUpdateInProgress = backgroundUtil.isUpdateInProgress;
+exports.getPleaseWaitStatus = backgroundUtil.getPleaseWaitStatus;
 exports.sendAmountToAccount = sendAmountToAccount;
 exports.requestAllBlockchainData = requestAllBlockchainData;
 exports.receivePending = receivePending;

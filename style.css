@@ -154,20 +154,15 @@ p {
   color: #FBDD11;
 }
 
-.yellow_on_black {
-  background-color: black;
+.yellow_on_black:hover {
+  background-color: gray;
   color: #FBDD11;
+  border-color: black;
 }
 
 .black_on_gray {
   background-color: gray;
   color: black;
-}
-
-.yellow_on_black:hover {
-  background-color: gray;
-  color: #FBDD11;
-  border-color: black;
 }
 
 .rounded {
