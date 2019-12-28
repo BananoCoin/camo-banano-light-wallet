@@ -12,10 +12,10 @@ const bananojs = require('@bananocoin/bananojs');
 // functions
 const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
   bananojs.setBananodeApiUrl(rpcUrl);
-  let hasMoreHistory = true;
+  let hasMoreHistoryOrPending = true;
   let seedIx = 0;
   accountData.length = 0;
-  while (hasMoreHistory) {
+  while (hasMoreHistoryOrPending) {
     // console.log('setAccountDataFromSeed', seedIx);
     const accountDataElt = {};
     accountDataElt.seedIx = seedIx;
@@ -24,11 +24,31 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
     accountDataElt.account = bananojs.getAccount(accountDataElt.publicKey);
     accountData.push(accountDataElt);
     const accountHistory = await bananojs.getAccountHistory(accountDataElt.account, 1);
+    const accountPending = await bananojs.getAccountsPending([accountDataElt.account], 1);
+    accountDataElt.hasPending = false;
+    if (accountPending) {
+      if (accountPending.blocks) {
+        const accountsPendingKeys = [...Object.keys(accountPending.blocks)];
+        accountsPendingKeys.forEach((accountsPendingKey) => {
+          const hashMap = accountPending.blocks[accountsPendingKey];
+          if (hashMap) {
+            const hashes = [...Object.keys(hashMap)];
+            if (hashes.length > 0) {
+              accountDataElt.hasPending = true;
+            }
+          }
+        });
+      }
+    }
     if (accountHistory.history) {
       accountDataElt.hasHistory = true;
     } else {
       accountDataElt.hasHistory = false;
-      hasMoreHistory = false;
+    }
+    if (!accountDataElt.hasHistory) {
+      if (!accountDataElt.hasPending) {
+        hasMoreHistoryOrPending = false;
+      }
     }
     seedIx++;
   }

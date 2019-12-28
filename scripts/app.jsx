@@ -155,7 +155,7 @@ const UseCamoButton = () => {
           name="Disable Camo"
           onClick={(e) => app.setUseCamo(false)}/>
         <div className="gray_on_yellow">First Account With No Transactions</div>
-        <p>{app.getAccountNoHistory()}</p>
+        <p>{app.getAccountNoHistoryOrPending()}</p>
         <div className="gray_on_yellow">Shared Account Information {app.getCamoSharedAccountData().length} rows.</div>
         {
           app.getCamoSharedAccountData().map((item, index) => {

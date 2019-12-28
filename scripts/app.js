@@ -829,11 +829,13 @@ const getLedgerMessage = () => {
   return message;
 };
 
-const getAccountNoHistory = () => {
+const getAccountNoHistoryOrPending = () => {
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
     if (!accountDataElt.hasHistory) {
-      return accountDataElt.account;
+      if (!accountDataElt.hasPending) {
+        return accountDataElt.account;
+      }
     }
   }
 };
@@ -1136,7 +1138,7 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
   backgroundUtil.updatePleaseWaitStatus('Sending Shared Account Balance To First Account With No Transactions.');
   const sendFromSeed = camoSharedAccountData[ix].seed;
   const sendFromSeedIx = camoSharedAccountData[ix].seedIx;
-  const sendToAccount = getAccountNoHistory();
+  const sendToAccount = getAccountNoHistoryOrPending();
   const sendAmount = camoSharedAccountData[ix].balance;
   let message = undefined;
   try {
@@ -1173,7 +1175,7 @@ exports.currentNetworkIx = currentNetworkIx;
 exports.NETWORKS = NETWORKS;
 exports.getGeneratedSeedHex = getGeneratedSeedHex;
 exports.getAccountZero = getAccountZero;
-exports.getAccountNoHistory = getAccountNoHistory;
+exports.getAccountNoHistoryOrPending = getAccountNoHistoryOrPending;
 exports.getCamoAccount = getCamoAccount;
 exports.getTransactionHistoryByAccount = getTransactionHistoryByAccount;
 exports.getBlockchainState = getBlockchainState;
