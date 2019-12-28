@@ -38,8 +38,8 @@ const LedgerMessage = () => {
 
 const UseLedgerButton = () => {
   if (
-    app.ledgerDeviceInfo
-    ? app.ledgerDeviceInfo.enabled
+    app.getLedgerDeviceInfo()
+    ? app.getLedgerDeviceInfo().enabled
     : false) {
     return (<div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => getPublicKeyFromLedger()}>Use Ledger</div>);
   } else {
@@ -140,7 +140,8 @@ const DeleteAccountFromBookButton = (props) => {
     return (<div/>);
   } else {
     return (
-      <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.deleteAccountFromBook(item.bookAccountIx)}>X</div>
+      <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
+      onClick={(e) => app.deleteAccountFromBook(item.bookAccountIx)}>X</div>
     );
   }
 }

@@ -141,18 +141,30 @@ const setUseCamo = async (_useCamo) => {
   const store = getCleartextConfig();
   store.set('useCamo', useCamo);
   // alert(`useCamo:${useCamo}`);
+  try {
+    await renderApp();
+    await requestCamoSharedAccount();
+    await requestCamoSharedAccountBalance();
+    await renderApp();
+    await requestCamoPending();
+  } catch (error) {
+    console.trace('setUseCamo', JSON.stringify(error));
+    alert(`error updating use camo flag to '${_useCamo}' ` + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
   await renderApp();
-  await requestCamoSharedAccount();
-  await requestCamoSharedAccountBalance();
-  renderApp();
-  await requestCamoPending();
-  renderApp();
 };
 
 const updateCamoSharedAccount = async () => {
-  await requestCamoSharedAccount();
-  await requestCamoSharedAccountBalance();
-  await requestCamoPending();
+  try {
+    await requestCamoSharedAccount();
+    await requestCamoSharedAccountBalance();
+    await requestCamoPending();
+  } catch (error) {
+    console.trace('updateCamoSharedAccount', JSON.stringify(error));
+    alert('error updating camo shared account. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
   renderApp();
 };
 
@@ -198,13 +210,19 @@ const requestAllBlockchainData = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  await requestTransactionHistory();
-  await requestBalanceAndRepresentative();
-  await requestBlockchainState();
-  await requestPending();
-  await requestCamoSharedAccount();
-  await requestCamoSharedAccountBalance();
-  await requestCamoPending();
+  try {
+    await requestTransactionHistory();
+    await requestBalanceAndRepresentative();
+    await requestBlockchainState();
+    await requestPending();
+    await requestCamoSharedAccount();
+    await requestCamoSharedAccountBalance();
+    await requestCamoPending();
+  } catch (error) {
+    console.trace('requestAllBlockchainData', JSON.stringify(error));
+    alert('error requesting all blockchain data. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
 };
 
 const changeNetwork = async (event) => {
@@ -317,8 +335,14 @@ const getAccountDataFromSeed = async () => {
     store.set('seed', seed);
   }
 
-  await setAccountDataFromSeed();
-  await requestBlockchainDataAndShowHome();
+  try {
+    await setAccountDataFromSeed();
+    await requestBlockchainDataAndShowHome();
+  } catch (error) {
+    console.trace('getAccountDataFromSeed', JSON.stringify(error));
+    alert('error getting account data from seed. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
 };
 
 const reuseSeed = async () => {
@@ -340,8 +364,8 @@ const reuseSeed = async () => {
     isLoggedIn = true;
     show('seed');
   } catch (error) {
-    console.trace(error);
-    alert('cannot open seed storage, check that password is correct.');
+    console.trace('reuseSeed', JSON.stringify(error));
+    alert('cannot open seed storage, check that password is correct. ' + JSON.stringify(error));
   }
   backgroundUtil.updatePleaseWaitStatus();
   await setAccountDataFromSeed();
@@ -375,18 +399,24 @@ const clearSendData = () => {
 };
 
 const updateRepresentative = async () => {
-  mainConsole.debug('STARTED updateRepresentative');
-  const newRepresentativeElt = appDocument.getElementById('newRepresentative');
-  const newRepresentative = newRepresentativeElt.value;
-  mainConsole.debug('STARTED updateRepresentative newRepresentative',
-      newRepresentative);
-  const newRepPublicKey = bananojs.getAccountPublicKey(newRepresentative);
-  mainConsole.debug('STARTED updateRepresentative newRepPublicKey',
-      newRepPublicKey);
-  const newBanRepresentative = bananojs.getAccount(newRepPublicKey);
-  mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
-      newBanRepresentative);
-  await bananojs.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
+  try {
+    mainConsole.debug('STARTED updateRepresentative');
+    const newRepresentativeElt = appDocument.getElementById('newRepresentative');
+    const newRepresentative = newRepresentativeElt.value;
+    mainConsole.debug('STARTED updateRepresentative newRepresentative',
+        newRepresentative);
+    const newRepPublicKey = bananojs.getAccountPublicKey(newRepresentative);
+    mainConsole.debug('STARTED updateRepresentative newRepPublicKey',
+        newRepPublicKey);
+    const newBanRepresentative = bananojs.getAccount(newRepPublicKey);
+    mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
+        newBanRepresentative);
+    await bananojs.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
+  } catch (error) {
+    console.trace('updateRepresentative', JSON.stringify(error));
+    alert('error updating representative. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
 };
 
 const updateAmount = () => {
@@ -408,40 +438,46 @@ const sendAmountToAccount = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('sending amount to account.');
-  updateAmount();
-
-  const sendToAccountElt = appDocument.getElementById('sendToAccount');
-
-  const sendToAccount = sendToAccountElt.value;
-
-  const sendFromSeedIxElt = appDocument.getElementById('sendFromSeedIx');
-  const sendFromSeedIx = parseInt(sendFromSeedIxElt.value);
-  if (Number.isNaN(sendFromSeedIx)) {
-    throw new Error(`sendFromSeedIx ${sendFromSeedIx} is not a number`);
-  }
-
-  if (Number.isNaN(sendAmount)) {
-    throw new Error(`sendAmount ${sendAmount} is not a number`);
-  }
-
-  let message = undefined;
   try {
-    if (useCamo) {
-      const messageSuffix = await bananojs.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
-      message = `Camo Tx Hash ${messageSuffix}`;
-    } else {
-      const messageSuffix = await bananojs.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
-      message = `Banano Tx Hash ${messageSuffix}`;
-    }
-  } catch (error) {
-    message = 'error:' + JSON.stringify(error);
-  }
+    backgroundUtil.updatePleaseWaitStatus('sending amount to account.');
+    updateAmount();
 
-  mainConsole.debug('sendAmountToAccount', message);
-  sendToAccountStatuses.push(message);
-  backgroundUtil.updatePleaseWaitStatus();
-  alert(message);
+    const sendToAccountElt = appDocument.getElementById('sendToAccount');
+
+    const sendToAccount = sendToAccountElt.value;
+
+    const sendFromSeedIxElt = appDocument.getElementById('sendFromSeedIx');
+    const sendFromSeedIx = parseInt(sendFromSeedIxElt.value);
+    if (Number.isNaN(sendFromSeedIx)) {
+      throw new Error(`sendFromSeedIx ${sendFromSeedIx} is not a number`);
+    }
+
+    if (Number.isNaN(sendAmount)) {
+      throw new Error(`sendAmount ${sendAmount} is not a number`);
+    }
+
+    let message = undefined;
+    try {
+      if (useCamo) {
+        const messageSuffix = await bananojs.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+        message = `Camo Tx Hash ${messageSuffix}`;
+      } else {
+        const messageSuffix = await bananojs.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+        message = `Banano Tx Hash ${messageSuffix}`;
+      }
+    } catch (error) {
+      message = 'error:' + JSON.stringify(error);
+    }
+
+    mainConsole.debug('sendAmountToAccount', message);
+    sendToAccountStatuses.push(message);
+    backgroundUtil.updatePleaseWaitStatus();
+    alert(message);
+  } catch (error) {
+    console.trace('sendAmountToAccount', JSON.stringify(error));
+    alert('error sending amount to account. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
   renderApp();
 };
 
@@ -727,7 +763,7 @@ const getAccountBook = () => {
       });
     });
   } catch (error) {
-    alert(JSON.stringify(error.message));
+    alert('error getting account book ' + JSON.stringify(error.message));
     mainConsole.log('getAccountBook error', error);
   }
   return book;
@@ -1067,13 +1103,19 @@ const getCamoPending = () => {
 };
 
 const receivePending = async (hash, seedIx) => {
-  const representative = getAccountRepresentative();
-  if (representative) {
-    const response = await bananojs.receiveDepositsForSeed(seed, seedIx, representative, hash);
-    mainConsole.debug('receivePending receiveDepositsForSeed', response);
-    alert(JSON.stringify(response));
-  } else {
-    alert('no representative, cannot receive pending.');
+  try {
+    const representative = getAccountRepresentative();
+    if (representative) {
+      const response = await bananojs.receiveDepositsForSeed(seed, seedIx, representative, hash);
+      mainConsole.debug('receivePending receiveDepositsForSeed', response);
+      alert(JSON.stringify(response));
+    } else {
+      alert('no representative, cannot receive pending.');
+    }
+  } catch (error) {
+    console.trace('receivePending', JSON.stringify(error));
+    alert('error trying to receive pending. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
   }
 };
 
@@ -1150,14 +1192,25 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
   }
 
   mainConsole.debug('sendSharedAccountBalanceToFirstAccountWithNoTransactions', message);
-  backgroundUtil.updatePleaseWaitStatus('Refreshing Account Data.');
-  await setAccountDataFromSeed();
-  await requestBlockchainDataAndShowHome();
-  backgroundUtil.updatePleaseWaitStatus();
-  alert(message);
+  try {
+    backgroundUtil.updatePleaseWaitStatus('Refreshing Account Data.');
+    await setAccountDataFromSeed();
+    await requestBlockchainDataAndShowHome();
+    backgroundUtil.updatePleaseWaitStatus();
+    alert(message);
+  } catch (error) {
+    console.trace('sendSharedAccountBalanceToFirstAccountWithNoTransactions', JSON.stringify(error));
+    alert('error refreshing account data. ' + JSON.stringify(error));
+    backgroundUtil.updatePleaseWaitStatus();
+  }
   renderApp();
 };
 
+const getLedgerDeviceInfo = () => {
+  return ledgerDeviceInfo;
+};
+
+exports.getLedgerDeviceInfo = getLedgerDeviceInfo;
 exports.isUpdateInProgress = backgroundUtil.isUpdateInProgress;
 exports.getPleaseWaitStatus = backgroundUtil.getPleaseWaitStatus;
 exports.sendAmountToAccount = sendAmountToAccount;
