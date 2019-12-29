@@ -1195,11 +1195,12 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
   try {
     backgroundUtil.updatePleaseWaitStatus('Refreshing Account Data.');
     await setAccountDataFromSeed();
-    await requestBlockchainDataAndShowHome();
+    await requestAllBlockchainData();
     backgroundUtil.updatePleaseWaitStatus();
     alert(message);
   } catch (error) {
     console.trace('sendSharedAccountBalanceToFirstAccountWithNoTransactions', JSON.stringify(error));
+    console.trace(error);
     alert('error refreshing account data. ' + JSON.stringify(error));
     backgroundUtil.updatePleaseWaitStatus();
   }
