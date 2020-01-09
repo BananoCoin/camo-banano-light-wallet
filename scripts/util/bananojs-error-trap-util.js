@@ -13,6 +13,11 @@ const isErrorUrl = () => {
   return url == ERROR_URL;
 };
 
+const setBananodeApiUrl = (rpcUrl) => {
+  url = rpcUrl;
+  return bananojs.setBananodeApiUrl(rpcUrl);
+};
+
 const getAccountHistory = async (account, count, head, raw) => {
   try {
     if (isErrorUrl()) {
@@ -25,45 +30,16 @@ const getAccountHistory = async (account, count, head, raw) => {
   }
 };
 
-const setBananodeApiUrl = (rpcUrl) => {
-  url = rpcUrl;
-  return bananojs.setBananodeApiUrl(rpcUrl);
-};
-
 const getPrivateKey = (seed, seedIx) => {
-  try {
-    if (isErrorUrl()) {
-      throw Error('getPrivateKey');
-    }
-    return bananojs.getPrivateKey(seed, seedIx);
-  } catch (error) {
-    alert('error getting private key from seed:' + error.message);
-    return;
-  }
+  return bananojs.getPrivateKey(seed, seedIx);
 };
 
 const getPublicKey = (privateKey) => {
-  try {
-    if (isErrorUrl()) {
-      throw Error('getPublicKey');
-    }
-    return bananojs.getPublicKey(privateKey);
-  } catch (error) {
-    alert('error getting public key from private key:' + error.message);
-    return;
-  }
+  return bananojs.getPublicKey(privateKey);
 };
 
 const getAccount = (publicKey) => {
-  try {
-    if (isErrorUrl()) {
-      throw Error('getAccount');
-    }
-    return bananojs.getAccount(publicKey);
-  } catch (error) {
-    alert('error getting account from public key:' + error.message);
-    return;
-  }
+  return bananojs.getAccount(publicKey);
 };
 
 const getAccountsPending = async (account, count) => {
@@ -131,15 +107,7 @@ const sendWithdrawalFromSeed = async (seed, sendFromSeedIx, sendToAccount, sendA
 };
 
 const getBananoPartsFromRaw = (amount) => {
-  try {
-    if (isErrorUrl()) {
-      throw Error('getBananoPartsFromRaw');
-    }
-    return bananojs.getBananoPartsFromRaw(amount);
-  } catch (error) {
-    alert('error:' + error.message);
-    return;
-  }
+  return bananojs.getBananoPartsFromRaw(amount);
 };
 
 const getAccountInfo = async (account, representativeFlag) => {
@@ -236,3 +204,11 @@ exports.getCamoAccount = getCamoAccount;
 exports.getCamoPublicKey = getCamoPublicKey;
 exports.getAccountInfo = getAccountInfo;
 exports.getBlockCount = getBlockCount;
+exports.getBananoPartsFromRaw = getBananoPartsFromRaw;
+exports.changeRepresentativeForSeed = changeRepresentativeForSeed;
+exports.camoSendWithdrawalFromSeed = camoSendWithdrawalFromSeed;
+exports.sendWithdrawalFromSeed = sendWithdrawalFromSeed;
+exports.getCamoSharedAccountData = getCamoSharedAccountData;
+exports.camoGetAccountsPending = camoGetAccountsPending;
+exports.receiveCamoDepositsForSeed = receiveCamoDepositsForSeed;
+exports.receiveDepositsForSeed = receiveDepositsForSeed;
