@@ -353,6 +353,7 @@ const reuseSeed = async () => {
   backgroundUtil.updatePleaseWaitStatus('opening secure storage.');
   const reuseSeedPasswordElt = appDocument.getElementById('reuseSeedPassword');
   const reuseSeedPassword = reuseSeedPasswordElt.value;
+  let success;
   try {
     const store = new Store({
       encryptionKey: `${storeEncryptionKeyPrefix}${reuseSeedPassword}`,
@@ -363,13 +364,17 @@ const reuseSeed = async () => {
     useLedgerFlag = false;
     isLoggedIn = true;
     show('seed');
+    success = true;
   } catch (error) {
+    success = false;
     console.trace('reuseSeed', JSON.stringify(error));
     alert('cannot open seed storage, check that password is correct. ' + JSON.stringify(error));
   }
   backgroundUtil.updatePleaseWaitStatus();
-  await setAccountDataFromSeed();
-  await requestBlockchainDataAndShowHome();
+  if (success) {
+    await setAccountDataFromSeed();
+    await requestBlockchainDataAndShowHome();
+  }
 };
 
 const clearSendData = () => {
