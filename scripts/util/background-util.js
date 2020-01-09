@@ -1,7 +1,6 @@
 'use strict';
 
 // libraries
-const bananojs = require('@bananocoin/bananojs');
 
 // modules
 

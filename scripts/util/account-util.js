@@ -1,9 +1,7 @@
 'use strict';
 
-// libraries
-const bananojs = require('@bananocoin/bananojs');
-
 // modules
+const bananojsErrorTrap = require('./bananojs-error-trap-util.js');
 
 // constants
 
@@ -11,7 +9,7 @@ const bananojs = require('@bananocoin/bananojs');
 
 // functions
 const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
-  bananojs.setBananodeApiUrl(rpcUrl);
+  bananojsErrorTrap.setBananodeApiUrl(rpcUrl);
   let hasMoreHistoryOrPending = true;
   let seedIx = 0;
   accountData.length = 0;
@@ -19,12 +17,12 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
     // console.log('setAccountDataFromSeed', seedIx);
     const accountDataElt = {};
     accountDataElt.seedIx = seedIx;
-    accountDataElt.privateKey = bananojs.getPrivateKey(seed, accountDataElt.seedIx);
-    accountDataElt.publicKey = bananojs.getPublicKey(accountDataElt.privateKey);
-    accountDataElt.account = bananojs.getAccount(accountDataElt.publicKey);
+    accountDataElt.privateKey = bananojsErrorTrap.getPrivateKey(seed, accountDataElt.seedIx);
+    accountDataElt.publicKey = bananojsErrorTrap.getPublicKey(accountDataElt.privateKey);
+    accountDataElt.account = bananojsErrorTrap.getAccount(accountDataElt.publicKey);
     accountData.push(accountDataElt);
-    const accountHistory = await bananojs.getAccountHistory(accountDataElt.account, 1);
-    const accountPending = await bananojs.getAccountsPending([accountDataElt.account], 1);
+    const accountHistory = await bananojsErrorTrap.getAccountHistory(accountDataElt.account, 1);
+    const accountPending = await bananojsErrorTrap.getAccountsPending([accountDataElt.account], 1);
     accountDataElt.hasPending = false;
     if (accountPending) {
       if (accountPending.blocks) {

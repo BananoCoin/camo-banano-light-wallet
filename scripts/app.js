@@ -5,12 +5,11 @@ const crypto = require('crypto');
 
 const mainConsoleLib = require('console');
 
-const bananojs = require('@bananocoin/bananojs');
-
 /** https://github.com/sindresorhus/electron-store */
 const Store = require('electron-store');
 const Conf = require('conf');
 
+const bananojsErrorTrap = require('./util/bananojs-error-trap-util.js');
 const accountUtil = require('./util/account-util.js');
 const backgroundUtil = require('./util/background-util.js');
 
@@ -33,6 +32,10 @@ const NETWORKS = [{
   NAME: 'Kalium Mainnet',
   EXPLORER: 'https://creeper.banano.cc/',
   RPC_URL: 'https://kaliumapi.appditto.com/api',
+}, {
+  NAME: 'Error Testnet',
+  EXPLORER: 'https://creeper.banano.cc/',
+  RPC_URL: bananojsErrorTrap.getUrl(),
 }];
 
 const sendToAccountStatuses = ['No Send-To Account Requested Yet'];
@@ -131,9 +134,9 @@ const getCamoRepresentative = () => {
   if (seed == undefined) {
     return undefined;
   }
-  const privateKey = bananojs.getPrivateKey(seed, 0);
-  const camoPublicKey = bananojs.getCamoPublicKey(privateKey);
-  return bananojs.getCamoAccount(camoPublicKey);
+  const privateKey = bananojsErrorTrap.getPrivateKey(seed, 0);
+  const camoPublicKey = bananojsErrorTrap.getCamoPublicKey(privateKey);
+  return bananojsErrorTrap.getCamoAccount(camoPublicKey);
 };
 
 const setUseCamo = async (_useCamo) => {
@@ -219,8 +222,8 @@ const requestAllBlockchainData = async () => {
     await requestCamoSharedAccountBalance();
     await requestCamoPending();
   } catch (error) {
-    console.trace('requestAllBlockchainData', JSON.stringify(error));
-    alert('error requesting all blockchain data. ' + JSON.stringify(error));
+    console.trace('requestAllBlockchainData', error.message);
+    alert('error requesting all blockchain data:' + error.message);
     backgroundUtil.updatePleaseWaitStatus();
   }
 };
@@ -300,7 +303,7 @@ const requestBlockchainDataAndShowHome = async () => {
   if (accountData.length == 0) {
     return;
   }
-  bananojs.setBananodeApiUrl(getRpcUrl());
+  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   await requestAllBlockchainData();
   showHome();
 };
@@ -410,13 +413,13 @@ const updateRepresentative = async () => {
     const newRepresentative = newRepresentativeElt.value;
     mainConsole.debug('STARTED updateRepresentative newRepresentative',
         newRepresentative);
-    const newRepPublicKey = bananojs.getAccountPublicKey(newRepresentative);
+    const newRepPublicKey = bananojsErrorTrap.getAccountPublicKey(newRepresentative);
     mainConsole.debug('STARTED updateRepresentative newRepPublicKey',
         newRepPublicKey);
-    const newBanRepresentative = bananojs.getAccount(newRepPublicKey);
+    const newBanRepresentative = bananojsErrorTrap.getAccount(newRepPublicKey);
     mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
         newBanRepresentative);
-    await bananojs.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
+    await bananojsErrorTrap.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
   } catch (error) {
     console.trace('updateRepresentative', JSON.stringify(error));
     alert('error updating representative. ' + JSON.stringify(error));
@@ -464,10 +467,10 @@ const sendAmountToAccount = async () => {
     let message = undefined;
     try {
       if (useCamo) {
-        const messageSuffix = await bananojs.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+        const messageSuffix = await bananojsErrorTrap.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
         message = `Camo Tx Hash ${messageSuffix}`;
       } else {
-        const messageSuffix = await bananojs.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+        const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
         message = `Banano Tx Hash ${messageSuffix}`;
       }
     } catch (error) {
@@ -496,12 +499,12 @@ const requestTransactionHistory = async () => {
     return;
   }
   backgroundUtil.updatePleaseWaitStatus('getting transaction history.');
-  bananojs.setBananodeApiUrl(getRpcUrl());
+  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   parsedTransactionHistoryByAccount.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
-    const accountHistory = await bananojs.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
+    const accountHistory = await bananojsErrorTrap.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
     // mainConsole.log('requestTransactionHistory', account, accountHistory);
     // transactionHistoryStatus = accountHistory;
     // mainConsole.log(transactionHistoryStatus);
@@ -514,7 +517,7 @@ const requestTransactionHistory = async () => {
         const parsedTransactionHistoryElt = {};
         parsedTransactionHistoryElt.type = historyElt.type;
         parsedTransactionHistoryElt.n = ix + 1;
-        parsedTransactionHistoryElt.value = bananojs.getBananoPartsFromRaw(historyElt.amount).banano;
+        parsedTransactionHistoryElt.value = bananojsErrorTrap.getBananoPartsFromRaw(historyElt.amount).banano;
         parsedTransactionHistoryElt.txHash = historyElt.hash;
         parsedTransactionHistoryElt.txDetailsUrl = 'https://creeper.banano.cc/explorer/block/' + historyElt.hash;
         parsedTransactionHistoryByAccount.push(parsedTransactionHistoryElt);
@@ -532,11 +535,11 @@ const requestBalanceAndRepresentative = async () => {
     return;
   }
   backgroundUtil.updatePleaseWaitStatus('getting account info.');
-  bananojs.setBananodeApiUrl(getRpcUrl());
+  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
-    const accountInfo = await bananojs.getAccountInfo(account, true);
+    const accountInfo = await bananojsErrorTrap.getAccountInfo(account, true);
     balanceStatus = JSON.stringify(accountInfo);
     mainConsole.debug('requestBalanceAndRepresentative', accountInfo);
     if (accountInfo.error) {
@@ -545,7 +548,7 @@ const requestBalanceAndRepresentative = async () => {
       accountDataElt.balance = undefined;
     } else {
       balanceStatus = 'Success';
-      accountDataElt.balance = bananojs.getBananoPartsFromRaw(accountInfo.balance).banano;
+      accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
       accountDataElt.representative = accountInfo.representative;
     }
   }
@@ -559,7 +562,7 @@ const requestBlockchainState = async () => {
     return;
   }
   backgroundUtil.updatePleaseWaitStatus('getting blockchain state.');
-  const blockCount = await bananojs.getBlockCount();
+  const blockCount = await bananojsErrorTrap.getBlockCount();
   blockchainState.count = blockCount.count;
   blockchainStatus = 'Success';
   mainConsole.debug('blockchainState', blockchainState);
@@ -717,17 +720,17 @@ const showAccountBook = () => {
 const getAccountAsCamoAccount = (banAccount) => {
   if (banAccount) {
     mainConsole.debug('getAccountAsCamoAccount banAccount', banAccount);
-    const camoAccountValid = bananojs.getCamoAccountValidationInfo(banAccount);
+    const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(banAccount);
     mainConsole.debug('getAccountAsCamoAccount camoAccountValid', camoAccountValid);
     if (camoAccountValid.valid) {
       mainConsole.debug('getAccountAsCamoAccount retval[1]', banAccount);
       return banAccount;
     }
-    const accountValid = bananojs.getAccountValidationInfo(banAccount);
+    const accountValid = bananojsErrorTrap.getAccountValidationInfo(banAccount);
     mainConsole.debug('getAccountAsCamoAccount accountValid', accountValid);
     if (accountValid.valid) {
-      const publicKey = bananojs.getAccountPublicKey(banAccount);
-      const camoAccount = bananojs.getCamoAccount(publicKey);
+      const publicKey = bananojsErrorTrap.getAccountPublicKey(banAccount);
+      const camoAccount = bananojsErrorTrap.getCamoAccount(publicKey);
       mainConsole.debug('getAccountAsCamoAccount retval[2]', camoAccount);
       return camoAccount;
     }
@@ -788,7 +791,7 @@ const deleteAccountFromBook = (ix) => {
 const addAccountToBook = () => {
   const newBookAccountElt = get('newBookAccount');
   const newBookAccount = newBookAccountElt.value;
-  const accountValid = bananojs.getAccountValidationInfo(newBookAccount);
+  const accountValid = bananojsErrorTrap.getAccountValidationInfo(newBookAccount);
   if (!accountValid.valid) {
     alert(accountValid.message);
   } else {
@@ -934,7 +937,7 @@ const requestCamoSharedAccount = async () => {
         const seedIx = 0;
         let sharedSeedIx = 0;
         while (hasMoreHistory) {
-          const newCamoSharedAccountData = await bananojs.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
+          const newCamoSharedAccountData = await bananojsErrorTrap.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
           mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountData);
           if (newCamoSharedAccountData) {
             const camoSharedAccountDataElt = {};
@@ -945,7 +948,7 @@ const requestCamoSharedAccount = async () => {
             camoSharedAccountDataElt.publicKey = newCamoSharedAccountData.sharedPublicKey;
             camoSharedAccountData.push(camoSharedAccountDataElt);
             mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountDataElt);
-            const accountHistory = await bananojs.getAccountHistory(newCamoSharedAccountData.sharedAccount, 1);
+            const accountHistory = await bananojsErrorTrap.getAccountHistory(newCamoSharedAccountData.sharedAccount, 1);
             if (!(accountHistory.history)) {
               hasMoreHistory = false;
             }
@@ -973,7 +976,7 @@ const requestCamoSharedAccountBalance = async () => {
 
     if (camoSharedAccountDataElt.account) {
       if (camoSharedAccountDataElt.account.length > 0) {
-        const accountInfo = await bananojs.getAccountInfo(camoSharedAccountDataElt.account, true);
+        const accountInfo = await bananojsErrorTrap.getAccountInfo(camoSharedAccountDataElt.account, true);
         balanceStatus = JSON.stringify(accountInfo);
         mainConsole.debug('requestCamoSharedAccountBalance accountInfo', accountInfo);
         if (accountInfo.error) {
@@ -982,7 +985,7 @@ const requestCamoSharedAccountBalance = async () => {
           camoSharedAccountDataElt.balance = undefined;
         } else {
           balanceStatus = 'Success';
-          camoSharedAccountDataElt.balance = bananojs.getBananoPartsFromRaw(accountInfo.balance).banano;
+          camoSharedAccountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
           camoSharedAccountDataElt.representative = accountInfo.representative;
         }
       }
@@ -994,10 +997,10 @@ const requestCamoSharedAccountBalance = async () => {
 const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => {
   mainConsole.debug('receiveCamoPending seedIx', seedIx, sendToAccount, sharedSeedIx, hash);
   try {
-    const pendingResponse = await bananojs.camoGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, 10);
+    const pendingResponse = await bananojsErrorTrap.camoGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, 10);
     mainConsole.debug('receiveCamoPending pendingResponse', pendingResponse);
 
-    const response = await bananojs.receiveCamoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
+    const response = await bananojsErrorTrap.receiveCamoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
     alert(JSON.stringify(response));
   } catch (error) {
     alert(JSON.stringify(error));
@@ -1037,11 +1040,11 @@ const requestCamoPending = async () => {
           let hasMoreHistoryOrPending = true;
           let sharedSeedIx = 0;
           while (hasMoreHistoryOrPending) {
-            const camoSharedAccountData = await bananojs.getCamoSharedAccountData(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx);
+            const camoSharedAccountData = await bananojsErrorTrap.getCamoSharedAccountData(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx);
             mainConsole.debug('requestCamoPending camoSharedAccountData', camoSharedAccountData);
             let hasHistory = false;
             if (camoSharedAccountData) {
-              const accountHistory = await bananojs.getAccountHistory(camoSharedAccountData.sharedAccount, 1);
+              const accountHistory = await bananojsErrorTrap.getAccountHistory(camoSharedAccountData.sharedAccount, 1);
               if (accountHistory.history) {
                 hasHistory = true;
               } else {
@@ -1051,7 +1054,7 @@ const requestCamoPending = async () => {
               hasMoreHistoryOrPending = false;
             }
             mainConsole.debug('requestCamoPending hasHistory', hasHistory);
-            const response = await bananojs.camoGetAccountsPending(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx, 10);
+            const response = await bananojsErrorTrap.camoGetAccountsPending(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx, 10);
             mainConsole.debug('requestCamoPending response', response);
             if (response) {
               if (response.blocks) {
@@ -1067,7 +1070,7 @@ const requestCamoPending = async () => {
                     }
                     hashes.forEach((hash) => {
                       const raw = hashMap[hash];
-                      const bananoParts = bananojs.getBananoPartsFromRaw(raw);
+                      const bananoParts = bananojsErrorTrap.getBananoPartsFromRaw(raw);
                       const camoPendingBlock = {};
                       camoPendingBlock.n = camoPendingBlocks.length + 1;
                       camoPendingBlock.hash = hash;
@@ -1111,9 +1114,9 @@ const receivePending = async (hash, seedIx) => {
   try {
     const representative = getAccountRepresentative();
     if (representative) {
-      const response = await bananojs.receiveDepositsForSeed(seed, seedIx, representative, hash);
+      const response = await bananojsErrorTrap.receiveDepositsForSeed(seed, seedIx, representative, hash);
       mainConsole.debug('receivePending receiveDepositsForSeed', response);
-      alert(JSON.stringify(response));
+      alert(JSON.stringify(response) + ' ' + response.message);
     } else {
       alert('no representative, cannot receive pending.');
     }
@@ -1136,7 +1139,7 @@ const getCamoAccount = () => {
     return undefined;
   }
   if (accountData.length > 0) {
-    return bananojs.getCamoAccount(accountData[0].publicKey);
+    return bananojsErrorTrap.getCamoAccount(accountData[0].publicKey);
   }
 };
 
@@ -1150,7 +1153,7 @@ const requestPending = async () => {
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
-    const response = await bananojs.getAccountsPending([account], 10);
+    const response = await bananojsErrorTrap.getAccountsPending([account], 10);
     mainConsole.debug('requestPending response', response);
     if (response.blocks) {
       const hashMap = response.blocks[account];
@@ -1158,7 +1161,7 @@ const requestPending = async () => {
         const hashes = [...Object.keys(hashMap)];
         hashes.forEach((hash) => {
           const raw = hashMap[hash];
-          const bananoParts = bananojs.getBananoPartsFromRaw(raw);
+          const bananoParts = bananojsErrorTrap.getBananoPartsFromRaw(raw);
           const pendingBlock = {};
           pendingBlock.n = pendingBlocks.length + 1;
           pendingBlock.hash = hash;
@@ -1190,7 +1193,7 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
   let message = undefined;
   try {
     mainConsole.debug('sendSharedAccountBalanceToFirstAccountWithNoTransactions', sendFromSeed, sendFromSeedIx, sendToAccount, sendAmount);
-    const messageSuffix = await bananojs.sendWithdrawalFromSeed(sendFromSeed, sendFromSeedIx, sendToAccount, sendAmount);
+    const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(sendFromSeed, sendFromSeedIx, sendToAccount, sendAmount);
     message = `Banano Tx Hash ${messageSuffix}`;
   } catch (error) {
     message = 'error:' + JSON.stringify(error);
