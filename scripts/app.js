@@ -35,7 +35,7 @@ const NETWORKS = [{
 }, {
   NAME: 'Error Testnet',
   EXPLORER: 'https://creeper.banano.cc/',
-  RPC_URL: bananojsErrorTrap.getUrl(),
+  RPC_URL: bananojsErrorTrap.getErrorUrl(),
 }];
 
 const sendToAccountStatuses = ['No Send-To Account Requested Yet'];
@@ -562,6 +562,7 @@ const requestBlockchainState = async () => {
     return;
   }
   backgroundUtil.updatePleaseWaitStatus('getting blockchain state.');
+  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   const blockCount = await bananojsErrorTrap.getBlockCount();
   blockchainState.count = blockCount.count;
   blockchainStatus = 'Success';
@@ -1219,6 +1220,10 @@ const getLedgerDeviceInfo = () => {
   return ledgerDeviceInfo;
 };
 
+const getCurrentNetworkIx = () => {
+  return currentNetworkIx;
+};
+
 exports.getLedgerDeviceInfo = getLedgerDeviceInfo;
 exports.isUpdateInProgress = backgroundUtil.isUpdateInProgress;
 exports.getPleaseWaitStatus = backgroundUtil.getPleaseWaitStatus;
@@ -1233,7 +1238,7 @@ exports.copyToClipboard = copyToClipboard;
 exports.setAppDocument = setAppDocument;
 exports.setRenderApp = setRenderApp;
 exports.showLogin = showLogin;
-exports.currentNetworkIx = currentNetworkIx;
+exports.getCurrentNetworkIx = getCurrentNetworkIx;
 exports.NETWORKS = NETWORKS;
 exports.getGeneratedSeedHex = getGeneratedSeedHex;
 exports.getAccountZero = getAccountZero;
@@ -1269,4 +1274,5 @@ exports.showAccountBook = showAccountBook;
 exports.addAccountToBook = addAccountToBook;
 exports.deleteAccountFromBook = deleteAccountFromBook;
 exports.sendSharedAccountBalanceToFirstAccountWithNoTransactions = sendSharedAccountBalanceToFirstAccountWithNoTransactions;
+exports.changeNetwork = changeNetwork;
 exports.init = init;

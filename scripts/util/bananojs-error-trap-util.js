@@ -9,13 +9,21 @@ const ERROR_URL = 'https://bananojs.coranos.cc/api';
 let url = ERROR_URL;
 
 // functions
+const getErrorUrl = () => {
+  return ERROR_URL;
+};
+
 const isErrorUrl = () => {
   return url == ERROR_URL;
 };
 
 const setBananodeApiUrl = (rpcUrl) => {
-  url = rpcUrl;
-  return bananojs.setBananodeApiUrl(rpcUrl);
+  if (rpcUrl) {
+    url = rpcUrl;
+    return bananojs.setBananodeApiUrl(rpcUrl);
+  } else {
+    throw Error('rpcUrl is undefined or null.');
+  }
 };
 
 const getAccountHistory = async (account, count, head, raw) => {
@@ -26,7 +34,7 @@ const getAccountHistory = async (account, count, head, raw) => {
     return await bananojs.getAccountHistory(account, count, head, raw);
   } catch (error) {
     alert('error getting account history:' + error.message);
-    return;
+    return [];
   }
 };
 
@@ -50,12 +58,8 @@ const getAccountsPending = async (account, count) => {
     return await bananojs.getAccountsPending(account, count);
   } catch (error) {
     alert('error getting account pending:' + error.message);
-    return;
+    return [];
   }
-};
-
-const getUrl = () => {
-  return;
 };
 
 const getAccountPublicKey = (account) => {
@@ -118,7 +122,9 @@ const getAccountInfo = async (account, representativeFlag) => {
     return await bananojs.getAccountInfo(account, representativeFlag);
   } catch (error) {
     alert('error:' + error.message);
-    return;
+    const retval = {};
+    retval.error = 'Error Testnet Selected';
+    return retval;
   };
 };
 
@@ -130,7 +136,9 @@ const getBlockCount = async () => {
     return await bananojs.getBlockCount();
   } catch (error) {
     alert('error:' + error.message);
-    return;
+    const retval = {};
+    retval.count = -1;
+    return retval;
   }
 };
 
@@ -196,7 +204,7 @@ exports.getAccountsPending = getAccountsPending;
 exports.getPrivateKey = getPrivateKey;
 exports.getPublicKey = getPublicKey;
 exports.getAccount = getAccount;
-exports.getUrl = getUrl;
+exports.getErrorUrl = getErrorUrl;
 exports.getCamoAccountValidationInfo = getCamoAccountValidationInfo;
 exports.getAccountValidationInfo = getAccountValidationInfo;
 exports.getAccountPublicKey = getAccountPublicKey;

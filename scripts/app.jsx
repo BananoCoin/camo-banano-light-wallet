@@ -281,10 +281,16 @@ class App extends React.Component {
                   <tr>
                     <td>
                       Network
-                      <select value={app.currentNetworkIx} name="network"
-                        onChange={(e) => changeNetwork(e)}
+                      <select value={app.getCurrentNetworkIx()} name="network"
+                        onChange={(e) => app.changeNetwork(e)}
                         disabled={app.isUpdateInProgress()}>
-                        <option value="0">{app.NETWORKS[0].NAME}</option>
+                        {
+                          app.NETWORKS.map((item, index) => {
+                            return (
+                              <option key={index} value={index}>{item.NAME}</option>
+                            )
+                          })
+                        }
                       </select>
                     </td>
                   </tr>
