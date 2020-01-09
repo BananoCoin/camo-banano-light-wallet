@@ -51,21 +51,31 @@ const UseLedgerButton = () => {
 const SendFromSeedIxField = () => {
   const accountBook = app.getAccountBook();
   if(accountBook[0]) {
+    const validAccountBook = [];
+    for(let accountBookIx = 0; accountBookIx < accountBook.length; accountBookIx++) {
+      const accountBookElt = accountBook[accountBookIx];
+      if(accountBookElt.seedIx !== undefined) {
+        if(accountBookElt.balance !== undefined) {
+          validAccountBook.push(accountBookElt);
+        }
+      }
+    }
+    if(validAccountBook.length == 0) {
+      const item = accountBook[0];
+      item.balance = 0;
+      validAccountBook.push(item);
+    }
     return (
       <select id="sendFromSeedIx"
         onChange={(e) => app.updateCamoSharedAccount()}
         disabled={app.isUpdateInProgress()}>
         {
-          accountBook.map((item, index) => {
-            if(item.seedIx !== undefined) {
-              if(item.balance !== undefined) {
-                if (app.getUseCamo()) {
-                  return (<option key={index}
-                     value={item.seedIx}>[{item.seedIx}]{item.camoAccount} ({item.balance} BAN)</option>)
-                } else {
-                  return (<option key={index}  value={item.seedIx}>[{item.seedIx}]{item.account} ({item.balance} BAN)</option>)
-                }
-              }
+          validAccountBook.map((item, index) => {
+            if (app.getUseCamo()) {
+              return (<option key={index}
+                 value={item.seedIx}>[{item.seedIx}]{item.camoAccount} ({item.balance} BAN)</option>)
+            } else {
+              return (<option key={index}  value={item.seedIx}>[{item.seedIx}]{item.account} ({item.balance} BAN)</option>)
             }
           })
         }
