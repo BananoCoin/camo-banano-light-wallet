@@ -580,13 +580,13 @@ const addClass = (id, cl) => {
 };
 
 const selectButton = (id) => {
-  addClass(id, 'white_on_light_purple');
-  removeClass(id, 'white_on_purple_with_hover');
+  addClass(id, 'black_on_yellow_with_hover');
+  removeClass(id, 'yellow_on_brown_with_hover');
 };
 
 const clearButtonSelection = (id) => {
-  removeClass(id, 'white_on_light_purple');
-  addClass(id, 'white_on_purple_with_hover');
+  removeClass(id, 'black_on_yellow_with_hover');
+  addClass(id, 'yellow_on_brown_with_hover');
 };
 
 const hideEverything = () => {
