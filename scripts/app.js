@@ -634,6 +634,7 @@ const showLogin = () => {
   // show('ledger-login');
   show('camo-banano-branding');
   show('private-key-generate');
+  isLoggedIn = false;
 };
 
 const showHome = () => {
