@@ -808,14 +808,33 @@ const deleteAccountFromBook = (ix) => {
 const addAccountToBook = () => {
   const newBookAccountElt = get('newBookAccount');
   const newBookAccount = newBookAccountElt.value;
-  const accountValid = bananojsErrorTrap.getAccountValidationInfo(newBookAccount);
-  if (!accountValid.valid) {
-    alert(accountValid.message);
-  } else {
-    accountBook.push(newBookAccount);
+
+  const pushAndStore = (validAccount) => {
+    accountBook.push(validAccount);
     const store = getCleartextConfig();
     store.set('accountBook', accountBook);
     renderApp();
+    alert('added:'+validAccount);
+  };
+
+  const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(newBookAccount);
+  // alert(JSON.stringify(camoAccountValid));
+  if (camoAccountValid.valid) {
+    try {
+      const publicKey = bananojsErrorTrap.getAccountPublicKey(newBookAccount);
+      const account = bananojsErrorTrap.getAccount(publicKey);
+      pushAndStore(account);
+    } catch (error) {
+      alert(error.message);
+    }
+  } else {
+    const accountValid = bananojsErrorTrap.getAccountValidationInfo(newBookAccount);
+    // alert(JSON.stringify(accountValid));
+    if (accountValid.valid) {
+      pushAndStore(newBookAccount);
+    } else {
+      alert(accountValid.message + '\n' + camoAccountValid.message);
+    }
   }
 };
 
