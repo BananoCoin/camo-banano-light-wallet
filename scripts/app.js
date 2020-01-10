@@ -419,12 +419,13 @@ const updateRepresentative = async () => {
     const newBanRepresentative = bananojsErrorTrap.getAccount(newRepPublicKey);
     mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
         newBanRepresentative);
-    await bananojsErrorTrap.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
+    const response = await bananojsErrorTrap.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
+    alert(response);
   } catch (error) {
     console.trace('updateRepresentative', JSON.stringify(error));
     alert('error updating representative. ' + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
   }
+  backgroundUtil.updatePleaseWaitStatus();
 };
 
 const updateAmount = () => {
@@ -465,16 +466,20 @@ const sendAmountToAccount = async () => {
     }
 
     let message = undefined;
-    try {
-      if (useCamo) {
-        const messageSuffix = await bananojsErrorTrap.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
-        message = `Camo Tx Hash ${messageSuffix}`;
-      } else {
-        const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
-        message = `Banano Tx Hash ${messageSuffix}`;
+    if (bananojsErrorTrap.getRawStrFromBananoStr(sendAmount) == '0') {
+      message = 'error:cannot send 0';
+    } else {
+      try {
+        if (useCamo) {
+          const messageSuffix = await bananojsErrorTrap.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+          message = `Camo Tx Hash ${messageSuffix}`;
+        } else {
+          const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+          message = `Banano Tx Hash ${messageSuffix}`;
+        }
+      } catch (error) {
+        message = 'error:' + JSON.stringify(error);
       }
-    } catch (error) {
-      message = 'error:' + JSON.stringify(error);
     }
 
     mainConsole.debug('sendAmountToAccount', message);
@@ -484,8 +489,8 @@ const sendAmountToAccount = async () => {
   } catch (error) {
     console.trace('sendAmountToAccount', JSON.stringify(error));
     alert('error sending amount to account. ' + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
   }
+  backgroundUtil.updatePleaseWaitStatus();
   renderApp();
 };
 

@@ -50,6 +50,10 @@ const getAccount = (publicKey) => {
   return bananojs.getAccount(publicKey);
 };
 
+const getRawStrFromBananoStr = (amountBananos) => {
+  return bananojs.getRawStrFromBananoStr(amountBananos);
+};
+
 const getAccountsPending = async (account, count) => {
   try {
     if (isErrorUrl()) {
@@ -198,6 +202,7 @@ const receiveDepositsForSeed = async (seed, seedIx, representative, hash) => {
   }
 };
 
+exports.getRawStrFromBananoStr = getRawStrFromBananoStr;
 exports.setBananodeApiUrl = setBananodeApiUrl;
 exports.getAccountHistory = getAccountHistory;
 exports.getAccountsPending = getAccountsPending;
