@@ -454,7 +454,17 @@ const sendAmountToAccount = async () => {
     const sendToAccountElt = appDocument.getElementById('sendToAccount');
 
     const sendToAccount = sendToAccountElt.value;
-
+    if (useCamo) {
+      const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(sendToAccount);
+      if (!camoAccountValid.valid) {
+        throw new Error(camoAccountValid.message);
+      }
+    } else {
+      const accountValid = bananojsErrorTrap.getAccountValidationInfo(sendToAccount);
+      if (!accountValid.valid) {
+        throw new Error(accountValid.message);
+      }
+    }
     const sendFromSeedIxElt = appDocument.getElementById('sendFromSeedIx');
     const sendFromSeedIx = parseInt(sendFromSeedIxElt.value);
     if (Number.isNaN(sendFromSeedIx)) {
@@ -487,8 +497,8 @@ const sendAmountToAccount = async () => {
     backgroundUtil.updatePleaseWaitStatus();
     alert(message);
   } catch (error) {
-    console.trace('sendAmountToAccount', JSON.stringify(error));
-    alert('error sending amount to account. ' + JSON.stringify(error));
+    console.trace('sendAmountToAccount', error.message);
+    alert('error sending amount to account. ' + error.message);
   }
   backgroundUtil.updatePleaseWaitStatus();
   renderApp();
