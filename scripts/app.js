@@ -124,8 +124,12 @@ const init = () => {
   accountBook.length = 0;
   if (conf.has('accountBook')) {
     const book = conf.get('accountBook');
+    const accountBookAccountSet = new Set();
     book.forEach((bookAccount) => {
-      accountBook.push(bookAccount);
+      if (!accountBookAccountSet.has(bookAccount.account)) {
+        accountBookAccountSet.add(bookAccount.account);
+        accountBook.push(bookAccount);
+      }
     });
   }
 };
@@ -810,11 +814,21 @@ const addAccountToBook = () => {
   const newBookAccount = newBookAccountElt.value;
 
   const pushAndStore = (validAccount) => {
-    accountBook.push(validAccount);
-    const store = getCleartextConfig();
-    store.set('accountBook', accountBook);
-    renderApp();
-    alert('added:'+validAccount);
+    let duplicate = false;
+
+    getAccountBook().forEach((bookAccount, bookAccountIx) => {
+      if (bookAccount.account == validAccount) {
+        alert('duplicate['+bookAccount.n+']:' + validAccount);
+        duplicate = true;
+      }
+    });
+    if (!duplicate) {
+      accountBook.push(validAccount);
+      const store = getCleartextConfig();
+      store.set('accountBook', accountBook);
+      renderApp();
+      alert('added:'+validAccount);
+    }
   };
 
   const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(newBookAccount);
@@ -1189,16 +1203,19 @@ const requestPending = async () => {
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
-    const response = await bananojsErrorTrap.getAccountsPending([account], 10);
+    const response = await bananojsErrorTrap.getAccountsPending([account], 10, true);
     mainConsole.debug('requestPending response', response);
     if (response.blocks) {
       const hashMap = response.blocks[account];
       if (hashMap) {
         const hashes = [...Object.keys(hashMap)];
-        hashes.forEach((hash) => {
-          const raw = hashMap[hash];
+        hashes.forEach((hash, hashIx) => {
+          const raw = hashMap[hash].amount;
           const bananoParts = bananojsErrorTrap.getBananoPartsFromRaw(raw);
           const pendingBlock = {};
+          if (hashIx == 0) {
+            pendingBlock.sourceAccount = hashMap[hash].source;
+          }
           pendingBlock.n = pendingBlocks.length + 1;
           pendingBlock.hash = hash;
           pendingBlock.detailsUrl = 'https://creeper.banano.cc/explorer/block/' + hash;

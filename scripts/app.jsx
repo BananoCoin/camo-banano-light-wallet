@@ -467,26 +467,53 @@ class App extends React.Component {
                       <div className="gray_on_yellow">Pending</div>
                       <br/>
                       <table className="w100pct no_border whitespace_nowrap">
-                        <tbody>
-                          {
-                            app.getPending().map((item, index) => {
-                              return (<tr key={index}>
-                                <td className="no_border no_padding">{item.n}</td>
-                                <td className="no_border no_padding">
-                                  <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
-                                </td>
-                                <td className="no_border no_padding">{item.banano}</td>
-                                <td className="no_border no_padding">{item.banoshi}</td>
-                                <td className="no_border no_padding">{item.raw}</td>
-                                <td className="no_border no_padding">
-                                  <DisableableButton
-                                    name="Receive"
-                                    onClick={(e) => app.receivePending(item.hash, item.seedIx)}/>
-                                </td>
-                              </tr>)
-                            })
+                        {
+                        app.getPending().map((item, index) => {
+                          if (item.sourceAccount) {
+                            return (
+                              <tbody key={index}>
+                                <tr>
+                                  <td className="no_border no_padding" colSpan="6">{item.sourceAccount}</td>
+                                </tr>
+                                <tr>
+                                  <td className="no_border no_padding">{item.n}</td>
+                                  <td className="no_border no_padding">
+                                    <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
+                                  </td>
+                                  <td className="no_border no_padding">{item.banano}</td>
+                                  <td className="no_border no_padding">{item.banoshi}</td>
+                                  <td className="no_border no_padding">{item.raw}</td>
+                                  <td className="no_border no_padding">
+                                    <DisableableButton
+                                      name="Receive"
+                                      onClick={(e) => app.receivePending(item.hash, item.seedIx)}/>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            )
                           }
-                        </tbody>
+                          else {
+                            return (
+                              <tbody key={index}>
+                                <tr>
+                                  <td className="no_border no_padding">{item.n}</td>
+                                  <td className="no_border no_padding">
+                                    <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
+                                  </td>
+                                  <td className="no_border no_padding">{item.banano}</td>
+                                  <td className="no_border no_padding">{item.banoshi}</td>
+                                  <td className="no_border no_padding">{item.raw}</td>
+                                  <td className="no_border no_padding">
+                                    <DisableableButton
+                                      name="Receive"
+                                      onClick={(e) => app.receivePending(item.hash, item.seedIx)}/>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            )
+                          }
+                        })
+                        }
                       </table>
                       <div className="gray_on_yellow">Camo Pending</div>
                       <br/>

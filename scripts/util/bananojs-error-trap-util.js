@@ -54,12 +54,12 @@ const getRawStrFromBananoStr = (amountBananos) => {
   return bananojs.getRawStrFromBananoStr(amountBananos);
 };
 
-const getAccountsPending = async (account, count) => {
+const getAccountsPending = async (account, count, source) => {
   try {
     if (isErrorUrl()) {
       throw Error('getAccountsPending');
     }
-    return await bananojs.getAccountsPending(account, count);
+    return await bananojs.getAccountsPending(account, count, source);
   } catch (error) {
     alert('error getting account pending:' + error.message);
     return [];
