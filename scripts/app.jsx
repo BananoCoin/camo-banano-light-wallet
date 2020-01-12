@@ -469,7 +469,7 @@ class App extends React.Component {
                       <table className="w100pct no_border whitespace_nowrap">
                         {
                         app.getPending().map((item, index) => {
-                          if (item.sourceAccount) {
+                          if (item.firstHashForSourceAccount) {
                             return (
                               <tbody key={index}>
                                 <tr>
@@ -518,26 +518,52 @@ class App extends React.Component {
                       <div className="gray_on_yellow">Camo Pending</div>
                       <br/>
                       <table className="w100pct no_border whitespace_nowrap">
-                        <tbody>
                           {
                             app.getCamoPending().map((item, index) => {
-                              return (<tr key={index}>
-                                <td className="no_border no_padding">{item.n}</td>
-                                <td className="no_border no_padding">
-                                  <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
-                                </td>
-                                <td className="no_border no_padding">{item.banano}</td>
-                                <td className="no_border no_padding">{item.banoshi}</td>
-                                <td className="no_border no_padding">{item.raw}</td>
-                                <td className="no_border no_padding">
-                                  <DisableableButton
-                                    name="Receive"
-                                    onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}/>
-                                </td>
-                              </tr>)
+                              if (item.firstHashForSendToAccount) {
+                                return (
+                                  <tbody key={index}>
+                                    <tr>
+                                      <td className="no_border no_padding" colSpan="6">{item.sendToAccount}</td>
+                                    </tr>
+                                    <tr>
+                                      <td className="no_border no_padding">{item.n}</td>
+                                      <td className="no_border no_padding">
+                                        <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
+                                      </td>
+                                      <td className="no_border no_padding">{item.banano}</td>
+                                      <td className="no_border no_padding">{item.banoshi}</td>
+                                      <td className="no_border no_padding">{item.raw}</td>
+                                      <td className="no_border no_padding">
+                                        <DisableableButton
+                                          name="Receive"
+                                          onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}/>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                )
+                              } else {
+                                return (
+                                  <tbody key={index}>
+                                    <tr>
+                                      <td className="no_border no_padding">{item.n}</td>
+                                      <td className="no_border no_padding">
+                                        <a href={item.detailsUrl} onClick={(e) => onLinkClick(e)}>{item.hash}</a>
+                                      </td>
+                                      <td className="no_border no_padding">{item.banano}</td>
+                                      <td className="no_border no_padding">{item.banoshi}</td>
+                                      <td className="no_border no_padding">{item.raw}</td>
+                                      <td className="no_border no_padding">
+                                        <DisableableButton
+                                          name="Receive"
+                                          onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}/>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                )
+                              }
                             })
                           }
-                        </tbody>
                       </table>
                     </td>
                   </tr>

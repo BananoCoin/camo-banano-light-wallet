@@ -1047,9 +1047,6 @@ const requestCamoSharedAccountBalance = async () => {
 const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => {
   mainConsole.debug('receiveCamoPending seedIx', seedIx, sendToAccount, sharedSeedIx, hash);
   try {
-    const pendingResponse = await bananojsErrorTrap.camoGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, 10);
-    mainConsole.debug('receiveCamoPending pendingResponse', pendingResponse);
-
     const response = await bananojsErrorTrap.receiveCamoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
     alert(JSON.stringify(response));
   } catch (error) {
@@ -1077,6 +1074,8 @@ const requestCamoPending = async () => {
     for (let accountBookIx = 0; accountBookIx < pendingAccountBook.length; accountBookIx++) {
       const accountBookElt = pendingAccountBook[accountBookIx];
       const sendToAccount = accountBookElt.camoAccount;
+      let firstHashForSendToAccount = true;
+
       if (sendToAccount) {
         mainConsole.debug('requestCamoPending sendToAccount', sendToAccount);
         for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
@@ -1118,11 +1117,15 @@ const requestCamoPending = async () => {
                     if (hashes.length > 0) {
                       hasMoreHistoryOrPending = true;
                     }
-                    hashes.forEach((hash) => {
+                    hashes.forEach((hash, hashIx) => {
                       const raw = hashMap[hash];
                       const bananoParts = bananojsErrorTrap.getBananoPartsFromRaw(raw);
                       const camoPendingBlock = {};
                       camoPendingBlock.n = camoPendingBlocks.length + 1;
+                      if (firstHashForSendToAccount) {
+                        firstHashForSendToAccount = false;
+                        camoPendingBlock.firstHashForSendToAccount = true;
+                      }
                       camoPendingBlock.hash = hash;
                       camoPendingBlock.banano = bananoParts.banano;
                       camoPendingBlock.banoshi = bananoParts.banoshi;
@@ -1166,15 +1169,17 @@ const receivePending = async (hash, seedIx) => {
     if (representative) {
       const response = await bananojsErrorTrap.receiveDepositsForSeed(seed, seedIx, representative, hash);
       mainConsole.debug('receivePending receiveDepositsForSeed', response);
-      alert(JSON.stringify(response) + ' ' + response.message);
+      if (response) {
+        alert(JSON.stringify(response));
+      }
     } else {
       alert('no representative, cannot receive pending.');
     }
   } catch (error) {
-    console.trace('receivePending', JSON.stringify(error));
-    alert('error trying to receive pending. ' + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
+    console.trace('receivePending', error.message);
+    alert('error trying to receive pending. ' + error.message);
   }
+  backgroundUtil.updatePleaseWaitStatus();
 };
 
 const getAccountRepresentative = () => {
@@ -1213,9 +1218,7 @@ const requestPending = async () => {
           const raw = hashMap[hash].amount;
           const bananoParts = bananojsErrorTrap.getBananoPartsFromRaw(raw);
           const pendingBlock = {};
-          if (hashIx == 0) {
-            pendingBlock.sourceAccount = hashMap[hash].source;
-          }
+          pendingBlock.sourceAccount = hashMap[hash].source;
           pendingBlock.n = pendingBlocks.length + 1;
           pendingBlock.hash = hash;
           pendingBlock.detailsUrl = 'https://creeper.banano.cc/explorer/block/' + hash;
@@ -1228,6 +1231,17 @@ const requestPending = async () => {
       }
     }
   }
+  pendingBlocks.sort((a, b) => {
+    return a.sourceAccount.localeCompare(b.sourceAccount);
+  });
+  const sourceAccounts = new Set();
+  pendingBlocks.forEach((pendingBlock) => {
+    if (!sourceAccounts.has(pendingBlock.sourceAccount)) {
+      sourceAccounts.add(pendingBlock.sourceAccount);
+      pendingBlock.firstHashForSourceAccount = true;
+    }
+  });
+
   backgroundUtil.updatePleaseWaitStatus();
   mainConsole.debug('requestPending pendingBlocks', pendingBlocks);
   renderApp();
