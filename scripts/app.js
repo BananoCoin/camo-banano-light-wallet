@@ -598,8 +598,13 @@ const requestBlockchainState = async () => {
   backgroundUtil.updatePleaseWaitStatus('getting blockchain state.');
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   const blockCount = await bananojsErrorTrap.getBlockCount();
-  blockchainState.count = blockCount.count;
-  blockchainStatus = 'Success';
+  if (blockCount) {
+    blockchainState.count = blockCount.count;
+    blockchainStatus = 'Success';
+  } else {
+    blockchainState.count = '';
+    blockchainStatus = 'Failure';
+  }
   mainConsole.debug('blockchainState', blockchainState);
   backgroundUtil.updatePleaseWaitStatus();
   renderApp();
