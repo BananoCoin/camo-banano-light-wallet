@@ -567,14 +567,20 @@ const requestBalanceAndRepresentative = async () => {
     const accountInfo = await bananojsErrorTrap.getAccountInfo(account, true);
     balanceStatus = JSON.stringify(accountInfo);
     mainConsole.debug('requestBalanceAndRepresentative', accountInfo);
-    if (accountInfo.error) {
-      balanceStatus = accountInfo.error;
+    if (accountInfo) {
+      balanceStatus = 'no account info returned.';
       accountDataElt.representative = account;
       accountDataElt.balance = undefined;
     } else {
-      balanceStatus = 'Success';
-      accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
-      accountDataElt.representative = accountInfo.representative;
+      if (accountInfo.error) {
+        balanceStatus = accountInfo.error;
+        accountDataElt.representative = account;
+        accountDataElt.balance = undefined;
+      } else {
+        balanceStatus = 'Success';
+        accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
+        accountDataElt.representative = accountInfo.representative;
+      }
     }
   }
   backgroundUtil.updatePleaseWaitStatus();
