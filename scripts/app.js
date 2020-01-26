@@ -525,6 +525,7 @@ const requestTransactionHistory = async () => {
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   parsedTransactionHistoryByAccount.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
+    backgroundUtil.updatePleaseWaitStatus(`getting transaction history ${accountDataIx} of ${accountData.length}.`);
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
     const accountHistory = await bananojsErrorTrap.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
@@ -535,7 +536,7 @@ const requestTransactionHistory = async () => {
     parsedTransactionHistoryByAccountElt.account = account;
     parsedTransactionHistoryByAccount.push(parsedTransactionHistoryByAccountElt);
 
-    if (accountHistory.history) {
+    if ((accountHistory) && (accountHistory.history)) {
       accountHistory.history.forEach((historyElt, ix) => {
         const parsedTransactionHistoryElt = {};
         parsedTransactionHistoryElt.type = historyElt.type;
@@ -560,6 +561,7 @@ const requestBalanceAndRepresentative = async () => {
   backgroundUtil.updatePleaseWaitStatus('getting account info.');
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
+    backgroundUtil.updatePleaseWaitStatus(`getting account info ${accountDataIx} of ${accountData.length}.`);
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
     const accountInfo = await bananojsErrorTrap.getAccountInfo(account, true);

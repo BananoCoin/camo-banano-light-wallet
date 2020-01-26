@@ -3,6 +3,7 @@
 // modules
 const bananojsErrorTrap = require('./bananojs-error-trap-util.js');
 
+const backgroundUtil = require('./background-util.js');
 // constants
 
 // variables
@@ -14,6 +15,7 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
   let seedIx = 0;
   accountData.length = 0;
   while (hasMoreHistoryOrPending) {
+    backgroundUtil.updatePleaseWaitStatus(`getting account data at seed index ${seedIx}.`);
     // console.log('setAccountDataFromSeed', seedIx);
     const accountDataElt = {};
     accountDataElt.seedIx = seedIx;
@@ -38,7 +40,7 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
         });
       }
     }
-    if (accountHistory.history) {
+    if ((accountHistory) && (accountHistory.history)) {
       accountDataElt.hasHistory = true;
     } else {
       accountDataElt.hasHistory = false;
