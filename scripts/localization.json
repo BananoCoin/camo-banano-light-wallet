@@ -214,5 +214,17 @@
   "noSendToAccountRequestedYet": {
     "en": "No Send-To Account Requested Yet",
     "es": "Aún no se solicitó una cuenta de envío"
+  },
+  "noBalanceRequestedYet": {
+    "en": "No Balance Requested Yet",
+    "es": ""
+  },
+  "noHistoryRequestedYet": {
+    "en": "No History Requested Yet",
+    "es": ""
+  },
+  "noBlockchainStateRequestedYet": {
+    "en": "No Blockchain State Requested Yet",
+    "es": ""
   }
 }

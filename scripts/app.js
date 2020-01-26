@@ -136,6 +136,9 @@ const init = () => {
   }
 
   sendToAccountStatuses.push(getLocalization('noSendToAccountRequestedYet'));
+  balanceStatus = getLocalization('noBalanceRequestedYet');
+  transactionHistoryStatus = getLocalization('noHistoryRequestedYet');
+  blockchainStatus = getLocalization('noBlockchainStateRequestedYet');
 };
 
 const getCamoRepresentative = () => {
@@ -568,10 +571,6 @@ const requestBalanceAndRepresentative = async () => {
     balanceStatus = JSON.stringify(accountInfo);
     mainConsole.debug('requestBalanceAndRepresentative', accountInfo);
     if (accountInfo) {
-      balanceStatus = 'no account info returned.';
-      accountDataElt.representative = account;
-      accountDataElt.balance = undefined;
-    } else {
       if (accountInfo.error) {
         balanceStatus = accountInfo.error;
         accountDataElt.representative = account;
@@ -581,6 +580,10 @@ const requestBalanceAndRepresentative = async () => {
         accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
         accountDataElt.representative = accountInfo.representative;
       }
+    } else {
+      balanceStatus = 'no account info returned.';
+      accountDataElt.representative = account;
+      accountDataElt.balance = undefined;
     }
   }
   backgroundUtil.updatePleaseWaitStatus();
@@ -1041,14 +1044,20 @@ const requestCamoSharedAccountBalance = async () => {
         const accountInfo = await bananojsErrorTrap.getAccountInfo(camoSharedAccountDataElt.account, true);
         balanceStatus = JSON.stringify(accountInfo);
         mainConsole.debug('requestCamoSharedAccountBalance accountInfo', accountInfo);
-        if (accountInfo.error) {
-          balanceStatus = accountInfo.error;
-          camoSharedAccountDataElt.representative = camoSharedAccountDataElt.account;
-          camoSharedAccountDataElt.balance = undefined;
+        if (accountInfo) {
+          if (accountInfo.error) {
+            balanceStatus = accountInfo.error;
+            camoSharedAccountDataElt.representative = camoSharedAccountDataElt.account;
+            camoSharedAccountDataElt.balance = undefined;
+          } else {
+            balanceStatus = 'Success';
+            camoSharedAccountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
+            camoSharedAccountDataElt.representative = accountInfo.representative;
+          }
         } else {
-          balanceStatus = 'Success';
-          camoSharedAccountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
-          camoSharedAccountDataElt.representative = accountInfo.representative;
+          balanceStatus = 'no account info returned.';
+          accountDataElt.representative = account;
+          accountDataElt.balance = undefined;
         }
       }
     }
