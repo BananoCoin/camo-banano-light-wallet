@@ -210,5 +210,9 @@
   "refresh": {
     "en": "Refresh",
     "es": "Actualizar"
+  },
+  "noSendToAccountRequestedYet": {
+    "en": "No Send-To Account Requested Yet",
+    "es": "Aún no se solicitó una cuenta de envío"
   }
 }

@@ -18,7 +18,6 @@ const Table = require('react-bootstrap').Table;
 
 const app = require('./app.js');
 const localization = require('./localization.json');
-let language = 'en';
 
 const openDevTools = () => {
   try {
@@ -29,27 +28,10 @@ const openDevTools = () => {
   }
 };
 
-const changeLanguage = (e) => {
-  language = event.target.value;
-  renderApp();
-}
-
-const getLanguages = () => {
-  return [...Object.entries(localization.languages)];
-}
-
 const Localization = (props) => {
   const name = props.name;
   if(name) {
-    const values = localization[name];
-    if(values) {
-      // alert(JSON.stringify(values));
-      const value = values[language];
-      // alert(JSON.stringify(value));
-      return value;
-    } else {
-      alert(name);
-    }
+    return app.getLocalization(name);
   } else {
     return null;
   }
@@ -298,11 +280,11 @@ class App extends React.Component {
                 <tbody>
                   <tr>
                     <td className="h20px no_border user_select_none">
-                      <select value={language} name="network"
-                        onChange={(e) => changeLanguage(e)}
+                      <select value={app.getLanguage()} name="network"
+                        onChange={(e) => app.changeLanguage(e)}
                         disabled={app.isUpdateInProgress()}>
                         {
-                          getLanguages().map((item, index) => {
+                          app.getLanguages().map((item, index) => {
                             return (
                               <option key={index} value={item[0]}>{item[1]}</option>
                             )

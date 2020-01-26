@@ -12,6 +12,7 @@ const Conf = require('conf');
 const bananojsErrorTrap = require('./util/bananojs-error-trap-util.js');
 const accountUtil = require('./util/account-util.js');
 const backgroundUtil = require('./util/background-util.js');
+const localization = require('./localization.json');
 
 /** modules */
 const mainConsole = new mainConsoleLib.Console(process.stdout, process.stderr);
@@ -38,7 +39,7 @@ const NETWORKS = [{
   RPC_URL: bananojsErrorTrap.getErrorUrl(),
 }];
 
-const sendToAccountStatuses = ['No Send-To Account Requested Yet'];
+const sendToAccountStatuses = [];
 
 const sendToAccountLinks = [];
 
@@ -83,6 +84,7 @@ let transactionHistoryStatus = 'No History Requested Yet';
 
 let blockchainStatus = 'No Blockchain State Requested Yet';
 
+let language = 'en';
 
 const blockchainState = {
   count: 0,
@@ -132,6 +134,8 @@ const init = () => {
       }
     });
   }
+
+  sendToAccountStatuses.push(getLocalization('noSendToAccountRequestedYet'));
 };
 
 const getCamoRepresentative = () => {
@@ -1290,6 +1294,35 @@ const getCurrentNetworkIx = () => {
   return currentNetworkIx;
 };
 
+const getLocalization = (name) => {
+  const values = localization[name];
+  if (values) {
+    // alert(JSON.stringify(values));
+    const value = values[language];
+    // alert(JSON.stringify(value));
+    return value;
+  } else {
+    alert(name);
+  }
+};
+
+const changeLanguage = (e) => {
+  language = event.target.value;
+  renderApp();
+};
+
+const getLanguages = () => {
+  return [...Object.entries(localization.languages)];
+};
+
+const getLanguage = () => {
+  return language;
+};
+
+exports.getLocalization = getLocalization;
+exports.changeLanguage = changeLanguage;
+exports.getLanguages = getLanguages;
+exports.getLanguage = getLanguage;
 exports.getLedgerDeviceInfo = getLedgerDeviceInfo;
 exports.isUpdateInProgress = backgroundUtil.isUpdateInProgress;
 exports.getPleaseWaitStatus = backgroundUtil.getPleaseWaitStatus;
