@@ -5,7 +5,7 @@
   },
   "title": {
     "en": "Camo Banano",
-    "es": "Banano de Camuflaje"
+    "es": "Banano de Camu"
   },
   "home": {
     "en": "Home",
@@ -34,5 +34,181 @@
   "network": {
     "en": "Network",
     "es": "Red"
+  },
+  "logout": {
+    "en": "Logout",
+    "es": "Cerrar Sesión"
+  },
+  "showDevTools": {
+    "en": "Show Dev Tools",
+    "es": "Herramientas"
+  },
+  "ledgerStatus": {
+    "en": "Ledger Status",
+    "es": "Estado del libro mayor"
+  },
+  "seed": {
+    "en": "Seed",
+    "es": "Semilla"
+  },
+  "enterSeedManually": {
+    "en": "Enter seed manually.",
+    "es": "Ingrese la semilla manualmente."
+  },
+  "enterSeed": {
+    "en": "Enter Seed",
+    "es": "Introducir Semilla"
+  },
+  "reuseStoredSeed": {
+    "en": "Reuse Stored Seed",
+    "es": "Reutilizar Semilla Almacenada"
+  },
+  "reuseSeedMessage": {
+    "en": "Reuse a seed that you have stored previously.",
+    "es": "Reutilice una semilla que haya almacenado previamente."
+  },
+  "seedStoragePasswordOptional": {
+    "en": "Seed Storage Password (Optional)",
+    "es": "Contraseña de almacenamiento de semillas (opcional)"
+  },
+  "storagePasswordOptional": {
+    "en": "Storage Password (Optional)",
+    "es": "Contraseña de almacenamiento (opcional)"
+  },
+  "storeSeed": {
+    "en": "Store Seed",
+    "es": "Almacenar Semillas"
+  },
+  "storeSeedLocallyForReuse": {
+    "en": "Store Seed Locally for Reuse",
+    "es": "Almacenar semillas localmente para su reutilización"
+  },
+  "useSeed": {
+    "en": "Use Seed",
+    "es": "Usar Semillas"
+  },
+  "generateNewSeed": {
+    "en": "Generate New Seed",
+    "es": "Generar Nueva Semilla"
+  },
+  "generateNewSeedMessage": {
+    "en": "Generate a new seed, to be used in this wallet.",
+    "es": "Genere una nueva semilla para usar en esta billetera."
+  },
+  "generateSeed": {
+    "en": "Generate Seed",
+    "es": "Generar Semilla"
+  },
+  "newSeed": {
+    "en": "New Seed",
+    "es": "Nueva semilla"
+  },
+  "copy": {
+    "en": "Copy",
+    "es": "Copiar"
+  },
+  "done": {
+    "en": "Done",
+    "es": "Hecho"
+  },
+  "camo": {
+    "en": "Camo",
+    "es": "Camu"
+  },
+  "account": {
+    "en": "Account",
+    "es": "Cuenta"
+  },
+  "yourPrimaryAccount": {
+    "en": "Your Primary Account",
+    "es": "Su cuenta principal"
+  },
+  "yourCamoAccount": {
+    "en": "Your Camo Account",
+    "es": "Tu cuenta de camuflaje"
+  },
+  "yourCurrentRepresentative": {
+    "en": "Your Current Representative",
+    "es": "Su representante actual"
+  },
+  "yourCamoRepresentative": {
+    "en": "Your Camo Representative",
+    "es": "Su representante de camuflaje"
+  },
+  "newRepresentative": {
+    "en": "New Representative",
+    "es": "Nuevo representante"
+  },
+  "updateRepresentative": {
+    "en": "Update Representative",
+    "es": "Representante de actualización"
+  },
+  "pending": {
+    "en": "Pending",
+    "es": "Pendiente"
+  },
+  "camoPending": {
+    "en": "Camo Pending",
+    "es": "Camo pendiente"
+  },
+  "previousTransactions": {
+    "en": "Previous Transactions",
+    "es": "Transacciones Previas"
+  },
+  "total": {
+    "en": "total",
+    "es": "total"
+  },
+  "blocks": {
+    "en": "Blocks",
+    "es": "Bloques"
+  },
+  "fromAccount": {
+    "en": "From Account",
+    "es": "De la cuenta"
+  },
+  "toAccount": {
+    "en": "To Account",
+    "es": "A la cuenta"
+  },
+  "sendAmount": {
+    "en": "Send Amount",
+    "es": "Enviar cantidad"
+  },
+  "balanceStatus": {
+    "en": "Balance Status",
+    "es": "Estado de saldo"
+  },
+  "sendStatus": {
+    "en": "Send Status",
+    "es": "Enviar estado"
+  },
+  "confirm": {
+    "en": "Confirm",
+    "es": "Confirmar"
+  },
+  "delete": {
+    "en": "Delete",
+    "es": "Eliminar"
+  },
+  "addAccount": {
+    "en": "Add Account",
+    "es": "Añadir cuenta"
+  },
+  "newAccount": {
+    "en": "New Account",
+    "es": "Nueva cuenta"
+  },
+  "addAccountToBook": {
+    "en": "Add Account To Book",
+    "es": "Agregar cuenta al libro"
+  },
+  "pleaseWait": {
+    "en": "Please Wait",
+    "es": "Por favor espera"
+  },
+  "refresh": {
+    "en": "Refresh",
+    "es": "Actualizar"
   }
 }

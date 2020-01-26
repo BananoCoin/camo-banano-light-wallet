@@ -42,10 +42,14 @@ const Localization = (props) => {
   const name = props.name;
   if(name) {
     const values = localization[name];
-    // alert(JSON.stringify(values));
-    const value = values[language];
-    // alert(JSON.stringify(value));
-    return value;
+    if(values) {
+      // alert(JSON.stringify(values));
+      const value = values[language];
+      // alert(JSON.stringify(value));
+      return value;
+    } else {
+      alert(name);
+    }
   } else {
     return null;
   }
@@ -374,15 +378,15 @@ class App extends React.Component {
                   </tr>
                   <tr>
                     <td className="yellow_on_brown_with_hover h20px fake_button"
-                      onClick={(e) => app.requestAllBlockchainData()}>Refresh</td>
+                      onClick={(e) => app.requestAllBlockchainData()}><Localization name="refresh"/></td>
                   </tr>
                   <tr>
                     <td className="yellow_on_brown_with_hover h20px fake_button"
-                      onClick={(e) => app.showLogin()}>Logout</td>
+                      onClick={(e) => app.showLogin()}><Localization name="logout"/></td>
                   </tr>
                   <tr>
                     <td className="yellow_on_brown_with_hover h20px fake_button"
-                      onClick={(e) => openDevTools()}>Show Dev Tools</td>
+                      onClick={(e) => openDevTools()}><Localization name="showDevTools"/></td>
                   </tr>
                 </tbody>
               </table>
@@ -401,7 +405,7 @@ class App extends React.Component {
                   </tr>
                   <tr id="ledger-login">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Ledger Status</div>
+                      <div className="gray_on_yellow"><Localization name="ledgerStatus"/></div>
                       <p><LedgerMessage/>
                       </p>
                       <UseLedgerButton/>
@@ -409,25 +413,26 @@ class App extends React.Component {
                   </tr>
                   <tr id="seed-login">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Seed</div>
-                      <p>Enter seed manually.</p>
+                      <div className="gray_on_yellow"><Localization name="seed"/></div>
+                      <p><Localization name="enterSeedManually"/></p>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                        onClick={(e) => app.showSeedEntry()}>Enter Seed</div>
+                        onClick={(e) => app.showSeedEntry()}><Localization name="enterSeed"/></div>
                     </td>
                   </tr>
                   <tr id="seed-reuse">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Reuse Stored Seed</div>
-                      <p>Reuse a seed that you have stored previously.</p>
+                      <div className="gray_on_yellow"><Localization name="reuseStoredSeed"/></div>
+                      <p><Localization name="reuseSeedMessage"/></p>
                       <DisableableButton name="Reuse Seed" onClick={(e) => app.showSeedReuse()} />
                     </td>
                   </tr>
                   <tr id="seed-reuse-entry">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Reuse Stored Seed</div>
-                      <div className="gray_on_yellow">Seed Storage Password (Optional)</div>
+                      <div className="gray_on_yellow"><Localization name="reuseStoredSeed"/></div>
+                      <div className="gray_on_yellow"><Localization name="seedStoragePasswordOptional"/></div>
                       <br/>
-                      <input className="monospace no_pad" type="password" size="66" maxLength="64" id="reuseSeedPassword" placeholder="Storage Password (Optional)"></input>
+                      <input className="monospace no_pad" type="password" size="66" maxLength="64" id="reuseSeedPassword"
+                       placeholder="Storage Password (Optional)"></input>
                       <br/>
                       <br/>
                       <DisableableButton name="Reuse Stored Seed" onClick={(e) => app.reuseSeed()} />
@@ -435,72 +440,74 @@ class App extends React.Component {
                   </tr>
                   <tr id="seed-entry">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Seed</div>
+                      <div className="gray_on_yellow"><Localization name="seed"/></div>
                       <br/>
                       <input className="monospace no_pad" type="text" size="66" maxLength="64" id="seed" placeholder="Seed"></input>
                       <hr/>
-                      <div className="gray_on_yellow">Store Seed</div>
+                      <div className="gray_on_yellow"><Localization name="storeSeed"/></div>
                       <br/>
-                      <input type="checkbox" id="storeSeed"></input>Store Seed Locally for Reuse
+                      <input type="checkbox" id="storeSeed"></input><Localization name="storeSeedLocallyForReuse"/>
                       <br/>
-                      <div className="gray_on_yellow">Seed Storage Password (Optional)</div>
+                      <div className="gray_on_yellow"><Localization name="seedStoragePasswordOptional"/></div>
                       <br/>
-                      <input className="monospace no_pad" type="password" size="66" maxLength="64" id="storeSeedPassword" placeholder="Storage Password (Optional)"></input>
+                      <input className="monospace no_pad" type="password" size="66" maxLength="64" id="storeSeedPassword"
+                        placeholder="Storage Password (Optional)"></input>
                       <br/>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                        onClick={(e) => app.getAccountDataFromSeed()}>Use Seed</div>
+                        onClick={(e) => app.getAccountDataFromSeed()}><Localization name="useSeed"/></div>
                     </td>
                   </tr>
                   <tr id="private-key-generate">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Generate New Seed</div>
-                      <p>Generate a new seed, to be used in this wallet.</p>
+                      <div className="gray_on_yellow"><Localization name="generateNewSeed"/></div>
+                      <p><Localization name="generateNewSeedMessage"/></p>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                        onClick={(e) => app.showGenerateNewSeed()}>Generate Seed</div>
+                        onClick={(e) => app.showGenerateNewSeed()}><Localization name="generateSeed"/></div>
                     </td>
                   </tr>
                   <tr id="private-key-generator">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">New Seed</div>
+                      <div className="gray_on_yellow"><Localization name="newSeed"/></div>
                       {app.getGeneratedSeedHex()}
                       <br/>
                       <div className="yellow_on_black bordered display_inline_block float_left fake_button rounded padding_5px"
-                        onClick={(e) => app.copyToClipboard()}>Copy</div>
+                        onClick={(e) => app.copyToClipboard()}><Localization name="copy"/></div>
                       <br/>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                        onClick={(e) => app.showLogin()}>Done</div>
+                        onClick={(e) => app.showLogin()}><Localization name="done"/></div>
                     </td>
                   </tr>
                   <tr id="your-account">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Your Primary Account</div>
+                      <div className="gray_on_yellow"><Localization name="yourPrimaryAccount"/></div>
                       <br/>{app.getAccountZero()}
-                      <div className="gray_on_yellow">Your Camo Account</div>
+                      <div className="gray_on_yellow"><Localization name="yourCamoAccount"/></div>
                       <br/>{app.getCamoAccount()}
                     </td>
                   </tr>
                   <tr id="your-representative">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Your Current Representative</div>
+                      <div className="gray_on_yellow"><Localization name="yourCurrentRepresentative"/></div>
                       <br/>{app.getAccountRepresentative()}
                       <hr/>
-                      <div className="gray_on_yellow">Your Camo Representative</div>
+                      <div className="gray_on_yellow"><Localization name="yourCamoRepresentative"/></div>
                       <br/>{app.getCamoRepresentative()}
                     </td>
                   </tr>
                   <tr id="update-representative">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">New Representative (can be ban_ or camo_)</div>
+                      <div className="gray_on_yellow"><Localization name="newRepresentative"/> (ban_ or camo_)</div>
                       <br/>
-                      <input className="monospace no_pad" type="text" size="67" maxLength="65" id="newRepresentative" placeholder="Representative"></input>
+                      <input className="monospace no_pad" type="text" size="67" maxLength="65" id="newRepresentative"
+                        placeholder="Representative"></input>
                       <hr/>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
-                        onClick={(e) => app.updateRepresentative()}>Update Representative</div>
+                        onClick={(e) => app.updateRepresentative()}><Localization name="updateRepresentative"/></div>
                     </td>
                   </tr>
                   <tr id="pending">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Pending</div>
+                      <div className="gray_on_yellow"><Localization name="pending"/></div>
                       <br/>
                       <table className="w100pct no_border whitespace_nowrap">
                         {
@@ -551,7 +558,7 @@ class App extends React.Component {
                         })
                         }
                       </table>
-                      <div className="gray_on_yellow">Camo Pending</div>
+                      <div className="gray_on_yellow"><Localization name="camoPending"/></div>
                       <br/>
                       <table className="w100pct no_border whitespace_nowrap">
                           {
@@ -605,10 +612,10 @@ class App extends React.Component {
                   </tr>
                   <tr id="transaction-list-small">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="` display_inline_block">Previous Transactions ({app.getTransactionHistoryByAccount().length + ' '}
-                        total)</div>
+                      <div className="` display_inline_block"><Localization name="previousTransactions"/> ({app.getTransactionHistoryByAccount().length + ' '}
+                        <Localization name="total"/>)</div>
                       <div className="float_right display_inline_block">{app.getBlockchainState().count + ' '}
-                        Blocks</div>
+                        <Localization name="blocks"/></div>
                       <br/>
                       <table className="w100pct no_border whitespace_nowrap">
                         <tbody>
@@ -646,10 +653,10 @@ class App extends React.Component {
                   </tr>
                   <tr id="transaction-list-large">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="` display_inline_block">Previous Transactions ({app.getTransactionHistoryByAccount().length + ' '}
-                        total)</div>
+                      <div className="` display_inline_block"><Localization name="previousTransactions"/> ({app.getTransactionHistoryByAccount().length + ' '}
+                        <Localization name="total"/>)</div>
                       <div className="float_right display_inline_block">{app.getBlockchainState().count + ' '}
-                        Blocks</div>
+                        <Localization name="blocks"/></div>
                       <p></p>
                       <div className="h440px overflow_auto">
                         <table className="w100pct no_border whitespace_nowrap">
@@ -686,21 +693,21 @@ class App extends React.Component {
                   </tr>
                   <tr id="from-account">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">From Account</div>
+                      <div className="gray_on_yellow"><Localization name="fromAccount"/></div>
                       <br/>
                       <SendFromSeedIxField/>
                     </td>
                   </tr>
                   <tr id="to-account">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">To Account</div>
+                      <div className="gray_on_yellow"><Localization name="toAccount"/></div>
                       <br/>
                       <SendToAccountField/>
                     </td>
                   </tr>
                   <tr id="send-amount">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Send Amount</div>
+                      <div className="gray_on_yellow"><Localization name="sendAmount"/></div>
                       <br/>
                       <input style={{
                           fontFamily: 'monospace'
@@ -709,10 +716,10 @@ class App extends React.Component {
                   </tr>
                   <tr id="send-spacer-01">
                     <td className="yellow_on_brown h200px no_border">
-                      <div className="gray_on_yellow">Balance Status</div>
+                      <div className="gray_on_yellow"><Localization name="balanceStatus"/></div>
                       <br/> {app.getBalanceStatus()}
                       <br/>
-                      <div className="gray_on_yellow">Send Status</div>
+                      <div className="gray_on_yellow"><Localization name="sendStatus"/></div>
                       <br/>
                       <table>
                         <tbody>
@@ -738,7 +745,7 @@ class App extends React.Component {
                   </tr>
                   <tr id="cancel-confirm-transaction">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow">Confirm</div>
+                      <div className="gray_on_yellow"><Localization name="confirm"/></div>
                       <p></p>
                       <DisableableButton
                         name="Confirm"
@@ -753,15 +760,15 @@ class App extends React.Component {
                   <tr id="account-book">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="h440px overflow_auto">
-                      <div className="gray_on_yellow">Account Book</div>
+                      <div className="gray_on_yellow"><Localization name="accountBook"/></div>
                       <br/>
                         <table className="w100pct no_border whitespace_nowrap">
                           <tbody>
                             <tr>
                               <td className="no_border no_padding">N</td>
-                              <td className="no_border no_padding">Account</td>
-                              <td className="no_border no_padding">Camo</td>
-                              <td className="no_border no_padding">Delete</td>
+                              <td className="no_border no_padding"><Localization name="account"/></td>
+                              <td className="no_border no_padding"><Localization name="camo"/></td>
+                              <td className="no_border no_padding"><Localization name="delete"/></td>
                             </tr>
                             {
                               app.getAccountBook().map((item, index) => {
@@ -779,20 +786,20 @@ class App extends React.Component {
                             }
                           </tbody>
                         </table>
-                        <div className="gray_on_yellow">Add Account</div>
+                        <div className="gray_on_yellow"><Localization name="addAccount"/></div>
                         <br/>
                         <input style={{
                             fontFamily: 'monospace'
                           }} type="text" size="65" id="newBookAccount" placeholder="New Account"></input>
                         <p></p>
                         <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
-                          onClick={(e) => app.addAccountToBook()}>Add Account To Book</div>
+                          onClick={(e) => app.addAccountToBook()}><Localization name="addAccountToBook"/></div>
                       </div>
                     </td>
                   </tr>
                   <tr id="please-wait">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="display_inline_block">Please Wait:</div>
+                      <div className="display_inline_block"><Localization name="pleaseWait"/>:</div>
                       <div className="display_inline_block">{app.getPleaseWaitStatus()}</div>
                     </td>
                   </tr>
