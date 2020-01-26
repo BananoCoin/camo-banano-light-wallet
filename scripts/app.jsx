@@ -17,6 +17,8 @@ const Table = require('react-bootstrap').Table;
 /** modules */
 
 const app = require('./app.js');
+const localization = require('./localization.json');
+let language = 'en';
 
 const openDevTools = () => {
   try {
@@ -26,6 +28,28 @@ const openDevTools = () => {
     alert(`error:${e}`);
   }
 };
+
+const changeLanguage = (e) => {
+  language = event.target.value;
+  renderApp();
+}
+
+const getLanguages = () => {
+  return [...Object.entries(localization.languages)];
+}
+
+const Localization = (props) => {
+  const name = props.name;
+  if(name) {
+    const values = localization[name];
+    // alert(JSON.stringify(values));
+    const value = values[language];
+    // alert(JSON.stringify(value));
+    return value;
+  } else {
+    return null;
+  }
+}
 
 const Version = () => {
   return remote.app.getVersion();
@@ -270,7 +294,19 @@ class App extends React.Component {
                 <tbody>
                   <tr>
                     <td className="h20px no_border user_select_none">
-                      Camo Banano
+                      <select value={language} name="network"
+                        onChange={(e) => changeLanguage(e)}
+                        disabled={app.isUpdateInProgress()}>
+                        {
+                          getLanguages().map((item, index) => {
+                            return (
+                              <option key={index} value={item[0]}>{item[1]}</option>
+                            )
+                          })
+                        }
+                      </select>
+                      <br/>
+                      <Localization name="title"/>
                       <br/>
                       <Version/>
                     </td>
@@ -280,7 +316,7 @@ class App extends React.Component {
                   </tr>
                   <tr>
                     <td>
-                      Network
+                      <Localization name="network"/>
                       <select value={app.getCurrentNetworkIx()} name="network"
                         onChange={(e) => app.changeNetwork(e)}
                         disabled={app.isUpdateInProgress()}>
@@ -301,37 +337,37 @@ class App extends React.Component {
                     <td id='home' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showHome()}>
                       <img className="valign_middle svg" src="artwork/home.svg"></img>&nbsp;
-                      Home</td>
+                      <Localization name="home"/></td>
                   </tr>
                   <tr>
                     <td id='send' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showSend()}>
                       <img className="valign_middle svg" src="artwork/send.svg"></img>&nbsp;
-                      Send</td>
+                      <Localization name="send"/></td>
                   </tr>
                   <tr>
                     <td id='receive' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showReceive()}>
                       <img className="valign_middle svg" src="artwork/receive.svg"></img>&nbsp;
-                      Receive</td>
+                      <Localization name="receive"/></td>
                   </tr>
                   <tr>
                     <td id='transactions' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showTransactions()}>
                       <img className="valign_middle svg" src="artwork/transactions.svg"></img>&nbsp;
-                      Transactions</td>
+                      <Localization name="transactions"/></td>
                   </tr>
                   <tr>
                     <td id='representatives' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showRepresentatives()}>
                       <img className="valign_middle svg" src="artwork/representatives.svg"></img>&nbsp;
-                      Representative</td>
+                      <Localization name="representative"/></td>
                   </tr>
                   <tr>
                     <td id='accounts' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showAccountBook()}>
                       <img className="valign_middle svg" src="artwork/accounts.svg"></img>&nbsp;
-                      Account Book</td>
+                      <Localization name="accountBook"/></td>
                   </tr>
                   <tr>
                     <td className="yellow_on_brown h200px no_border"></td>
@@ -352,10 +388,10 @@ class App extends React.Component {
               </table>
             </td>
             <td className="valign_top no_border no_padding">
-              <table className="w626px no_border no_padding">
+              <table className="w590px no_border no_padding">
                 <tbody>
                   <tr id="camo-banano-branding" className="no_border no_padding">
-                    <td className="h225px w595px no_border no_padding">
+                    <td className="h225px w500px no_border no_padding">
                       <div className="branding_container">
                         <a href="https://banano.cc/" onClick={(e) => onLinkClick(e)}>
                         <img className="h200px w200px no_border no_padding" src="artwork/cfccamobanano.png"/>

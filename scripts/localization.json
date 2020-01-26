@@ -1,0 +1,38 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español"
+  },
+  "title": {
+    "en": "Camo Banano",
+    "es": "Banano de Camuflaje"
+  },
+  "home": {
+    "en": "Home",
+    "es": "Inicio"
+  },
+  "send": {
+    "en": "Send",
+    "es": "Enviar"
+  },
+  "receive": {
+    "en": "Receive",
+    "es": "Recibir"
+  },
+  "transactions": {
+    "en": "Transactions",
+    "es": "Actas"
+  },
+  "representative": {
+    "en": "Representative",
+    "es": "Representante"
+  },
+  "accountBook": {
+    "en": "Account Book",
+    "es": "Libro de Cuentas"
+  },
+  "network": {
+    "en": "Network",
+    "es": "Red"
+  }
+}
