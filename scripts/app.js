@@ -164,7 +164,7 @@ const setUseCamo = async (_useCamo) => {
   } catch (error) {
     console.trace('setUseCamo', JSON.stringify(error));
     alert(`error updating use camo flag to '${_useCamo}' ` + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
   }
   await renderApp();
 };
@@ -177,7 +177,7 @@ const updateCamoSharedAccount = async () => {
   } catch (error) {
     console.trace('updateCamoSharedAccount', JSON.stringify(error));
     alert('error updating camo shared account. ' + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
   }
   renderApp();
 };
@@ -194,10 +194,6 @@ const getTransactionHistoryUrl = (account) => {
   const url = `${getCurrentNetwork().EXPLORER}/explorer/account/${account}/history`;
   // console.log('getTransactionHistoryUrl',url);
   return url;
-};
-
-const getTransactionHistoryLink = (txid) => {
-  throw new Error('getTransactionHistoryLink not implemented completely');
 };
 
 const getRpcUrl = () => {
@@ -235,7 +231,7 @@ const requestAllBlockchainData = async () => {
   } catch (error) {
     console.trace('requestAllBlockchainData', error.message);
     alert('error requesting all blockchain data:' + error.message);
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
   }
 };
 
@@ -320,9 +316,9 @@ const requestBlockchainDataAndShowHome = async () => {
 };
 
 const setAccountDataFromSeed = async () => {
-  backgroundUtil.updatePleaseWaitStatus('getting account data.');
+  updateLocalizedPleaseWaitStatus('gettingAccountData');
   await accountUtil.setAccountDataFromSeed(getRpcUrl(), seed, accountData);
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
 };
 
 const getAccountDataFromSeed = async () => {
@@ -355,7 +351,7 @@ const getAccountDataFromSeed = async () => {
   } catch (error) {
     console.trace('getAccountDataFromSeed', JSON.stringify(error));
     alert('error getting account data from seed. ' + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
   }
 };
 
@@ -364,7 +360,7 @@ const reuseSeed = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('opening secure storage.');
+  updateLocalizedPleaseWaitStatus('openingSecureStorage');
   const reuseSeedPasswordElt = appDocument.getElementById('reuseSeedPassword');
   const reuseSeedPassword = reuseSeedPasswordElt.value;
   let success;
@@ -384,7 +380,7 @@ const reuseSeed = async () => {
     console.trace('reuseSeed', JSON.stringify(error));
     alert('cannot open seed storage, check that password is correct. ' + JSON.stringify(error));
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   if (success) {
     await setAccountDataFromSeed();
     await requestBlockchainDataAndShowHome();
@@ -436,14 +432,14 @@ const updateRepresentative = async () => {
     console.trace('updateRepresentative', JSON.stringify(error));
     alert('error updating representative. ' + JSON.stringify(error));
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
 };
 
 const updateAmount = () => {
   const sendAmountElt = appDocument.getElementById('sendAmount');
 
   sendAmount = sendAmountElt.value;
-  if (Number.isNaN(sendAmount)) {
+  if (isNaN(sendAmount)) {
     throw new Error(`sendAmount ${sendAmount} is not a number`);
   }
 };
@@ -459,7 +455,7 @@ const sendAmountToAccount = async () => {
     return;
   }
   try {
-    backgroundUtil.updatePleaseWaitStatus('sending amount to account.');
+    updateLocalizedPleaseWaitStatus('sendingAmountToAccount');
     updateAmount();
 
     const sendToAccountElt = appDocument.getElementById('sendToAccount');
@@ -478,11 +474,11 @@ const sendAmountToAccount = async () => {
     }
     const sendFromSeedIxElt = appDocument.getElementById('sendFromSeedIx');
     const sendFromSeedIx = parseInt(sendFromSeedIxElt.value);
-    if (Number.isNaN(sendFromSeedIx)) {
+    if (isNaN(sendFromSeedIx)) {
       throw new Error(`sendFromSeedIx ${sendFromSeedIx} is not a number`);
     }
 
-    if (Number.isNaN(sendAmount)) {
+    if (isNaN(sendAmount)) {
       throw new Error(`sendAmount ${sendAmount} is not a number`);
     }
 
@@ -505,13 +501,13 @@ const sendAmountToAccount = async () => {
 
     mainConsole.debug('sendAmountToAccount', message);
     sendToAccountStatuses.push(message);
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
     alert(message);
   } catch (error) {
     console.trace('sendAmountToAccount', error.message);
     alert('error sending amount to account. ' + error.message);
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   renderApp();
 };
 
@@ -524,11 +520,12 @@ const requestTransactionHistory = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting transaction history.');
+  updateLocalizedPleaseWaitStatus('gettingTransactionHistory', '.');
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   parsedTransactionHistoryByAccount.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
-    backgroundUtil.updatePleaseWaitStatus(`getting transaction history ${accountDataIx} of ${accountData.length}.`);
+    updateLocalizedPleaseWaitStatus('gettingTransactionHistory',
+        accountDataIx, 'of', accountData.length, '.');
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
     const accountHistory = await bananojsErrorTrap.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
@@ -551,7 +548,7 @@ const requestTransactionHistory = async () => {
       });
     }
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   // mainConsole.log('parsedTransactionHistoryByAccount', parsedTransactionHistoryByAccount);
   renderApp();
 };
@@ -561,10 +558,11 @@ const requestBalanceAndRepresentative = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting account info.');
+  updateLocalizedPleaseWaitStatus('gettingAccountInfo', '.');
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
-    backgroundUtil.updatePleaseWaitStatus(`getting account info ${accountDataIx} of ${accountData.length}.`);
+    updateLocalizedPleaseWaitStatus('gettingAccountInfo',
+        accountDataIx, 'of', accountData.length, '.');
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
     const accountInfo = await bananojsErrorTrap.getAccountInfo(account, true);
@@ -586,7 +584,7 @@ const requestBalanceAndRepresentative = async () => {
       accountDataElt.balance = undefined;
     }
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   renderApp();
 };
 
@@ -595,7 +593,7 @@ const requestBlockchainState = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting blockchain state.');
+  updateLocalizedPleaseWaitStatus('gettingBlockchainState');
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   const blockCount = await bananojsErrorTrap.getBlockCount();
   if (blockCount) {
@@ -606,7 +604,7 @@ const requestBlockchainState = async () => {
     blockchainStatus = 'Failure';
   }
   mainConsole.debug('blockchainState', blockchainState);
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   renderApp();
 };
 
@@ -995,7 +993,7 @@ const requestCamoSharedAccount = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting camo shared account.');
+  updateLocalizedPleaseWaitStatus('gettingCamoSharedAccount');
   const sendToAccountElt = appDocument.getElementById('sendToAccount');
   const sendToAccount = sendToAccountElt.value;
   mainConsole.debug('requestCamoSharedAccount sendToAccount', sendToAccount);
@@ -1031,7 +1029,7 @@ const requestCamoSharedAccount = async () => {
     }
   }
   // mainConsole.trace('requestCamoSharedAccount');
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
 };
 
 const requestCamoSharedAccountBalance = async () => {
@@ -1039,7 +1037,7 @@ const requestCamoSharedAccountBalance = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting camo shared account balance.');
+  updateLocalizedPleaseWaitStatus('gettingCamoSharedAccountBalance');
   mainConsole.debug('requestCamoSharedAccountBalance camoSharedAccountData', camoSharedAccountData);
   for (let camoSharedAccountDataIx = 0; camoSharedAccountDataIx < camoSharedAccountData.length; camoSharedAccountDataIx++) {
     const camoSharedAccountDataElt = camoSharedAccountData[camoSharedAccountDataIx];
@@ -1067,7 +1065,7 @@ const requestCamoSharedAccountBalance = async () => {
       }
     }
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
 };
 
 const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => {
@@ -1086,7 +1084,7 @@ const requestCamoPending = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting camo pending.');
+  updateLocalizedPleaseWaitStatus('gettingCamoPending');
   camoPendingBlocks.length = 0;
   if (useCamo) {
     const fullAccountBook = getAccountBook();
@@ -1107,9 +1105,9 @@ const requestCamoPending = async () => {
         for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
           const accountDataElt = accountData[accountDataIx];
 
-          backgroundUtil.updatePleaseWaitStatus('getting camo pending:' +
-        `book account ${accountBookIx+1} of ${pendingAccountBook.length},` +
-        `seed account ${accountDataIx+1} of ${accountData.length}.` );
+          updateLocalizedPleaseWaitStatus('getting camo pending',
+              'book account', (accountBookIx+1), 'of', pendingAccountBook.length, ',',
+              'seed account', (accountDataIx+1), 'of', accountData.length, '.' );
 
           mainConsole.debug('requestCamoPending request', seed, accountDataElt.seedIx, sendToAccount);
           let hasMoreHistoryOrPending = true;
@@ -1177,7 +1175,7 @@ const requestCamoPending = async () => {
       }
     }
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   renderApp();
 };
 
@@ -1205,7 +1203,7 @@ const receivePending = async (hash, seedIx) => {
     console.trace('receivePending', error.message);
     alert('error trying to receive pending. ' + error.message);
   }
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
 };
 
 const getAccountRepresentative = () => {
@@ -1229,7 +1227,7 @@ const requestPending = async () => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('getting account pending.');
+  updateLocalizedPleaseWaitStatus('gettingAccountPending');
   pendingBlocks.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
@@ -1268,7 +1266,7 @@ const requestPending = async () => {
     }
   });
 
-  backgroundUtil.updatePleaseWaitStatus();
+  updateLocalizedPleaseWaitStatus();
   mainConsole.debug('requestPending pendingBlocks', pendingBlocks);
   renderApp();
 };
@@ -1278,7 +1276,7 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
     backgroundUtil.showUpdateInProgressAlert();
     return;
   }
-  backgroundUtil.updatePleaseWaitStatus('Sending Shared Account Balance To First Account With No Transactions.');
+  updateLocalizedPleaseWaitStatus('sendingSharedAccountBalanceToFirstAccountWithNoTransactions');
   const sendFromSeed = camoSharedAccountData[ix].seed;
   const sendFromSeedIx = camoSharedAccountData[ix].seedIx;
   const sendToAccount = getAccountNoHistoryOrPending();
@@ -1294,16 +1292,16 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
 
   mainConsole.debug('sendSharedAccountBalanceToFirstAccountWithNoTransactions', message);
   try {
-    backgroundUtil.updatePleaseWaitStatus('Refreshing Account Data.');
+    updateLocalizedPleaseWaitStatus('refreshingAccountData');
     await setAccountDataFromSeed();
     await requestAllBlockchainData();
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
     alert(message);
   } catch (error) {
     console.trace('sendSharedAccountBalanceToFirstAccountWithNoTransactions', JSON.stringify(error));
     console.trace(error);
     alert('error refreshing account data. ' + JSON.stringify(error));
-    backgroundUtil.updatePleaseWaitStatus();
+    updateLocalizedPleaseWaitStatus();
   }
   renderApp();
 };
@@ -1316,15 +1314,34 @@ const getCurrentNetworkIx = () => {
   return currentNetworkIx;
 };
 
-const getLocalization = (name) => {
-  const values = localization[name];
-  if (values) {
-    // alert(JSON.stringify(values));
-    const value = values[language];
-    // alert(JSON.stringify(value));
-    return value;
+const updateLocalizedPleaseWaitStatus = (...statusParts) => {
+  if (statusParts.length == 0) {
+    backgroundUtil.updatePleaseWaitStatus();
+    return;
+  }
+  const localizedStatusParts = [];
+  statusParts.forEach((statusPart) => {
+    const localizedStatusPart = getLocalization(statusPart);
+    localizedStatusParts.push(localizedStatusPart);
+  });
+  const localizedStatus = localizedStatusParts.join(' ');
+  backgroundUtil.updatePleaseWaitStatus(localizedStatus);
+};
+
+const getLocalization = (key) => {
+  // alert(`${key}, ${isNaN(key)}`);
+  if (isNaN(key)) {
+    const values = localization[key];
+    if (values) {
+      // alert(JSON.stringify(values));
+      const value = values[language];
+      // alert(JSON.stringify(value));
+      return value;
+    } else {
+      alert(key);
+    }
   } else {
-    alert(name);
+    return key;
   }
 };
 

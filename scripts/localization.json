@@ -217,14 +217,74 @@
   },
   "noBalanceRequestedYet": {
     "en": "No Balance Requested Yet",
-    "es": ""
+    "es": "No se solicitó saldo aún"
   },
   "noHistoryRequestedYet": {
     "en": "No History Requested Yet",
-    "es": ""
+    "es": "Aún no se ha solicitado historia"
   },
   "noBlockchainStateRequestedYet": {
     "en": "No Blockchain State Requested Yet",
-    "es": ""
+    "es": "Aún no se ha solicitado el estado de Blockchain"
+  },
+  "gettingAccountData": {
+    "en": "getting account data.",
+    "es": "obteniendo datos de la cuenta."
+  },
+  "openingSecureStorage": {
+    "en": "opening secure storage.",
+    "es": "abrir almacenamiento seguro."
+  },
+  "sendingAmountToAccount": {
+    "en": "sending amount to account.",
+    "es": "envío de importe a cuenta."
+  },
+  "gettingTransactionHistory": {
+    "en": "getting transaction history.",
+    "es": "obteniendo el historial de transacciones."
+  },
+  "of": {
+    "en": "of",
+    "es": "de"
+  },
+  ".": {
+    "en": ".",
+    "es": "."
+  },
+  "gettingBlockchainState": {
+    "en": "getting blockchain state.",
+    "es": "obteniendo el estado blockchain."
+  },
+  "gettingCamoSharedAccount": {
+    "en": "getting camo shared account.",
+    "es": "obtener una cuenta compartida de camuflaje."
+  },
+  "gettingCamoSharedAccountBalance": {
+    "en": "getting camo shared account balance.",
+    "es": "obtener saldo de cuenta compartida de camuflaje."
+  },
+  "gettingCamoPending": {
+    "en": "getting camo pending.",
+    "es": "obtener camuflaje pendiente."
+  },
+  ",": {
+    "en": ",",
+    "es": ","
+  },
+  "gettingAccountPending": {
+    "en": "getting account pending.",
+    "es": "obtener cuenta pendiente."
+  },
+  "gettingAccountInfo": {
+    "en": "getting account info",
+    "es": "obteniendo información de la cuenta"
+  },
+  "sendingSharedAccountBalanceToFirstAccountWithNoTransactions": {
+    "en": "Sending shared account balance to first account with no transactions.",
+    "es": "Envío del saldo de la cuenta compartida a la primera cuenta sin transacciones."
+  },
+  "refreshingAccountData": {
+    "en": "Refreshing Account Data.",
+    "es": "Actualización de datos de la cuenta."
   }
 }
