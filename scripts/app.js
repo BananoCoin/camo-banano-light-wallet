@@ -1353,6 +1353,8 @@ const getLocalization = (key) => {
 
 const changeLanguage = (e) => {
   language = event.target.value;
+  const store = getCleartextConfig();
+  store.set('language', language);
   renderApp();
 };
 
