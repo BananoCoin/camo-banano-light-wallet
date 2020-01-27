@@ -84,7 +84,7 @@ let transactionHistoryStatus = 'No History Requested Yet';
 
 let blockchainStatus = 'No Blockchain State Requested Yet';
 
-let language = 'en';
+let language = undefined;
 
 const blockchainState = {
   count: 0,
@@ -123,6 +123,12 @@ const init = () => {
   } else {
     useCamo = false;
   }
+  if (conf.has('language')) {
+    language = conf.get('language');
+  } else {
+    language = 'en';
+  }
+
   accountBook.length = 0;
   if (conf.has('accountBook')) {
     const book = conf.get('accountBook');
