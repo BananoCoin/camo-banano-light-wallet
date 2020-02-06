@@ -28,6 +28,33 @@ const openDevTools = () => {
   }
 };
 
+const BalancesTable = () => {
+  const totals = app.getTotalBalances();
+  return (
+  <table className="yellow_on_brown h20px darkgray_border bordered">
+    <tbody>
+      <tr><td><Localization name="balance"/></td><td>{totals.balance}</td></tr>
+      <tr><td><Localization name="pendingBalance"/></td><td>{totals.pendingBalance}</td></tr>
+      <tr><td><Localization name="camoBalance"/></td><td>{totals.camoBalance}</td></tr>
+      <tr><td><Localization name="camoPendingBalance"/></td><td>{totals.camoPendingBalance}</td></tr>
+    </tbody>
+  </table>
+  )
+}
+
+const LocalizationInput = (props) => {
+  const placeholder = props.placeholder;
+  const localizedPlaceholder = app.getLocalization(placeholder);
+  return (
+    <input style={props.style}
+     type={props.type}
+     size={props.size}
+     id={props.id}
+     placeholder={localizedPlaceholder}
+     ></input>
+  )
+}
+
 const Localization = (props) => {
   const name = props.name;
   if(name) {
@@ -129,27 +156,28 @@ const SendToAccountField = () => {
     }
   } else {
     return (
-      <input style={{
+      <LocalizationInput style={{
           fontFamily: 'monospace'
-        }} type="text" size="64" id="sendToAccount" placeholder="Send To Account"></input>
+        }} type="text" size="64" id="sendToAccount" placeholder="sendToAccount"/>
     )
   }
 }
 
 const DisableableButton = (props) => {
   const name = props.name;
+  const localizedName = app.getLocalization(name);
   const onClick = props.onClick;
   if(app.isUpdateInProgress()) {
     return (
       <div className="black_on_gray bordered display_inline_block float_right fake_button rounded padding_5px"
-      >{name}</div>
+      >{localizedName}</div>
     )
   } else {
     return (
       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
         onClick={(e) => {
           onClick();
-        }}>{name}</div>
+        }}>{localizedName}</div>
     )
   }
 }
@@ -173,7 +201,7 @@ const UseCamoButton = () => {
         <div className="gray_on_yellow">Using Camo To Send Transaction</div>
         <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Enable Camo</div>
         <DisableableButton
-          name="Disable Camo"
+          name="disableCamo"
           onClick={(e) => app.setUseCamo(false)}/>
         <div className="gray_on_yellow">First Account With No Transactions</div>
         <p>{app.getAccountNoHistoryOrPending()}</p>
@@ -212,7 +240,7 @@ const UseCamoButton = () => {
                   </div>
                   <p></p>
                   <DisableableButton
-                    name="Send Shared Account Balance To First Account With No Transactions"
+                    name="sendSharedAccountBalanceToFirstAccountWithNoTransactions"
                     onClick={(e) => app.sendSharedAccountBalanceToFirstAccountWithNoTransactions(index)}/>
                   <p></p>
                 </div>
@@ -225,9 +253,9 @@ const UseCamoButton = () => {
   } else {
     return (
       <div>
-        <div className="gray_on_yellow">Sending Regular Transaction</div>
+        <div className="gray_on_yellow"><Localization name="sendingRegularTransaction"/></div>
         <DisableableButton
-          name="Enable Camo"
+          name="enableCamo"
           onClick={(e) => app.setUseCamo(true)}/>
         <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Disable Camo</div>
       </div>
@@ -383,6 +411,9 @@ class App extends React.Component {
                         <img className="h200px w200px no_border no_padding" src="artwork/cfccamobanano.png"/>
                         </a>
                       </div>
+                      <div className="balance_container">
+                      <BalancesTable/>
+                      </div>
                     </td>
                   </tr>
                   <tr id="ledger-login">
@@ -405,7 +436,7 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow"><Localization name="reuseStoredSeed"/></div>
                       <p><Localization name="reuseSeedMessage"/></p>
-                      <DisableableButton name="Reuse Seed" onClick={(e) => app.showSeedReuse()} />
+                      <DisableableButton name="reuseSeed" onClick={(e) => app.showSeedReuse()} />
                     </td>
                   </tr>
                   <tr id="seed-reuse-entry">
@@ -413,18 +444,18 @@ class App extends React.Component {
                       <div className="gray_on_yellow"><Localization name="reuseStoredSeed"/></div>
                       <div className="gray_on_yellow"><Localization name="seedStoragePasswordOptional"/></div>
                       <br/>
-                      <input className="monospace no_pad" type="password" size="66" maxLength="64" id="reuseSeedPassword"
-                       placeholder="Storage Password (Optional)"></input>
+                      <LocalizationInput className="monospace no_pad" type="password" size="66" maxLength="64" id="reuseSeedPassword"
+                       placeholder="storagePasswordOptional"/>
                       <br/>
                       <br/>
-                      <DisableableButton name="Reuse Stored Seed" onClick={(e) => app.reuseSeed()} />
+                      <DisableableButton name="reuseStoredSeed" onClick={(e) => app.reuseSeed()} />
                     </td>
                   </tr>
                   <tr id="seed-entry">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow"><Localization name="seed"/></div>
                       <br/>
-                      <input className="monospace no_pad" type="text" size="66" maxLength="64" id="seed" placeholder="Seed"></input>
+                      <LocalizationInput className="monospace no_pad" type="text" size="66" maxLength="64" id="seed" placeholder="seed"/>
                       <hr/>
                       <div className="gray_on_yellow"><Localization name="storeSeed"/></div>
                       <br/>
@@ -432,8 +463,8 @@ class App extends React.Component {
                       <br/>
                       <div className="gray_on_yellow"><Localization name="seedStoragePasswordOptional"/></div>
                       <br/>
-                      <input className="monospace no_pad" type="password" size="66" maxLength="64" id="storeSeedPassword"
-                        placeholder="Storage Password (Optional)"></input>
+                      <LocalizationInput className="monospace no_pad" type="password" size="66" maxLength="64" id="storeSeedPassword"
+                        placeholder="storagePasswordOptional"/>
                       <br/>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
                         onClick={(e) => app.getAccountDataFromSeed()}><Localization name="useSeed"/></div>
@@ -480,8 +511,8 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow"><Localization name="newRepresentative"/> (ban_ or camo_)</div>
                       <br/>
-                      <input className="monospace no_pad" type="text" size="67" maxLength="65" id="newRepresentative"
-                        placeholder="Representative"></input>
+                      <LocalizationInput className="monospace no_pad" type="text" size="67" maxLength="65" id="newRepresentative"
+                        placeholder="representative"/>
                       <hr/>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
                         onClick={(e) => app.updateRepresentative()}><Localization name="updateRepresentative"/></div>
@@ -510,7 +541,7 @@ class App extends React.Component {
                                   <td className="no_border no_padding">{item.raw}</td>
                                   <td className="no_border no_padding">
                                     <DisableableButton
-                                      name="Receive"
+                                      name="receive"
                                       onClick={(e) => app.receivePending(item.hash, item.seedIx)}/>
                                   </td>
                                 </tr>
@@ -530,7 +561,7 @@ class App extends React.Component {
                                   <td className="no_border no_padding">{item.raw}</td>
                                   <td className="no_border no_padding">
                                     <DisableableButton
-                                      name="Receive"
+                                      name="receive"
                                       onClick={(e) => app.receivePending(item.hash, item.seedIx)}/>
                                   </td>
                                 </tr>
@@ -561,7 +592,7 @@ class App extends React.Component {
                                       <td className="no_border no_padding">{item.raw}</td>
                                       <td className="no_border no_padding">
                                         <DisableableButton
-                                          name="Receive"
+                                          name="receive"
                                           onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}/>
                                       </td>
                                     </tr>
@@ -580,7 +611,7 @@ class App extends React.Component {
                                       <td className="no_border no_padding">{item.raw}</td>
                                       <td className="no_border no_padding">
                                         <DisableableButton
-                                          name="Receive"
+                                          name="receive"
                                           onClick={(e) => app.receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw)}/>
                                       </td>
                                     </tr>
@@ -691,9 +722,9 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="gray_on_yellow"><Localization name="sendAmount"/></div>
                       <br/>
-                      <input style={{
+                      <LocalizationInput style={{
                           fontFamily: 'monospace'
-                        }} type="text" size="64" id="sendAmount" placeholder="Send Amount"></input>
+                        }} type="text" size="64" id="sendAmount" placeholder="sendAmount"/>
                     </td>
                   </tr>
                   <tr id="send-spacer-01">
@@ -730,7 +761,7 @@ class App extends React.Component {
                       <div className="gray_on_yellow"><Localization name="confirm"/></div>
                       <p></p>
                       <DisableableButton
-                        name="Confirm"
+                        name="confirm"
                         onClick={(e) =>app.sendAmountToAccount()}/>
                     </td>
                   </tr>
@@ -770,9 +801,9 @@ class App extends React.Component {
                         </table>
                         <div className="gray_on_yellow"><Localization name="addAccount"/></div>
                         <br/>
-                        <input style={{
+                        <LocalizationInput style={{
                             fontFamily: 'monospace'
-                          }} type="text" size="65" id="newBookAccount" placeholder="New Account"></input>
+                          }} type="text" size="65" id="newBookAccount" placeholder="newAccount"/>
                         <p></p>
                         <div className="yellow_on_black gray_border bordered display_inline_block float_right fake_button rounded padding_5px"
                           onClick={(e) => app.addAccountToBook()}><Localization name="addAccountToBook"/></div>

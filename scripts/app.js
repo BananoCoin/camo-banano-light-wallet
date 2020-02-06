@@ -80,6 +80,14 @@ let generatedSeedHex = undefined;
 
 let balanceStatus = 'No Balance Requested Yet';
 
+let totalBalance = '?';
+
+let totalPendingBalance = '?';
+
+let totalCamoBalance = '?';
+
+let totalCamoPendingBalance = '?';
+
 let transactionHistoryStatus = 'No History Requested Yet';
 
 let blockchainStatus = 'No Blockchain State Requested Yet';
@@ -566,6 +574,7 @@ const requestBalanceAndRepresentative = async () => {
   }
   updateLocalizedPleaseWaitStatus('gettingAccountInfo', '.');
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
+  totalBalance = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     updateLocalizedPleaseWaitStatus('gettingAccountInfo',
         accountDataIx, 'of', accountData.length, '.');
@@ -583,6 +592,7 @@ const requestBalanceAndRepresentative = async () => {
         balanceStatus = 'Success';
         accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
         accountDataElt.representative = accountInfo.representative;
+        totalBalance += parseInt(accountDataElt.balance);
       }
     } else {
       balanceStatus = 'no account info returned.';
@@ -916,6 +926,11 @@ const clearGlobalData = () => {
   pendingBlocks.length = 0;
   camoPendingBlocks.length = 0;
 
+  totalBalance = '?';
+  totalPendingBalance = '?';
+  totalCamoBalance = '?';
+  totalCamoPendingBalance = '?';
+
   renderApp();
 };
 
@@ -1045,6 +1060,7 @@ const requestCamoSharedAccountBalance = async () => {
   }
   updateLocalizedPleaseWaitStatus('gettingCamoSharedAccountBalance');
   mainConsole.debug('requestCamoSharedAccountBalance camoSharedAccountData', camoSharedAccountData);
+  totalCamoBalance = 0;
   for (let camoSharedAccountDataIx = 0; camoSharedAccountDataIx < camoSharedAccountData.length; camoSharedAccountDataIx++) {
     const camoSharedAccountDataElt = camoSharedAccountData[camoSharedAccountDataIx];
 
@@ -1062,6 +1078,7 @@ const requestCamoSharedAccountBalance = async () => {
             balanceStatus = 'Success';
             camoSharedAccountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
             camoSharedAccountDataElt.representative = accountInfo.representative;
+            totalCamoBalance += parseInt(camoSharedAccountDataElt.balance);
           }
         } else {
           balanceStatus = 'no account info returned.';
@@ -1091,6 +1108,8 @@ const requestCamoPending = async () => {
     return;
   }
   updateLocalizedPleaseWaitStatus('gettingCamoPending');
+
+  totalCamoPendingBalance = 0;
   camoPendingBlocks.length = 0;
   if (useCamo) {
     const fullAccountBook = getAccountBook();
@@ -1111,9 +1130,9 @@ const requestCamoPending = async () => {
         for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
           const accountDataElt = accountData[accountDataIx];
 
-          updateLocalizedPleaseWaitStatus('getting camo pending',
-              'book account', (accountBookIx+1), 'of', pendingAccountBook.length, ',',
-              'seed account', (accountDataIx+1), 'of', accountData.length, '.' );
+          updateLocalizedPleaseWaitStatus('gettingCamoPending',
+              'bookAccount', (accountBookIx+1), 'of', pendingAccountBook.length, ',',
+              'seedAccount', (accountDataIx+1), 'of', accountData.length, '.' );
 
           mainConsole.debug('requestCamoPending request', seed, accountDataElt.seedIx, sendToAccount);
           let hasMoreHistoryOrPending = true;
@@ -1168,6 +1187,8 @@ const requestCamoPending = async () => {
                       camoPendingBlock.sharedAccount = camoSharedAccountData.sharedAccount;
                       camoPendingBlocks.push(camoPendingBlock);
                       mainConsole.debug('camoPendingBlocks camoPendingBlock', camoPendingBlock);
+
+                      totalCamoPendingBalance += parseInt(camoPendingBlock.banano);
                     });
                   }
                 });
@@ -1234,6 +1255,7 @@ const requestPending = async () => {
     return;
   }
   updateLocalizedPleaseWaitStatus('gettingAccountPending');
+  totalPendingBalance = 0;
   pendingBlocks.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     const accountDataElt = accountData[accountDataIx];
@@ -1257,6 +1279,8 @@ const requestPending = async () => {
           pendingBlock.banoshi = bananoParts.banoshi;
           pendingBlock.raw = bananoParts.raw;
           pendingBlocks.push(pendingBlock);
+
+          totalPendingBalance += parseInt(pendingBlock.banano);
         });
       }
     }
@@ -1366,6 +1390,15 @@ const getLanguage = () => {
   return language;
 };
 
+const getTotalBalances = () => {
+  return {
+    balance: totalBalance,
+    pendingBalance: totalPendingBalance,
+    camoBalance: totalCamoBalance,
+    camoPendingBalance: totalCamoPendingBalance,
+  };
+};
+
 exports.getLocalization = getLocalization;
 exports.changeLanguage = changeLanguage;
 exports.getLanguages = getLanguages;
@@ -1421,4 +1454,5 @@ exports.addAccountToBook = addAccountToBook;
 exports.deleteAccountFromBook = deleteAccountFromBook;
 exports.sendSharedAccountBalanceToFirstAccountWithNoTransactions = sendSharedAccountBalanceToFirstAccountWithNoTransactions;
 exports.changeNetwork = changeNetwork;
+exports.getTotalBalances = getTotalBalances;
 exports.init = init;

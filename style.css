@@ -257,7 +257,12 @@ p {
 
 .branding_container {
   float: left;
-  width: 490px;
+  width: 250px;
+}
+
+.balance_container {
+  float: left;
+  width: 250px;
 }
 
 .branding_image {

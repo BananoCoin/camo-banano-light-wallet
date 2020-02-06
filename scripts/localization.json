@@ -11,9 +11,17 @@
     "en": "Home",
     "es": "Inicio"
   },
+  "sendingRegularTransaction": {
+    "en": "Sending Regular Transaction",
+    "es": "Envío de Transacciones Regulares"
+  },
   "send": {
     "en": "Send",
     "es": "Enviar"
+  },
+  "sendToAccount": {
+    "en": "Send To Account",
+    "es": "Enviar A Cuenta"
   },
   "receive": {
     "en": "Receive",
@@ -58,6 +66,10 @@
   "enterSeed": {
     "en": "Enter Seed",
     "es": "Introducir Semilla"
+  },
+  "reuseSeed": {
+    "en": "Reuse Seed",
+    "es": "Reutilizar Semilla"
   },
   "reuseStoredSeed": {
     "en": "Reuse Stored Seed",
@@ -114,6 +126,14 @@
   "camo": {
     "en": "Camo",
     "es": "Camu"
+  },
+  "enableCamo": {
+    "en": "Enable Camo",
+    "es": "HabilitarCamu"
+  },
+  "disableCamo": {
+    "en": "Disable Camo",
+    "es": "Desactivar Camu"
   },
   "account": {
     "en": "Account",
@@ -174,6 +194,22 @@
   "sendAmount": {
     "en": "Send Amount",
     "es": "Enviar cantidad"
+  },
+  "pendingBalance": {
+    "en": "Pending Balance",
+    "es": "Saldo Pendiente"
+  },
+  "camoBalance": {
+    "en": "Camo Balance",
+    "es": "Camo Saldo"
+  },
+  "camoPendingBalance": {
+    "en": "Camo Pending Balance",
+    "es": "Camo Saldo Pendiente"
+  },
+  "balance": {
+    "en": "Balance",
+    "es": "Saldo"
   },
   "balanceStatus": {
     "en": "Balance Status",
@@ -286,5 +322,21 @@
   "refreshingAccountData": {
     "en": "Refreshing Account Data.",
     "es": "Actualización de datos de la cuenta."
+  },
+  "sendSharedAccountBalanceToFirstAccountWithNoTransactions": {
+    "en": "Send Shared Account Balance To First Account With No Transactions",
+    "es": "Enviar saldo de cuenta compartida a la primera cuenta sin transacciones"
+  },
+  "gettingCamoPending": {
+    "en": "getting camo pending",
+    "es": "obteniendo camo pendiente"
+  },
+  "bookAccount": {
+    "en": "book account",
+    "es": "cuenta de libro"
+  },
+  "seedAccount": {
+    "en": "seed account",
+    "es": "cuenta de semillas"
   }
 }
