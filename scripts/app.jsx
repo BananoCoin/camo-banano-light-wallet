@@ -198,14 +198,19 @@ const UseCamoButton = () => {
   if (app.getUseCamo()) {
     return (
       <div className="h310px overflow_auto">
-        <div className="gray_on_yellow">Using Camo To Send Transaction</div>
-        <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Enable Camo</div>
+        <div className="gray_on_yellow"><Localization name="usingCamoToSendTransaction"/></div>
+        <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px"><Localization name="enableCamo"/></div>
         <DisableableButton
           name="disableCamo"
           onClick={(e) => app.setUseCamo(false)}/>
-        <div className="gray_on_yellow">First Account With No Transactions</div>
+        <div className="gray_on_yellow"><Localization name="firstAccountWithNoTransactions"/></div>
         <p>{app.getAccountNoHistoryOrPending()}</p>
-        <div className="gray_on_yellow">Shared Account Information {app.getCamoSharedAccountData().length} rows.</div>
+        <div className="gray_on_yellow">
+          <Localization name="sharedAccountInformation"/>
+          &nbsp;
+          {app.getCamoSharedAccountData().length}
+          &nbsp;
+          <Localization name="rows"/>.</div>
         {
           app.getCamoSharedAccountData().map((item, index) => {
             let skip = false;
@@ -221,10 +226,11 @@ const UseCamoButton = () => {
                 <div key={index} className="h20px">
                   <hr/>
                   <div className="gray_on_yellow">
-                  Account &nbsp;
-                  {item.account} &nbsp;
-                  0
-                  BAN
+                    <Localization name="account"/>
+                     &nbsp;
+                    {item.account} &nbsp;
+                    0
+                    BAN
                   </div>
                 </div>
               )
@@ -233,7 +239,7 @@ const UseCamoButton = () => {
                 <div key={index} className="h90px">
                   <hr/>
                   <div className="gray_on_yellow">
-                  Account &nbsp;
+                  <Localization name="account"/> &nbsp;
                   {item.account} &nbsp;
                   {item.balance} &nbsp;
                   BAN
@@ -257,7 +263,7 @@ const UseCamoButton = () => {
         <DisableableButton
           name="enableCamo"
           onClick={(e) => app.setUseCamo(true)}/>
-        <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Disable Camo</div>
+        <div className="black_on_gray gray_border bordered display_inline_block float_right fake_button_disabled rounded padding_5px"><Localization name="disableCamo"/></div>
       </div>
     );
   }

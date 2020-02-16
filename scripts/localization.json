@@ -11,6 +11,10 @@
     "en": "Home",
     "es": "Inicio"
   },
+  "usingCamoToSendTransaction": {
+    "en": "Using Camo To Send Transaction",
+    "es": "Usando Camo Para Enviar Transacciones"
+  },
   "sendingRegularTransaction": {
     "en": "Sending Regular Transaction",
     "es": "Envío de Transacciones Regulares"
@@ -129,7 +133,7 @@
   },
   "enableCamo": {
     "en": "Enable Camo",
-    "es": "HabilitarCamu"
+    "es": "Habilitar Camu"
   },
   "disableCamo": {
     "en": "Disable Camo",
@@ -307,6 +311,10 @@
     "en": ",",
     "es": ","
   },
+  "rows": {
+    "en": "rows",
+    "es": "filas"
+  },
   "gettingAccountPending": {
     "en": "getting account pending.",
     "es": "obtener cuenta pendiente."
@@ -314,6 +322,14 @@
   "gettingAccountInfo": {
     "en": "getting account info",
     "es": "obteniendo información de la cuenta"
+  },
+  "sharedAccountInformation": {
+    "en": "Shared Account Information",
+    "es": "Información de Cuenta Compartida"
+  },
+  "firstAccountWithNoTransactions": {
+    "en": "First Account With No Transactions",
+    "es": "Primera Cuenta Sin Transacciones"
   },
   "sendingSharedAccountBalanceToFirstAccountWithNoTransactions": {
     "en": "Sending shared account balance to first account with no transactions.",
