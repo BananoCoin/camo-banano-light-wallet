@@ -33,7 +33,7 @@ const NETWORKS = [{
   NAME: 'Kalium Mainnet',
   EXPLORER: 'https://creeper.banano.cc/',
   RPC_URL: 'https://kaliumapi.appditto.com/api',
-}
+},
 // , {
 //   NAME: 'Error Testnet',
 //   EXPLORER: 'https://creeper.banano.cc/',
@@ -514,6 +514,7 @@ const sendAmountToAccount = async () => {
           const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
           message = `Banano Tx Hash ${messageSuffix}`;
         }
+        clearSendData();
       } catch (error) {
         message = 'error:' + JSON.stringify(error);
       }
@@ -721,18 +722,6 @@ const showSend = () => {
   show('to-account-is-camo');
   show('cancel-confirm-transaction');
   selectButton('send');
-};
-
-const cancelSend = () => {
-  const sendToAccountElt = appDocument.getElementById('sendToAccount');
-  const sendAmountElt = appDocument.getElementById('sendAmount');
-
-  sendToAccountElt.value = '';
-  sendAmountElt.value = '';
-
-  sendAmount = '';
-
-  showSend();
 };
 
 const showReceive = () => {
