@@ -33,11 +33,13 @@ const NETWORKS = [{
   NAME: 'Kalium Mainnet',
   EXPLORER: 'https://creeper.banano.cc/',
   RPC_URL: 'https://kaliumapi.appditto.com/api',
-}, {
-  NAME: 'Error Testnet',
-  EXPLORER: 'https://creeper.banano.cc/',
-  RPC_URL: bananojsErrorTrap.getErrorUrl(),
-}];
+}
+// , {
+//   NAME: 'Error Testnet',
+//   EXPLORER: 'https://creeper.banano.cc/',
+//   RPC_URL: bananojsErrorTrap.getErrorUrl(),
+// }
+];
 
 const sendToAccountStatuses = [];
 
