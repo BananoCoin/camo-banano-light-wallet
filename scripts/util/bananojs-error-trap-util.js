@@ -2,7 +2,12 @@
 // modules
 const bananojs = require('@bananocoin/bananojs');
 
+const mainConsoleLib = require('console');
+
 // constants
+const mainConsole = new mainConsoleLib.Console(process.stdout, process.stderr);
+mainConsole.debug = () => {};
+
 const ERROR_URL = 'https://bananojs.coranos.cc/api';
 
 // variables
@@ -39,7 +44,17 @@ const getAccountHistory = async (account, count, head, raw) => {
 };
 
 const getPrivateKey = (seed, seedIx) => {
-  return bananojs.getPrivateKey(seed, seedIx);
+  try {
+    if (isErrorUrl()) {
+      throw Error('getPrivateKey');
+    }
+    // mainConsole.trace('getting account history', 'seedIx', seedIx);
+    return bananojs.getPrivateKey(seed, seedIx);
+  } catch (error) {
+    // mainConsole.trace('error getting account history', 'seedIx', seedIx, error.message);
+    alert('error getting account history:' + error.message);
+    return undefined;
+  }
 };
 
 const getPublicKey = (privateKey) => {

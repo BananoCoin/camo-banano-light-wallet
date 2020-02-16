@@ -20,37 +20,41 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
     const accountDataElt = {};
     accountDataElt.seedIx = seedIx;
     accountDataElt.privateKey = bananojsErrorTrap.getPrivateKey(seed, accountDataElt.seedIx);
-    accountDataElt.publicKey = bananojsErrorTrap.getPublicKey(accountDataElt.privateKey);
-    accountDataElt.account = bananojsErrorTrap.getAccount(accountDataElt.publicKey);
-    accountData.push(accountDataElt);
-    const accountHistory = await bananojsErrorTrap.getAccountHistory(accountDataElt.account, 1);
-    const accountPending = await bananojsErrorTrap.getAccountsPending([accountDataElt.account], 1);
-    accountDataElt.hasPending = false;
-    if (accountPending) {
-      if (accountPending.blocks) {
-        const accountsPendingKeys = [...Object.keys(accountPending.blocks)];
-        accountsPendingKeys.forEach((accountsPendingKey) => {
-          const hashMap = accountPending.blocks[accountsPendingKey];
-          if (hashMap) {
-            const hashes = [...Object.keys(hashMap)];
-            if (hashes.length > 0) {
-              accountDataElt.hasPending = true;
+    if (accountDataElt.privateKey) {
+      accountDataElt.publicKey = bananojsErrorTrap.getPublicKey(accountDataElt.privateKey);
+      accountDataElt.account = bananojsErrorTrap.getAccount(accountDataElt.publicKey);
+      accountData.push(accountDataElt);
+      const accountHistory = await bananojsErrorTrap.getAccountHistory(accountDataElt.account, 1);
+      const accountPending = await bananojsErrorTrap.getAccountsPending([accountDataElt.account], 1);
+      accountDataElt.hasPending = false;
+      if (accountPending) {
+        if (accountPending.blocks) {
+          const accountsPendingKeys = [...Object.keys(accountPending.blocks)];
+          accountsPendingKeys.forEach((accountsPendingKey) => {
+            const hashMap = accountPending.blocks[accountsPendingKey];
+            if (hashMap) {
+              const hashes = [...Object.keys(hashMap)];
+              if (hashes.length > 0) {
+                accountDataElt.hasPending = true;
+              }
             }
-          }
-        });
+          });
+        }
       }
-    }
-    if ((accountHistory) && (accountHistory.history)) {
-      accountDataElt.hasHistory = true;
+      if ((accountHistory) && (accountHistory.history)) {
+        accountDataElt.hasHistory = true;
+      } else {
+        accountDataElt.hasHistory = false;
+      }
+      if (!accountDataElt.hasHistory) {
+        if (!accountDataElt.hasPending) {
+          hasMoreHistoryOrPending = false;
+        }
+      }
+      seedIx++;
     } else {
-      accountDataElt.hasHistory = false;
+      hasMoreHistoryOrPending = false;
     }
-    if (!accountDataElt.hasHistory) {
-      if (!accountDataElt.hasPending) {
-        hasMoreHistoryOrPending = false;
-      }
-    }
-    seedIx++;
   }
 };
 

@@ -160,8 +160,12 @@ const getCamoRepresentative = () => {
     return undefined;
   }
   const privateKey = bananojsErrorTrap.getPrivateKey(seed, 0);
-  const camoPublicKey = bananojsErrorTrap.getCamoPublicKey(privateKey);
-  return bananojsErrorTrap.getCamoAccount(camoPublicKey);
+  if (privateKey) {
+    const camoPublicKey = bananojsErrorTrap.getCamoPublicKey(privateKey);
+    return bananojsErrorTrap.getCamoAccount(camoPublicKey);
+  } else {
+    return undefined;
+  }
 };
 
 const setUseCamo = async (_useCamo) => {
