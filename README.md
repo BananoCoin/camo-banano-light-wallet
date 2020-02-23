@@ -7,13 +7,13 @@ light wallet for banano that supports camo transactions
 https://github.com/BananoCoin/camo-banano-light-wallet/releases/latest
 
 2. open wallet to home page.  
-[](https://imgur.com/XJ5bXGm)
+![](https://imgur.com/XJ5bXGm)
 
 3. generate a new seed.  
-[](https://imgur.com/6n7mDey)
+![](https://imgur.com/6n7mDey)
 
 4. copy seed to clipboard.  
-(https://imgur.com/AhgAsA1)
+!(https://imgur.com/AhgAsA1)
 
 5. use seed to log in to the wallet.  
 (https://imgur.com/6evbCmN)
