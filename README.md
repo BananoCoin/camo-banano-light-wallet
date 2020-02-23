@@ -13,25 +13,25 @@ https://github.com/BananoCoin/camo-banano-light-wallet/releases/latest
 ![](https://imgur.com/6n7mDey.png)
 
 4. copy seed to clipboard.  
-!(https://imgur.com/AhgAsA1.png)
+![](https://imgur.com/AhgAsA1.png)
 
 5. use seed to log in to the wallet.  
-(https://imgur.com/6evbCmN.png)
+![](https://imgur.com/6evbCmN.png)
 
 6. see the home page, with no pending balance, and no transactions.  
-(https://imgur.com/PrQ8onA.png)
+![](https://imgur.com/PrQ8onA.png)
 
 7. go to the receive page.  
-(https://imgur.com/IEUPMZV.png)
+![](https://imgur.com/IEUPMZV.png)
 
 8. on the the receive page, copy your primary account. send 1 banano to this account. After sending the banano, click 'refresh' until the transaction shows up as 'pending'.  
-(https://imgur.com/ZGXatHe.png)
+![](https://imgur.com/ZGXatHe.png)
 
 9. on the the receive page, click 'receive' to receive the banano. click 'refresh' to refresh the blockchain data. Some times it is slow and takes a few seconds.  
-(https://imgur.com/1VQB1Hp.png)
+![](https://imgur.com/1VQB1Hp.png)
 
 10. go to the 'send' page.  
-(https://imgur.com/mZVA3aP.png)
+![](https://imgur.com/mZVA3aP.png)
 
 11. send the banano back to the account it came from.  
-(https://imgur.com/opXFyaR.png)
+![](https://imgur.com/opXFyaR.png)
