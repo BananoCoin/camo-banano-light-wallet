@@ -44,7 +44,7 @@
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
     "@bananocoin/bananojs": "^2.0.9",
-    "@ledgerhq/hw-transport-node-hid": "^5.13.1",
+    "@ledgerhq/hw-transport-node-hid": "^5.19.0",
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
     "check-node-version": "^4.0.3",
