@@ -4,6 +4,20 @@
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
+  "build": {
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "hardenedRuntime": true
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    }
+  },
   "scripts": {
     "start": "check-node-version --node 12 --npm 6 && electron . --enable-logging --remote-debugging-port=9222",
     "test": "check-node-version --node 12 --npm 6 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
@@ -30,6 +44,7 @@
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
     "@bananocoin/bananojs": "^2.0.9",
+    "@ledgerhq/hw-transport-node-hid": "^5.13.1",
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
     "check-node-version": "^4.0.3",
