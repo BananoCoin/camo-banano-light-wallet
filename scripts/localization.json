@@ -23,6 +23,10 @@
     "en": "Send",
     "es": "Enviar"
   },
+  "sendToList": {
+    "en": "Send to List",
+    "es": "Enviar a la Lista"
+  },
   "sendToAccount": {
     "en": "Send To Account",
     "es": "Enviar A Cuenta"

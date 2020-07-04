@@ -62,7 +62,7 @@ const getPublicKey = (privateKey) => {
 };
 
 const getAccount = (publicKey) => {
-  return bananojs.getAccount(publicKey);
+  return bananojs.getBananoAccount(publicKey);
 };
 
 const getRawStrFromBananoStr = (amountBananos) => {
@@ -166,7 +166,7 @@ const getCamoAccountValidationInfo = (camoAccount) => {
 };
 
 const getAccountValidationInfo = (banAccount) => {
-  return bananojs.getAccountValidationInfo(banAccount);
+  return bananojs.getBananoAccountValidationInfo(banAccount);
 };
 
 const getCamoSharedAccountData = async (seed, seedIx, sendToAccount, sharedSeedIx) => {

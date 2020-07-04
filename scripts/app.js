@@ -369,8 +369,8 @@ const getAccountDataFromSeed = async () => {
     await setAccountDataFromSeed();
     await requestBlockchainDataAndShowHome();
   } catch (error) {
-    console.trace('getAccountDataFromSeed', JSON.stringify(error));
-    alert('error getting account data from seed. ' + JSON.stringify(error));
+    mainConsole.trace('getAccountDataFromSeed', error);
+    alert('error getting account data from seed. ' + error.message);
     updateLocalizedPleaseWaitStatus();
   }
 };
@@ -722,6 +722,16 @@ const showSend = () => {
   show('to-account-is-camo');
   show('cancel-confirm-transaction');
   selectButton('send');
+};
+
+const showSendToList = () => {
+  if (!isLoggedIn) {
+    return;
+  }
+  hideEverything();
+  clearSendData();
+  show('from-account');
+  selectButton('sendToList');
 };
 
 const showReceive = () => {
@@ -1431,6 +1441,7 @@ exports.getAccountDataFromSeed = getAccountDataFromSeed;
 exports.showHome = showHome;
 exports.showGenerateNewSeed = showGenerateNewSeed;
 exports.showSend = showSend;
+exports.showSendToList = showSendToList;
 exports.showReceive = showReceive;
 exports.showTransactions = showTransactions;
 exports.showRepresentatives = showRepresentatives;

@@ -366,6 +366,12 @@ class App extends React.Component {
                       <Localization name="send"/></td>
                   </tr>
                   <tr>
+                    <td id='sendToList' className="yellow_on_brown_with_hover h20px fake_button"
+                      onClick={(e) => app.showSendToList()}>
+                      <img className="valign_middle svg" src="artwork/send.svg"></img>&nbsp;
+                      <Localization name="sendToList"/></td>
+                  </tr>
+                  <tr>
                     <td id='receive' className="yellow_on_brown_with_hover h20px fake_button"
                       onClick={(e) => app.showReceive()}>
                       <img className="valign_middle svg" src="artwork/receive.svg"></img>&nbsp;
