@@ -396,7 +396,7 @@ class App extends React.Component {
                       <Localization name="accountBook"/></td>
                   </tr>
                   <tr>
-                    <td className="yellow_on_brown h200px no_border"></td>
+                    <td className="yellow_on_brown h180px no_border"></td>
                   </tr>
                   <tr>
                     <td className="yellow_on_brown_with_hover h20px fake_button"
@@ -826,6 +826,15 @@ class App extends React.Component {
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <div className="display_inline_block"><Localization name="pleaseWait"/>:</div>
                       <div className="display_inline_block">{app.getPleaseWaitStatus()}</div>
+                    </td>
+                  </tr>
+                  <tr id="alert">
+                    <td className="black_on_yellow h20px darkgray_border bordered">
+                      <div className="display_inline_block"><Localization name="alert"/>:</div>
+                      <div className="display_inline_block">{app.getAlertMessage()}</div>
+                      <DisableableButton
+                        name="ok"
+                        onClick={(e) =>app.hideAlert()}/>
                     </td>
                   </tr>
                 </tbody>

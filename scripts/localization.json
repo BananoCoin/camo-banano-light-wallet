@@ -19,6 +19,14 @@
     "en": "Sending Regular Transaction",
     "es": "Envío de Transacciones Regulares"
   },
+  "ok": {
+    "en": "OK",
+    "es": "OK"
+  },
+  "alert": {
+    "en": "Alert",
+    "es": "Alerta"
+  },
   "send": {
     "en": "Send",
     "es": "Enviar"

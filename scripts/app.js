@@ -96,6 +96,8 @@ let blockchainStatus = 'No Blockchain State Requested Yet';
 
 let language = undefined;
 
+let alertMessage = '';
+
 const blockchainState = {
   count: 0,
 };
@@ -174,7 +176,7 @@ const setUseCamo = async (_useCamo) => {
   useCamo = _useCamo;
   const store = getCleartextConfig();
   store.set('useCamo', useCamo);
-  // alert(`useCamo:${useCamo}`);
+  // showAlert(`useCamo:${useCamo}`);
   try {
     await renderApp();
     await requestCamoSharedAccount();
@@ -182,8 +184,8 @@ const setUseCamo = async (_useCamo) => {
     await renderApp();
     await requestCamoPending();
   } catch (error) {
-    console.trace('setUseCamo', JSON.stringify(error));
-    alert(`error updating use camo flag to '${_useCamo}' ` + JSON.stringify(error));
+    mainConsole.trace('setUseCamo', error);
+    showAlert(`error updating use camo flag to '${_useCamo}' ` + error.message);
     updateLocalizedPleaseWaitStatus();
   }
   await renderApp();
@@ -195,8 +197,8 @@ const updateCamoSharedAccount = async () => {
     await requestCamoSharedAccountBalance();
     await requestCamoPending();
   } catch (error) {
-    console.trace('updateCamoSharedAccount', JSON.stringify(error));
-    alert('error updating camo shared account. ' + JSON.stringify(error));
+    mainConsole.trace('updateCamoSharedAccount', error);
+    showAlert('error updating camo shared account. ' + error.message);
     updateLocalizedPleaseWaitStatus();
   }
   renderApp();
@@ -212,7 +214,7 @@ const getCurrentNetwork = () => {
 
 const getTransactionHistoryUrl = (account) => {
   const url = `${getCurrentNetwork().EXPLORER}/explorer/account/${account}/history`;
-  // console.log('getTransactionHistoryUrl',url);
+  // mainConsole.log('getTransactionHistoryUrl',url);
   return url;
 };
 
@@ -249,8 +251,8 @@ const requestAllBlockchainData = async () => {
     await requestCamoSharedAccountBalance();
     await requestCamoPending();
   } catch (error) {
-    console.trace('requestAllBlockchainData', error.message);
-    alert('error requesting all blockchain data:' + error.message);
+    mainConsole.trace('requestAllBlockchainData', error);
+    showAlert('error requesting all blockchain data:' + error.message);
     updateLocalizedPleaseWaitStatus();
   }
 };
@@ -347,7 +349,7 @@ const getAccountDataFromSeed = async () => {
   show('seed');
   const seedElt = appDocument.getElementById('seed');
   if (seedElt.value.length != SEED_LENGTH) {
-    alert(`seed must be a hex encoded string of length ${SEED_LENGTH}, not ${seedElt.value.length}`);
+    showAlert(`seed must be a hex encoded string of length ${SEED_LENGTH}, not ${seedElt.value.length}`);
     return;
   }
   seed = seedElt.value;
@@ -356,7 +358,7 @@ const getAccountDataFromSeed = async () => {
   const storeSeed = storeSeedElt.checked;
   const storeSeedPasswordElt = appDocument.getElementById('storeSeedPassword');
   const storeSeedPassword = storeSeedPasswordElt.value;
-  // alert(`storeSeed:${storeSeed} storeSeedPassword:${storeSeedPassword} `);
+  // showAlert(`storeSeed:${storeSeed} storeSeedPassword:${storeSeedPassword} `);
 
   if (storeSeed) {
     const store = new Store({
@@ -370,7 +372,7 @@ const getAccountDataFromSeed = async () => {
     await requestBlockchainDataAndShowHome();
   } catch (error) {
     mainConsole.trace('getAccountDataFromSeed', error);
-    alert('error getting account data from seed. ' + error.message);
+    showAlert('error getting account data from seed. ' + error.message);
     updateLocalizedPleaseWaitStatus();
   }
 };
@@ -397,8 +399,8 @@ const reuseSeed = async () => {
     success = true;
   } catch (error) {
     success = false;
-    console.trace('reuseSeed', JSON.stringify(error));
-    alert('cannot open seed storage, check that password is correct. ' + JSON.stringify(error));
+    mainConsole.trace('reuseSeed', error);
+    showAlert('cannot open seed storage, check that password is correct. ' + error.message);
   }
   updateLocalizedPleaseWaitStatus();
   if (success) {
@@ -447,10 +449,10 @@ const updateRepresentative = async () => {
     mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
         newBanRepresentative);
     const response = await bananojsErrorTrap.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
-    alert(response);
+    showAlert(response);
   } catch (error) {
-    console.trace('updateRepresentative', JSON.stringify(error));
-    alert('error updating representative. ' + JSON.stringify(error));
+    mainConsole.trace('updateRepresentative', error);
+    showAlert('error updating representative. ' + error.message);
   }
   updateLocalizedPleaseWaitStatus();
 };
@@ -523,10 +525,10 @@ const sendAmountToAccount = async () => {
     mainConsole.debug('sendAmountToAccount', message);
     sendToAccountStatuses.push(message);
     updateLocalizedPleaseWaitStatus();
-    alert(message);
+    showAlert(message);
   } catch (error) {
-    console.trace('sendAmountToAccount', error.message);
-    alert('error sending amount to account. ' + error.message);
+    mainConsole.trace('sendAmountToAccount', error);
+    showAlert('error sending amount to account. ' + error.message);
   }
   updateLocalizedPleaseWaitStatus();
   renderApp();
@@ -678,11 +680,12 @@ const hideEverything = () => {
   hide('private-key-generator');
   hide('account-book');
   hide('please-wait');
+  hide('alert');
 };
 
 const copyToClipboard = () => {
   appClipboard.writeText(generatedSeedHex);
-  alert(`copied to clipboard:\n${generatedSeedHex}`);
+  showAlert(`copied to clipboard:\n${generatedSeedHex}`);
 };
 
 const showLogin = () => {
@@ -831,7 +834,7 @@ const getAccountBook = () => {
       });
     });
   } catch (error) {
-    alert('error getting account book ' + JSON.stringify(error.message));
+    showAlert('error getting account book ' + error.message);
     mainConsole.log('getAccountBook error', error);
   }
   return book;
@@ -857,7 +860,7 @@ const addAccountToBook = () => {
 
     getAccountBook().forEach((bookAccount, bookAccountIx) => {
       if (bookAccount.account == validAccount) {
-        alert('duplicate['+bookAccount.n+']:' + validAccount);
+        showAlert('duplicate['+bookAccount.n+']:' + validAccount);
         duplicate = true;
       }
     });
@@ -866,27 +869,27 @@ const addAccountToBook = () => {
       const store = getCleartextConfig();
       store.set('accountBook', accountBook);
       renderApp();
-      alert('added:'+validAccount);
+      showAlert('added:'+validAccount);
     }
   };
 
   const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(newBookAccount);
-  // alert(JSON.stringify(camoAccountValid));
+  // showAlert(JSON.stringify(camoAccountValid));
   if (camoAccountValid.valid) {
     try {
       const publicKey = bananojsErrorTrap.getAccountPublicKey(newBookAccount);
       const account = bananojsErrorTrap.getAccount(publicKey);
       pushAndStore(account);
     } catch (error) {
-      alert(error.message);
+      showAlert(error.message);
     }
   } else {
     const accountValid = bananojsErrorTrap.getAccountValidationInfo(newBookAccount);
-    // alert(JSON.stringify(accountValid));
+    // showAlert(JSON.stringify(accountValid));
     if (accountValid.valid) {
       pushAndStore(newBookAccount);
     } else {
-      alert(accountValid.message + '\n' + camoAccountValid.message);
+      showAlert(accountValid.message + '\n' + camoAccountValid.message);
     }
   }
 };
@@ -1100,9 +1103,9 @@ const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => 
   mainConsole.debug('receiveCamoPending seedIx', seedIx, sendToAccount, sharedSeedIx, hash);
   try {
     const response = await bananojsErrorTrap.receiveCamoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
-    alert(JSON.stringify(response));
+    showAlert(JSON.stringify(response));
   } catch (error) {
-    alert(JSON.stringify(error));
+    showAlert(error.message);
     mainConsole.debug('receiveCamoPending error', error);
   }
 };
@@ -1226,14 +1229,14 @@ const receivePending = async (hash, seedIx) => {
       const response = await bananojsErrorTrap.receiveDepositsForSeed(seed, seedIx, representative, hash);
       mainConsole.debug('receivePending receiveDepositsForSeed', response);
       if (response) {
-        alert(JSON.stringify(response));
+        showAlert(JSON.stringify(response));
       }
     } else {
-      alert('no representative, cannot receive pending.');
+      showAlert('no representative, cannot receive pending.');
     }
   } catch (error) {
-    console.trace('receivePending', error.message);
-    alert('error trying to receive pending. ' + error.message);
+    mainConsole.trace('receivePending', error);
+    showAlert('error trying to receive pending. ' + error.message);
   }
   updateLocalizedPleaseWaitStatus();
 };
@@ -1331,11 +1334,10 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
     await setAccountDataFromSeed();
     await requestAllBlockchainData();
     updateLocalizedPleaseWaitStatus();
-    alert(message);
+    showAlert(message);
   } catch (error) {
-    console.trace('sendSharedAccountBalanceToFirstAccountWithNoTransactions', JSON.stringify(error));
-    console.trace(error);
-    alert('error refreshing account data. ' + JSON.stringify(error));
+    mainConsole.trace('sendSharedAccountBalanceToFirstAccountWithNoTransactions', error);
+    showAlert('error refreshing account data. ' + error.message);
     updateLocalizedPleaseWaitStatus();
   }
   renderApp();
@@ -1364,16 +1366,16 @@ const updateLocalizedPleaseWaitStatus = (...statusParts) => {
 };
 
 const getLocalization = (key) => {
-  // alert(`${key}, ${isNaN(key)}`);
+  // showAlert(`${key}, ${isNaN(key)}`);
   if (isNaN(key)) {
     const values = localization[key];
     if (values) {
-      // alert(JSON.stringify(values));
+      // showAlert(JSON.stringify(values));
       const value = values[language];
-      // alert(JSON.stringify(value));
+      // showAlert(JSON.stringify(value));
       return value;
     } else {
-      alert(key);
+      showAlert(key);
     }
   } else {
     return key;
@@ -1402,6 +1404,22 @@ const getTotalBalances = () => {
     camoBalance: totalCamoBalance,
     camoPendingBalance: totalCamoPendingBalance,
   };
+};
+
+const getAlertMessage = () => {
+  return alertMessage;
+};
+
+const hideAlert = () => {
+  hide('alert');
+  renderApp();
+};
+
+const showAlert = (message) => {
+  mainConsole.log('showAlert', message);
+  alertMessage = message;
+  show('alert');
+  renderApp();
 };
 
 exports.getLocalization = getLocalization;
@@ -1461,4 +1479,7 @@ exports.deleteAccountFromBook = deleteAccountFromBook;
 exports.sendSharedAccountBalanceToFirstAccountWithNoTransactions = sendSharedAccountBalanceToFirstAccountWithNoTransactions;
 exports.changeNetwork = changeNetwork;
 exports.getTotalBalances = getTotalBalances;
+exports.getAlertMessage = getAlertMessage;
+exports.hideAlert = hideAlert;
+exports.showAlert = showAlert;
 exports.init = init;

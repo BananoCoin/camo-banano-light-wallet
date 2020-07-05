@@ -96,6 +96,10 @@ p {
   height: 120px;
 }
 
+.h180px {
+  height: 180px;
+}
+
 .h200px {
   height: 200px;
 }
@@ -130,6 +134,11 @@ p {
 
 .w100pct {
   width: 100%;
+}
+
+.black_on_yellow {
+  background-color: rgba(251, 221, 17, 0.63);
+  color: #000000;
 }
 
 .yellow_on_brown {
