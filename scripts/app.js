@@ -12,6 +12,7 @@ const Conf = require('conf');
 const bananojsErrorTrap = require('./util/bananojs-error-trap-util.js');
 const accountUtil = require('./util/account-util.js');
 const backgroundUtil = require('./util/background-util.js');
+const sendToListUtil = require('./util/send-to-list-util.js');
 const localization = require('./localization.json');
 
 /** modules */
@@ -98,6 +99,8 @@ let language = undefined;
 
 let alertMessage = '';
 
+let exampleWorkbookBase64 = '';
+
 const blockchainState = {
   count: 0,
 };
@@ -116,7 +119,7 @@ const getCleartextConfig = () => {
   return conf;
 };
 
-const init = () => {
+const init = async () => {
   backgroundUtil.setApp(
       {
         hide: hide,
@@ -157,6 +160,7 @@ const init = () => {
   balanceStatus = getLocalization('noBalanceRequestedYet');
   transactionHistoryStatus = getLocalization('noHistoryRequestedYet');
   blockchainStatus = getLocalization('noBlockchainStateRequestedYet');
+  exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
 };
 
 const getCamoRepresentative = () => {
@@ -681,6 +685,7 @@ const hideEverything = () => {
   hide('account-book');
   hide('please-wait');
   hide('alert');
+  hide('send-to-list-file-select');
 };
 
 const copyToClipboard = () => {
@@ -734,6 +739,7 @@ const showSendToList = () => {
   hideEverything();
   clearSendData();
   show('from-account');
+  show('send-to-list-file-select');
   selectButton('sendToList');
 };
 
@@ -1422,6 +1428,10 @@ const showAlert = (message) => {
   renderApp();
 };
 
+const getExampleWorkbookURL = () => {
+  return 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + exampleWorkbookBase64;
+};
+
 exports.getLocalization = getLocalization;
 exports.changeLanguage = changeLanguage;
 exports.getLanguages = getLanguages;
@@ -1482,4 +1492,5 @@ exports.getTotalBalances = getTotalBalances;
 exports.getAlertMessage = getAlertMessage;
 exports.hideAlert = hideAlert;
 exports.showAlert = showAlert;
+exports.getExampleWorkbookURL = getExampleWorkbookURL;
 exports.init = init;

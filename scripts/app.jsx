@@ -837,6 +837,17 @@ class App extends React.Component {
                         onClick={(e) =>app.hideAlert()}/>
                     </td>
                   </tr>
+                  <tr id="send-to-list-file-select">
+                    <td className="black_on_yellow h20px darkgray_border bordered">
+                      <div className="h20px">
+                        <a download="send-to-list.xlsx" target="_blank" href={app.getExampleWorkbookURL()}><Localization name="downloadExampleWorkbook"/></a>
+                      </div>
+                      <hr />
+                      <Localization name="selectFileWithAccountAndAmountOfBananos"/>
+                      <br />
+                      <input id="exportExampleWorkbookFileDialog" type="file" />
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </td>
