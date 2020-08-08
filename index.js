@@ -38,7 +38,7 @@ app.on( 'window-all-closed', function() {
 } );
 
 const createMenu = () => {
-  const isMac = process.platform === 'darwin'
+  const isMac = process.platform === 'darwin';
 
   const application = {
     label: 'Application',
@@ -124,6 +124,7 @@ app.on( 'ready', () => {
     icon: path.join( __dirname, 'assets/icons/png/64x64.png' ),
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   } );
 

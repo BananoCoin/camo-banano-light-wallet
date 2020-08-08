@@ -12,6 +12,7 @@ const ERROR_URL = 'https://bananojs.coranos.cc/api';
 
 // variables
 let url = ERROR_URL;
+let app;
 
 // functions
 const getErrorUrl = () => {
@@ -20,6 +21,10 @@ const getErrorUrl = () => {
 
 const isErrorUrl = () => {
   return url == ERROR_URL;
+};
+
+const setApp = (_app) => {
+  app = _app;
 };
 
 const setBananodeApiUrl = (rpcUrl) => {
@@ -38,7 +43,7 @@ const getAccountHistory = async (account, count, head, raw) => {
     }
     return await bananojs.getAccountHistory(account, count, head, raw);
   } catch (error) {
-    alert('error getting account history:' + error.message);
+    app.showAlert('error getting account history:' + error.message);
     return [];
   }
 };
@@ -52,7 +57,7 @@ const getPrivateKey = (seed, seedIx) => {
     return bananojs.getPrivateKey(seed, seedIx);
   } catch (error) {
     // mainConsole.trace('error getting account history', 'seedIx', seedIx, error.message);
-    alert('error getting account history:' + error.message);
+    app.showAlert('error getting account history:' + error.message);
     return undefined;
   }
 };
@@ -76,7 +81,7 @@ const getAccountsPending = async (account, count, source) => {
     }
     return await bananojs.getAccountsPending(account, count, source);
   } catch (error) {
-    alert('error getting account pending:' + error.message);
+    app.showAlert('error getting account pending:' + error.message);
     return [];
   }
 };
@@ -100,7 +105,7 @@ const changeRepresentativeForSeed = async (seed, seedIx, representative) => {
     }
     return await bananojs.changeRepresentativeForSeed(seed, seedIx, representative);
   } catch (error) {
-    alert('error changing rep:' + error.message);
+    app.showAlert('error changing rep:' + error.message);
     return;
   }
 };
@@ -110,9 +115,9 @@ const camoSendWithdrawalFromSeed = async (seed, sendFromSeedIx, sendToAccount, s
     if (isErrorUrl()) {
       throw Error('camoSendWithdrawalFromSeed');
     }
-    return await bananojs.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+    return await bananojs.camoBananoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
   } catch (error) {
-    alert('error camo send withdrawal:' + error.message);
+    app.showAlert('error camo send withdrawal:' + error.message);
     return;
   }
 };
@@ -122,9 +127,9 @@ const sendWithdrawalFromSeed = async (seed, sendFromSeedIx, sendToAccount, sendA
     if (isErrorUrl()) {
       throw Error('sendWithdrawalFromSeed');
     }
-    return await bananojs.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+    return await bananojs.sendBananoWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
   } catch (error) {
-    alert('error send withdrawal:' + error.message);
+    app.showAlert('error send withdrawal:' + error.message);
     return;
   }
 };
@@ -140,7 +145,7 @@ const getAccountInfo = async (account, representativeFlag) => {
     }
     return await bananojs.getAccountInfo(account, representativeFlag);
   } catch (error) {
-    alert('error:' + error.message);
+    app.showAlert('error:' + error.message);
     const retval = {};
     retval.error = 'Error Testnet Selected';
     return retval;
@@ -154,7 +159,7 @@ const getBlockCount = async () => {
     }
     return await bananojs.getBlockCount();
   } catch (error) {
-    alert('error get block count:' + error.message);
+    app.showAlert('error get block count:' + error.message);
     const retval = {};
     retval.count = -1;
     return retval;
@@ -174,9 +179,9 @@ const getCamoSharedAccountData = async (seed, seedIx, sendToAccount, sharedSeedI
     if (isErrorUrl()) {
       throw Error('getCamoSharedAccountData');
     }
-    return await bananojs.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
+    return await bananojs.getCamoBananoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
   } catch (error) {
-    alert('error getting camo shared acount data:' + error.message);
+    app.showAlert('error getting camo shared acount data:' + error.message);
     return;
   }
 };
@@ -186,9 +191,9 @@ const camoGetAccountsPending = async (seed, seedIx, sendToAccount, sharedSeedIx,
     if (isErrorUrl()) {
       throw Error('camoGetAccountsPending');
     }
-    return await bananojs.camoGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, count);
+    return await bananojs.camoBananoGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, count);
   } catch (error) {
-    alert('error get account pending:' + error.message);
+    app.showAlert('error get account pending:' + error.message);
     return;
   }
 };
@@ -198,9 +203,9 @@ const receiveCamoDepositsForSeed = async (seed, seedIx, sendToAccount, sharedSee
     if (isErrorUrl()) {
       throw Error('receiveCamoDepositsForSeed');
     }
-    return await bananojs.receiveCamoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
+    return await bananojs.receiveCamoBananoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
   } catch (error) {
-    alert('error receive camo deposit:' + error.message);
+    app.showAlert('error receive camo deposit:' + error.message);
     return;
   }
 };
@@ -210,9 +215,9 @@ const receiveDepositsForSeed = async (seed, seedIx, representative, hash) => {
     if (isErrorUrl()) {
       throw Error('receiveDepositsForSeed');
     }
-    return await bananojs.receiveDepositsForSeed(seed, seedIx, representative, hash);
+    return await bananojs.receiveBananoDepositsForSeed(seed, seedIx, representative, hash);
   } catch (error) {
-    alert('error receive deposit:' + error.message);
+    app.showAlert('error receive deposit:' + error.message);
     return;
   }
 };
@@ -240,3 +245,4 @@ exports.getCamoSharedAccountData = getCamoSharedAccountData;
 exports.camoGetAccountsPending = camoGetAccountsPending;
 exports.receiveCamoDepositsForSeed = receiveCamoDepositsForSeed;
 exports.receiveDepositsForSeed = receiveDepositsForSeed;
+exports.setApp = setApp;

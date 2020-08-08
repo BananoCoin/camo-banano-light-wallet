@@ -161,6 +161,8 @@ const init = async () => {
   transactionHistoryStatus = getLocalization('noHistoryRequestedYet');
   blockchainStatus = getLocalization('noBlockchainStateRequestedYet');
   exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
+
+  bananojsErrorTrap.setApp(this);
 };
 
 const getCamoRepresentative = () => {
@@ -396,11 +398,15 @@ const reuseSeed = async () => {
       clearInvalidConfig: false,
     });
     seed = store.get('seed');
-
-    useLedgerFlag = false;
-    isLoggedIn = true;
-    show('seed');
-    success = true;
+    if (seed == null) {
+      success = false;
+      showAlert('no seed found in seed storage, storage may not have been initialized.');
+    } else {
+      useLedgerFlag = false;
+      isLoggedIn = true;
+      show('seed');
+      success = true;
+    }
   } catch (error) {
     success = false;
     mainConsole.trace('reuseSeed', error);
