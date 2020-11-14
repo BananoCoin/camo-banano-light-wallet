@@ -668,6 +668,7 @@ const hideEverything = () => {
   clearButtonSelection('transactions');
   clearButtonSelection('representatives');
   clearButtonSelection('accounts');
+  clearButtonSelection('sendToList');
   hide('seed-reuse');
   hide('seed-reuse-entry');
   hide('seed-entry');
