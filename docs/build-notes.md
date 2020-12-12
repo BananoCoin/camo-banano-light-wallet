@@ -5,15 +5,16 @@
   npm outdated;
   npm install package@latest;
   npm i;
+  npm audit fix;
 
 ## to auto build a releases
-  git commit -am v1.0.9;
-  git tag v1.0.9;
+  git commit -am v1.0.10;
+  git tag v1.0.10;
   git push;
   git push --tags;
 
 ## to delete release tags
-  git push --delete origin v1.0.9;
-  git tag -d v1.0.9;
+  git push --delete origin v1.0.10;
+  git tag -d v1.0.10;
   git pull;
   git push;
