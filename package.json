@@ -52,6 +52,7 @@
     "elliptic": "^6.5.3",
     "exceljs": "^4.2.0",
     "hw-app-nano": "^1.3.0",
+    "node-hid": "^2.1.1",
     "node-jsx": "^0.13.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
