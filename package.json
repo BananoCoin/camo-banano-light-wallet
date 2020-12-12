@@ -27,7 +27,8 @@
     "dist-mac": "electron-builder -m",
     "dist-win": "electron-builder -w",
     "dist-linux": "electron-builder -l",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "install": "electron-rebuild -f -w node-hid"
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,7 @@
     "chai": "^4.2.0",
     "electron": "^11.1.0",
     "electron-builder": "^22.9.1",
+    "electron-rebuild": "^1.10.1",
     "eslint": "^7.15.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^8.2.1"
