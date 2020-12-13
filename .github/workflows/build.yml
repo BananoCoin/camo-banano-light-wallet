@@ -13,7 +13,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os:             [macos-latest, windows-2019, ubuntu-latest]
+        os:             [macos-latest, windows-2019, ubuntu-18.04]
 
     steps:
       - name:           Check out Git repository
@@ -22,7 +22,7 @@ jobs:
       - name:           Install Node.js and Yarn
         uses:           actions/setup-node@v1
         with:
-          node-version: 13.x
+          node-version: 11.x
 
       - name:           Install libusb
         run:            |
