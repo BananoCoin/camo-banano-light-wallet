@@ -8,13 +8,13 @@
   npm audit fix;
 
 ## to auto build a releases
-  git commit -am v1.0.10;
-  git tag v1.0.10;
+  git commit -am v1.0.11;
+  git tag v1.0.11;
   git push;
   git push --tags;
 
 ## to delete release tags
-  git push --delete origin v1.0.10;
-  git tag -d v1.0.10;
+  git push --delete origin v1.0.11;
+  git tag -d v1.0.11;
   git pull;
   git push;
