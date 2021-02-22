@@ -21,7 +21,7 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
     accountDataElt.seedIx = seedIx;
     accountDataElt.privateKey = bananojsErrorTrap.getPrivateKey(seed, accountDataElt.seedIx);
     if (accountDataElt.privateKey) {
-      accountDataElt.publicKey = bananojsErrorTrap.getPublicKey(accountDataElt.privateKey);
+      accountDataElt.publicKey = await bananojsErrorTrap.getPublicKey(accountDataElt.privateKey);
       accountDataElt.account = bananojsErrorTrap.getAccount(accountDataElt.publicKey);
       accountData.push(accountDataElt);
       const accountHistory = await bananojsErrorTrap.getAccountHistory(accountDataElt.account, 1);

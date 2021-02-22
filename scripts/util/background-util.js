@@ -38,7 +38,7 @@ const getPleaseWaitStatus = () => {
 
 const showUpdateInProgressAlert = () => {
   // console.trace('showUpdateInProgressAlert');
-  alert('please wait for background actions to complete.\n' +
+  app.showAlert('please wait for background actions to complete.\n' +
         `status: '${pleaseWaitStatus}'`);
 };
 

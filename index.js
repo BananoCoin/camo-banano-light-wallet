@@ -1,6 +1,7 @@
 'use strict';
 
 const electron = require( 'electron' );
+const Store = require('electron-store');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -12,6 +13,8 @@ const remote = electron.remote;
 const path = require( 'path' );
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+
+Store.initRenderer();
 
 // Report crashes to our server.
 // require('crash-reporter').start();

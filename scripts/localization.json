@@ -374,5 +374,26 @@
   "seedAccount": {
     "en": "seed account",
     "es": "cuenta de semillas"
+  },
+  "autoRecieve": {
+    "en": "automatically recieve blocks periodically",
+    "es": "recibir automáticamente bloques periódicamente"
+  },
+  "autoRecieving": {
+    "en": "automatically recieving",
+    "es": "recepción automática"
+  },
+  "nextAutoRecieve": {
+    "en": "next auto recieve",
+    "es": "siguiente auto recibir"
+  },
+
+  "enableAutoRecieve": {
+    "en": "Enable Auto Recieve",
+    "es": "Habilitar Recepción Automática"
+  },
+  "disableAutoRecieve": {
+    "en": "Disable Auto Recieve",
+    "es": "Desactivar Recepción Automática"
   }
 }

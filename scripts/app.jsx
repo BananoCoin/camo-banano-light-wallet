@@ -28,6 +28,22 @@ const openDevTools = () => {
   }
 };
 
+const AutoRecieveButton = () => {
+  if (app.getUseAutoRecieve()) {
+    return (
+      <DisableableButton
+        name="disableAutoRecieve"
+        onClick={(e) => app.setAutoRecieve(false)}/>
+    )
+  } else {
+    return (
+      <DisableableButton
+        name="enableAutoRecieve"
+        onClick={(e) => app.setAutoRecieve(true)}/>
+    )
+  }
+}
+
 const BalancesTable = () => {
   const totals = app.getTotalBalances();
   return (
@@ -532,6 +548,10 @@ class App extends React.Component {
                   </tr>
                   <tr id="pending">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
+                      <Localization name="autoRecieve"/><br/>
+                      <Localization name="nextAutoRecieve"/>&nbsp;{app.getAutoRecieveCountdown()}<br/>
+                      <AutoRecieveButton/>
+                      <br/>
                       <div className="gray_on_yellow"><Localization name="pending"/></div>
                       <br/>
                       <table className="w100pct no_border whitespace_nowrap">

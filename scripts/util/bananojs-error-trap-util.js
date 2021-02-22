@@ -62,8 +62,8 @@ const getPrivateKey = (seed, seedIx) => {
   }
 };
 
-const getPublicKey = (privateKey) => {
-  return bananojs.getPublicKey(privateKey);
+const getPublicKey = async (privateKey) => {
+  return await bananojs.getPublicKey(privateKey);
 };
 
 const getAccount = (publicKey) => {

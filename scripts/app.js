@@ -27,6 +27,8 @@ const SEED_LENGTH = 64;
 
 const LOG_LEDGER_POLLING = false;
 
+const LOG_ALERTS = true;
+
 const ACCOUNT_HISTORY_SIZE = 20;
 
 /** networks */
@@ -70,6 +72,10 @@ const accountData = [];
 let sendAmount = '';
 
 let useCamo = undefined;
+
+let useAutoRecieve = undefined;
+
+let autoRecieveCountdown = '';
 
 const camoSharedAccountData = [];
 
@@ -124,6 +130,7 @@ const init = async () => {
       {
         hide: hide,
         show: show,
+        showAlert: showAlert,
         renderApp: () => {
           renderApp();
         },
@@ -138,6 +145,12 @@ const init = async () => {
   } else {
     useCamo = false;
   }
+  if (conf.has('useAutoRecieve')) {
+    useAutoRecieve = conf.get('useAutoRecieve');
+  } else {
+    useAutoRecieve = false;
+  }
+
   if (conf.has('language')) {
     language = conf.get('language');
   } else {
@@ -163,6 +176,8 @@ const init = async () => {
   exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
 
   bananojsErrorTrap.setApp(this);
+
+  setTimeout(autoRecieve, getAutoRecieveTimer());
 };
 
 const getCamoRepresentative = () => {
@@ -1429,7 +1444,9 @@ const hideAlert = () => {
 };
 
 const showAlert = (message) => {
-  mainConsole.log('showAlert', message);
+  if (LOG_ALERTS) {
+    mainConsole.log('showAlert', message);
+  }
   alertMessage = message;
   show('alert');
   renderApp();
@@ -1439,6 +1456,70 @@ const getExampleWorkbookURL = () => {
   return 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + exampleWorkbookBase64;
 };
 
+const getUseAutoRecieve = () => {
+  return useAutoRecieve;
+};
+
+const setAutoRecieve = async (_useAutoRecieve) => {
+  useAutoRecieve = _useAutoRecieve;
+  const store = getCleartextConfig();
+  store.set('useAutoRecieve', useAutoRecieve);
+  showAlert('auto recieve set to ' + useAutoRecieve);
+  await renderApp();
+};
+
+const autoRecieve = async () => {
+  // mainConsole.log('autoRecieve', seed, useAutoRecieve, backgroundUtil.isUpdateInProgress());
+  if (seed !== undefined) {
+    if (useAutoRecieve) {
+    // showAlert('timer auto recieve' + useAutoRecieve);
+      if (!backgroundUtil.isUpdateInProgress()) {
+        await requestAllBlockchainData();
+        let item = undefined;
+        let camo = undefined;
+        if (pendingBlocks.length > 0) {
+          item = pendingBlocks[0];
+          camo = false;
+        } else if (camoPendingBlocks.length > 0) {
+          item = camoPendingBlocks[0];
+          camo = true;
+        }
+        if (item !== undefined) {
+          updateLocalizedPleaseWaitStatus('autoRecieving');
+          if (camo) {
+            await receiveCamoPending(item.seedIx, item.sendToAccount, item.sharedSeedIx, item.hash, item.totalRaw);
+          } else {
+            await receivePending(item.hash, item.seedIx);
+          }
+          hideAlert();
+          updateLocalizedPleaseWaitStatus();
+          await requestAllBlockchainData();
+        }
+      }
+    }
+  }
+  setTimeout(autoRecieve, getAutoRecieveTimer());
+};
+
+const getAutoRecieveTimer = () => {
+  // every 150 seconds +/- 30 seconds.
+  const timerSeconds = 150 + (Math.random() * 30);
+  const timerMillis = timerSeconds * 1000;
+  const dateNow = Date.now();
+  const coundownMillis = dateNow + timerMillis;
+  autoRecieveCountdown = new Date(coundownMillis).toISOString().replace('T',' ');
+  // mainConsole.log('getAutoRecieveTimer', timerSeconds, autoRecieveCountdown);
+  renderApp();
+  return timerMillis;
+};
+
+const getAutoRecieveCountdown = () => {
+  return autoRecieveCountdown;
+};
+
+exports.getAutoRecieveCountdown = getAutoRecieveCountdown;
+exports.getUseAutoRecieve = getUseAutoRecieve;
+exports.setAutoRecieve = setAutoRecieve;
 exports.getLocalization = getLocalization;
 exports.changeLanguage = changeLanguage;
 exports.getLanguages = getLanguages;
