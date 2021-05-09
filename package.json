@@ -6,11 +6,15 @@
   "main": "index.js",
   "build": {
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "hardenedRuntime": true
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "category": "Utility"
     }
   },
@@ -29,7 +33,9 @@
     "type": "git",
     "url": "git+https://github.com/BananoCoin/camo-banano-light-wallet.git"
   },
-  "keywords": ["camo banano wallet"],
+  "keywords": [
+    "camo banano wallet"
+  ],
   "author": "coranos",
   "license": "MIT",
   "bugs": {
@@ -38,6 +44,7 @@
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
     "@bananocoin/bananojs": "^2.4.7",
+    "@electron/remote": "^1.1.0",
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
     "check-node-version": "^4.1.0",

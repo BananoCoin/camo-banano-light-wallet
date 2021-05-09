@@ -2,6 +2,8 @@
 
 const electron = require( 'electron' );
 const Store = require('electron-store');
+const main = require('@electron/remote/main');
+
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -14,6 +16,7 @@ const path = require( 'path' );
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
+main.initialize();
 Store.initRenderer();
 
 // Report crashes to our server.
@@ -127,6 +130,7 @@ app.on( 'ready', () => {
     icon: path.join( __dirname, 'assets/icons/png/64x64.png' ),
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       enableRemoteModule: true,
     },
   } );

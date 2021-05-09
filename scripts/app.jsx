@@ -5,8 +5,8 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const electron = require('electron');
+const remote = require('@electron/remote');
 const shell = electron.shell;
-const remote = electron.remote;
 const clipboard = electron.clipboard;
 
 const Row = require('react-bootstrap').Row;
