@@ -63,7 +63,7 @@ let appClipboard = undefined;
 
 let renderApp = undefined;
 
-const ledgerDeviceInfo = undefined;
+let ledgerDeviceInfo = undefined;
 
 let seed = undefined;
 
@@ -83,8 +83,6 @@ const accountBook = [];
 
 let isLoggedIn = false;
 
-let useLedgerFlag = false;
-
 let generatedSeedHex = undefined;
 
 let balanceStatus = 'No Balance Requested Yet';
@@ -96,10 +94,6 @@ let totalPendingBalance = '?';
 let totalCamoBalance = '?';
 
 let totalCamoPendingBalance = '?';
-
-let transactionHistoryStatus = 'No History Requested Yet';
-
-let blockchainStatus = 'No Blockchain State Requested Yet';
 
 let language = undefined;
 
@@ -171,11 +165,11 @@ const init = async () => {
 
   sendToAccountStatuses.push(getLocalization('noSendToAccountRequestedYet'));
   balanceStatus = getLocalization('noBalanceRequestedYet');
-  transactionHistoryStatus = getLocalization('noHistoryRequestedYet');
-  blockchainStatus = getLocalization('noBlockchainStateRequestedYet');
   exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
 
   bananojsErrorTrap.setApp(this);
+  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
+  await requestLedgerDeviceInfo();
 
   setTimeout(autoRecieve, getAutoRecieveTimer());
 };
@@ -233,29 +227,8 @@ const getCurrentNetwork = () => {
   return NETWORKS[currentNetworkIx];
 };
 
-const getTransactionHistoryUrl = (account) => {
-  const url = `${getCurrentNetwork().EXPLORER}/explorer/account/${account}/history`;
-  // mainConsole.log('getTransactionHistoryUrl',url);
-  return url;
-};
-
 const getRpcUrl = () => {
   return getCurrentNetwork().RPC_URL;
-};
-
-const formatDate = (date) => {
-  let month = (date.getMonth() + 1).toString();
-  let day = date.getDate().toString();
-  const year = date.getFullYear();
-
-  if (month.length < 2) {
-    month = '0' + month;
-  };
-  if (day.length < 2) {
-    day = '0' + day;
-  };
-
-  return [year, month, day].join('-');
 };
 
 const requestAllBlockchainData = async () => {
@@ -271,6 +244,7 @@ const requestAllBlockchainData = async () => {
     await requestCamoSharedAccount();
     await requestCamoSharedAccountBalance();
     await requestCamoPending();
+    await requestLedgerDeviceInfo();
   } catch (error) {
     mainConsole.trace('requestAllBlockchainData', error);
     showAlert('error requesting all blockchain data:' + error.message);
@@ -282,49 +256,6 @@ const changeNetwork = async (event) => {
   currentNetworkIx = event.target.value;
   await requestAllBlockchainData();
   renderApp();
-};
-
-const postJson = (url, jsonString, readyCallback, errorCallback) => {
-  const xmlhttp = new XMLHttpRequest(); // new HttpRequest instance
-
-  const xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4) {
-      // sendToAccountStatuses.push( `XMLHttpRequest: status:${this.status} response:'${this.response}'` );
-      if (this.status == 200) {
-        readyCallback(JSON.parse(this.response));
-      } else {
-        errorCallback(this.response);
-      }
-    }
-  };
-  xhttp.responseType = 'text';
-  xhttp.open('POST', url, true);
-  xhttp.setRequestHeader('Content-Type', 'application/json');
-
-  // sendToAccountStatuses.push( `XMLHttpRequest: curl ${url} -H "Content-Type: application/json" -d '${jsonString}'` );
-
-  xhttp.send(jsonString);
-};
-
-const getJson = (url, readyCallback, errorCallback) => {
-  const xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4) {
-      if (this.status == 200) {
-        readyCallback(JSON.parse(this.response));
-      } else {
-        errorCallback({
-          'status': this.status,
-          'statusText': this.statusText,
-          'response': this.response,
-        });
-      }
-    }
-  };
-  xhttp.responseType = 'text';
-  xhttp.open('GET', url, true);
-  xhttp.send();
 };
 
 const get = (id) => {
@@ -343,17 +274,23 @@ const show = (id) => {
   get(id).style = 'display:default;';
 };
 
-const getPublicKeyFromLedger = () => {
-  throw new Error('getPublicKeyFromLedger not completely implemented.');
-  useLedgerFlag = true;
+const useLedger = async () => {
+  bananojsErrorTrap.setUseLedgerFlag(true);
   isLoggedIn = true;
+  try {
+    await setAccountDataFromSeed();
+    await requestBlockchainDataAndShowHome();
+  } catch (error) {
+    mainConsole.trace('getAccountDataFromSeed', error);
+    showAlert('error getting account data from seed. ' + error.message);
+    updateLocalizedPleaseWaitStatus();
+  }
 };
 
 const requestBlockchainDataAndShowHome = async () => {
   if (accountData.length == 0) {
     return;
   }
-  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   await requestAllBlockchainData();
   showHome();
 };
@@ -365,7 +302,7 @@ const setAccountDataFromSeed = async () => {
 };
 
 const getAccountDataFromSeed = async () => {
-  useLedgerFlag = false;
+  bananojsErrorTrap.setUseLedgerFlag(false);
   isLoggedIn = true;
   show('seed');
   const seedElt = appDocument.getElementById('seed');
@@ -417,7 +354,7 @@ const reuseSeed = async () => {
       success = false;
       showAlert('no seed found in seed storage, storage may not have been initialized.');
     } else {
-      useLedgerFlag = false;
+      bananojsErrorTrap.setUseLedgerFlag(false);
       isLoggedIn = true;
       show('seed');
       success = true;
@@ -489,11 +426,6 @@ const updateAmount = () => {
   if (isNaN(sendAmount)) {
     throw new Error(`sendAmount ${sendAmount} is not a number`);
   }
-};
-
-const updateAmountAndRenderApp = () => {
-  updateAmount();
-  renderApp();
 };
 
 const sendAmountToAccount = async () => {
@@ -577,9 +509,6 @@ const requestTransactionHistory = async () => {
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
     const accountHistory = await bananojsErrorTrap.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
-    // mainConsole.log('requestTransactionHistory', account, accountHistory);
-    // transactionHistoryStatus = accountHistory;
-    // mainConsole.log(transactionHistoryStatus);
     const parsedTransactionHistoryByAccountElt = {};
     parsedTransactionHistoryByAccountElt.account = account;
     parsedTransactionHistoryByAccount.push(parsedTransactionHistoryByAccountElt);
@@ -648,10 +577,8 @@ const requestBlockchainState = async () => {
   const blockCount = await bananojsErrorTrap.getBlockCount();
   if (blockCount) {
     blockchainState.count = blockCount.count;
-    blockchainStatus = 'Success';
   } else {
     blockchainState.count = '';
-    blockchainStatus = 'Failure';
   }
   mainConsole.debug('blockchainState', blockchainState);
   updateLocalizedPleaseWaitStatus();
@@ -721,7 +648,7 @@ const showLogin = () => {
   clearSendData();
   show('seed-login');
   show('seed-reuse');
-  // show('ledger-login');
+  show('ledger-login');
   show('camo-banano-branding');
   show('private-key-generate');
   isLoggedIn = false;
@@ -944,7 +871,8 @@ const clearGlobalData = () => {
 
   accountData.length = 0;
 
-  useLedgerFlag = false;
+
+  bananojsErrorTrap.setUseLedgerFlag(false);
   generatedSeedHex = undefined;
   seed = undefined;
 
@@ -956,7 +884,6 @@ const clearGlobalData = () => {
 
   balanceStatus = 'No Balance Requested Yet';
 
-  transactionHistoryStatus = 'No History Requested Yet';
   parsedTransactionHistoryByAccount.length = 0;
 
   pendingBlocks.length = 0;
@@ -978,6 +905,11 @@ const setAppDocument = (_document) => {
   appDocument = _document;
 };
 
+const requestLedgerDeviceInfo = async () => {
+  ledgerDeviceInfo = await bananojsErrorTrap.getLedgerInfo();
+  // mainConsole.log('requestLedgerDeviceInfo', ledgerDeviceInfo);
+};
+
 const getLedgerMessage = () => {
   let message = '';
   if (LOG_LEDGER_POLLING) {
@@ -986,12 +918,16 @@ const getLedgerMessage = () => {
   if (ledgerDeviceInfo) {
     if (ledgerDeviceInfo.error) {
       message += 'Error:';
-      if (ledgerDeviceInfo.message) {
-        message += ledgerDeviceInfo.message;
+      message += ledgerDeviceInfo.error;
+    }
+    if (ledgerDeviceInfo.config) {
+      if (ledgerDeviceInfo.config.coinName) {
+        message += ledgerDeviceInfo.config.coinName;
+        message += ' ';
       }
-    } else {
-      if (ledgerDeviceInfo.message) {
-        message += ledgerDeviceInfo.message;
+      if (ledgerDeviceInfo.config.version) {
+        message += ledgerDeviceInfo.config.version;
+        message += ' ';
       }
     }
   }
@@ -1507,7 +1443,7 @@ const getAutoRecieveTimer = () => {
   const timerMillis = timerSeconds * 1000;
   const dateNow = Date.now();
   const coundownMillis = dateNow + timerMillis;
-  autoRecieveCountdown = new Date(coundownMillis).toISOString().replace('T',' ');
+  autoRecieveCountdown = new Date(coundownMillis).toISOString().replace('T', ' ');
   // mainConsole.log('getAutoRecieveTimer', timerSeconds, autoRecieveCountdown);
   renderApp();
   return timerMillis;
@@ -1517,6 +1453,12 @@ const getAutoRecieveCountdown = () => {
   return autoRecieveCountdown;
 };
 
+const requestAllBlockchainDataAndRenderApp = async () => {
+  await requestAllBlockchainData();
+  await renderApp();
+};
+
+exports.useLedger = useLedger;
 exports.getAutoRecieveCountdown = getAutoRecieveCountdown;
 exports.getUseAutoRecieve = getUseAutoRecieve;
 exports.setAutoRecieve = setAutoRecieve;
@@ -1529,6 +1471,7 @@ exports.isUpdateInProgress = backgroundUtil.isUpdateInProgress;
 exports.getPleaseWaitStatus = backgroundUtil.getPleaseWaitStatus;
 exports.sendAmountToAccount = sendAmountToAccount;
 exports.requestAllBlockchainData = requestAllBlockchainData;
+exports.requestAllBlockchainDataAndRenderApp = requestAllBlockchainDataAndRenderApp;
 exports.receivePending = receivePending;
 exports.getPending = getPending;
 exports.reuseSeed = reuseSeed;

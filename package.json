@@ -1,6 +1,6 @@
 {
   "name": "camo-banano-light-wallet",
-  "version": "1.0.15",
+  "version": "1.1.0",
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
@@ -21,6 +21,7 @@
   "scripts": {
     "start": "check-node-version --node 14 --npm 6 && electron . --enable-logging --remote-debugging-port=9222",
     "test": "check-node-version --node 14 --npm 6 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
+    "eslint": "eslint --fix 'scripts/**/*.js'",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist-all": "electron-builder -mwl",
@@ -43,7 +44,8 @@
   },
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
-    "@bananocoin/bananojs": "^2.4.7",
+    "@bananocoin/bananojs": "^2.4.8",
+    "@bananocoin/bananojs-hw": "^1.0.5",
     "@electron/remote": "^1.1.0",
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
@@ -54,14 +56,14 @@
     "node-hid": "^2.1.1",
     "node-jsx": "^0.13.3",
     "react": "^17.0.2",
-    "react-bootstrap": "^1.5.2",
+    "react-bootstrap": "^1.6.0",
     "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.7",
     "smart-buffer": "^4.1.0"
   },
   "devDependencies": {
     "chai": "^4.3.4",
-    "electron": "^12.0.7",
+    "electron": "^11.4.6",
     "electron-builder": "22.10.5",
     "eslint": "^7.26.0",
     "eslint-config-google": "^0.14.0",

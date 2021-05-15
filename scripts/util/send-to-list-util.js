@@ -2,7 +2,7 @@
 
 // modules
 const ExcelJS = require('exceljs');
-const mainConsoleLib = require('console');
+// const mainConsoleLib = require('console');
 
 // constants
 

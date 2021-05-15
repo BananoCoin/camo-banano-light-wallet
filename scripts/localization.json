@@ -279,14 +279,6 @@
     "en": "No Balance Requested Yet",
     "es": "No se solicitó saldo aún"
   },
-  "noHistoryRequestedYet": {
-    "en": "No History Requested Yet",
-    "es": "Aún no se ha solicitado historia"
-  },
-  "noBlockchainStateRequestedYet": {
-    "en": "No Blockchain State Requested Yet",
-    "es": "Aún no se ha solicitado el estado de Blockchain"
-  },
   "gettingAccountData": {
     "en": "getting account data.",
     "es": "obteniendo datos de la cuenta."

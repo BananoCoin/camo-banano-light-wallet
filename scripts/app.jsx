@@ -92,9 +92,9 @@ const LedgerMessage = () => {
 const UseLedgerButton = () => {
   if (
     app.getLedgerDeviceInfo()
-    ? app.getLedgerDeviceInfo().enabled
+    ? app.getLedgerDeviceInfo().supported
     : false) {
-    return (<div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => getPublicKeyFromLedger()}>Use Ledger</div>);
+    return (<div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => app.useLedger()}>Use Ledger</div>);
   } else {
     return (<div className="black_on_gray bordered display_inline_block float_right fake_button_disabled rounded padding_5px">Use Ledger</div>);
   }
@@ -416,7 +416,7 @@ class App extends React.Component {
                   </tr>
                   <tr>
                     <td className="yellow_on_brown_with_hover h20px fake_button"
-                      onClick={(e) => app.requestAllBlockchainData()}><Localization name="refresh"/></td>
+                      onClick={(e) => app.requestAllBlockchainDataAndRenderApp()}><Localization name="refresh"/></td>
                   </tr>
                   <tr>
                     <td className="yellow_on_brown_with_hover h20px fake_button"
@@ -442,14 +442,6 @@ class App extends React.Component {
                       <div className="balance_container">
                       <BalancesTable/>
                       </div>
-                    </td>
-                  </tr>
-                  <tr id="ledger-login">
-                    <td className="yellow_on_brown h20px darkgray_border bordered">
-                      <div className="gray_on_yellow"><Localization name="ledgerStatus"/></div>
-                      <p><LedgerMessage/>
-                      </p>
-                      <UseLedgerButton/>
                     </td>
                   </tr>
                   <tr id="seed-login">
@@ -516,6 +508,14 @@ class App extends React.Component {
                       <br/>
                       <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
                         onClick={(e) => app.showLogin()}><Localization name="done"/></div>
+                    </td>
+                  </tr>
+                  <tr id="ledger-login">
+                    <td className="yellow_on_brown h20px darkgray_border bordered">
+                      <div className="gray_on_yellow"><Localization name="ledgerStatus"/></div>
+                      <p><LedgerMessage/>
+                      </p>
+                      <UseLedgerButton/>
                     </td>
                   </tr>
                   <tr id="your-account">
