@@ -1434,6 +1434,7 @@ const autoRecieve = async () => {
       }
     }
   }
+  renderApp();
   setTimeout(autoRecieve, getAutoRecieveTimer());
 };
 
@@ -1445,7 +1446,6 @@ const getAutoRecieveTimer = () => {
   const coundownMillis = dateNow + timerMillis;
   autoRecieveCountdown = new Date(coundownMillis).toISOString().replace('T', ' ');
   // mainConsole.log('getAutoRecieveTimer', timerSeconds, autoRecieveCountdown);
-  renderApp();
   return timerMillis;
 };
 
