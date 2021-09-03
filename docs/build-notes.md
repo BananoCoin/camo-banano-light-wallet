@@ -1,20 +1,20 @@
 ## before doing a release
 
-  (change version)
-
+  npm update;
   npm outdated;
-  npm install package@latest;
-  npm i;
   npm audit fix;
 
-## to auto build a releases
-  git commit -am v1.1.3;
-  git tag v1.1.3;
+  npm install package@latest;
+  npm audit fix;
+
+# to auto build a releases
+
+  npm version patch;
   git push;
   git push --tags;
 
 ## to delete release tags
-  git push --delete origin v1.1.3;
-  git tag -d v1.1.3;
+  git push --delete origin [tag];
+  git tag -d [tag];
   git pull;
   git push;
