@@ -9,7 +9,7 @@
 
 # to auto build a releases
 
-  npm version patch;
+  npm version patch --tag-version-prefix='v';
   git push;
   git push --tags;
 
