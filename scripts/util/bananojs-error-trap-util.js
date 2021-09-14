@@ -104,12 +104,12 @@ const getCamoPublicKey = (privateKey) => {
   return bananojs.getCamoPublicKey(privateKey);
 };
 
-const changeRepresentativeForSeed = async (seed, seedIx, representative) => {
+const changeBananoRepresentativeForSeed = async (seed, seedIx, representative) => {
   try {
     if (isErrorUrl()) {
-      throw Error('changeRepresentativeForSeed');
+      throw Error('changeBananoRepresentativeForSeed');
     }
-    return await bananojs.changeRepresentativeForSeed(seed, seedIx, representative);
+    return await bananojs.changeBananoRepresentativeForSeed(seed, seedIx, representative);
   } catch (error) {
     app.showAlert('error changing rep:' + error.message);
     return;
@@ -308,7 +308,7 @@ exports.getCamoPublicKey = getCamoPublicKey;
 exports.getAccountInfo = getAccountInfo;
 exports.getBlockCount = getBlockCount;
 exports.getBananoPartsFromRaw = getBananoPartsFromRaw;
-exports.changeRepresentativeForSeed = changeRepresentativeForSeed;
+exports.changeBananoRepresentativeForSeed = changeBananoRepresentativeForSeed;
 exports.camoSendWithdrawalFromSeed = camoSendWithdrawalFromSeed;
 exports.sendWithdrawalFromSeed = sendWithdrawalFromSeed;
 exports.getCamoSharedAccountData = getCamoSharedAccountData;

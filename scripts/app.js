@@ -410,7 +410,7 @@ const updateRepresentative = async () => {
     const newBanRepresentative = bananojsErrorTrap.getAccount(newRepPublicKey);
     mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
         newBanRepresentative);
-    const response = await bananojsErrorTrap.changeRepresentativeForSeed(seed, 0, newBanRepresentative);
+    const response = await bananojsErrorTrap.changeBananoRepresentativeForSeed(seed, 0, newBanRepresentative);
     showAlert(response);
   } catch (error) {
     mainConsole.trace('updateRepresentative', error);
