@@ -379,7 +379,6 @@
     "en": "next auto recieve",
     "es": "siguiente auto recibir"
   },
-
   "enableAutoRecieve": {
     "en": "Enable Auto Recieve",
     "es": "Habilitar Recepción Automática"
@@ -387,5 +386,9 @@
   "disableAutoRecieve": {
     "en": "Disable Auto Recieve",
     "es": "Desactivar Recepción Automática"
+  },
+  "currentTime": {
+    "en": "current time",
+    "es": "tiempo actual"
   }
 }

@@ -77,6 +77,8 @@ let useAutoRecieve = undefined;
 
 let autoRecieveCountdown = '';
 
+let autoRecieveTimerPtr;
+
 const camoSharedAccountData = [];
 
 const accountBook = [];
@@ -171,7 +173,7 @@ const init = async () => {
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   await requestLedgerDeviceInfo();
 
-  setTimeout(autoRecieve, getAutoRecieveTimer());
+  setImmediate(autoRecieve);
 };
 
 const getCamoRepresentative = () => {
@@ -255,6 +257,7 @@ const requestAllBlockchainData = async () => {
 const changeNetwork = async (event) => {
   currentNetworkIx = event.target.value;
   await requestAllBlockchainData();
+  setImmediate(autoRecieve);
   renderApp();
 };
 
@@ -292,6 +295,7 @@ const requestBlockchainDataAndShowHome = async () => {
     return;
   }
   await requestAllBlockchainData();
+  setImmediate(autoRecieve);
   showHome();
 };
 
@@ -1067,7 +1071,8 @@ const receiveCamoPending = async (seedIx, sendToAccount, sharedSeedIx, hash) => 
   mainConsole.debug('receiveCamoPending seedIx', seedIx, sendToAccount, sharedSeedIx, hash);
   try {
     const response = await bananojsErrorTrap.receiveCamoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
-    showAlert(JSON.stringify(response));
+    // showAlert(JSON.stringify(response));
+    showAlert(`${response.pendingMessage},${response.receiveMessage}`);
   } catch (error) {
     showAlert(error.message);
     mainConsole.debug('receiveCamoPending error', error);
@@ -1193,7 +1198,7 @@ const receivePending = async (hash, seedIx) => {
       const response = await bananojsErrorTrap.receiveDepositsForSeed(seed, seedIx, representative, hash);
       mainConsole.debug('receivePending receiveDepositsForSeed', response);
       if (response) {
-        showAlert(JSON.stringify(response));
+        showAlert(`${response.pendingMessage},${response.receiveMessage}`);
       }
     } else {
       showAlert('no representative, cannot receive pending.');
@@ -1401,12 +1406,16 @@ const setAutoRecieve = async (_useAutoRecieve) => {
   const store = getCleartextConfig();
   store.set('useAutoRecieve', useAutoRecieve);
   showAlert('auto recieve set to ' + useAutoRecieve);
+  if(useAutoRecieve) {
+    setImmediate(autoRecieve);
+  }
   await renderApp();
 };
 
 const autoRecieve = async () => {
-  // mainConsole.log('autoRecieve', seed, useAutoRecieve, backgroundUtil.isUpdateInProgress());
-  if (seed !== undefined) {
+  clearTimeout(autoRecieveTimerPtr);
+  mainConsole.log('autoRecieve', seed, useAutoRecieve, backgroundUtil.isUpdateInProgress());
+  if (isLoggedIn) {
     if (useAutoRecieve) {
     // showAlert('timer auto recieve' + useAutoRecieve);
       if (!backgroundUtil.isUpdateInProgress()) {
@@ -1435,16 +1444,17 @@ const autoRecieve = async () => {
     }
   }
   renderApp();
-  setTimeout(autoRecieve, getAutoRecieveTimer());
+  autoRecieveTimerPtr = setTimeout(autoRecieve, getAutoRecieveTimer());
 };
 
 const getAutoRecieveTimer = () => {
   // every 150 seconds +/- 30 seconds.
-  const timerSeconds = 150 + (Math.random() * 30);
+  const timerSeconds = Math.round(150 + (Math.random() * 30));
   const timerMillis = timerSeconds * 1000;
   const dateNow = Date.now();
   const coundownMillis = dateNow + timerMillis;
-  autoRecieveCountdown = new Date(coundownMillis).toISOString().replace('T', ' ');
+  const coundownDate = new Date(coundownMillis).toISOString().replace('T', ' ');
+  autoRecieveCountdown = `${coundownDate}`;
   // mainConsole.log('getAutoRecieveTimer', timerSeconds, autoRecieveCountdown);
   return timerMillis;
 };
@@ -1453,12 +1463,18 @@ const getAutoRecieveCountdown = () => {
   return autoRecieveCountdown;
 };
 
+const getCurrentTime = () => {
+  return new Date().toISOString().replace('T', ' ');
+};
+
 const requestAllBlockchainDataAndRenderApp = async () => {
   await requestAllBlockchainData();
+  setImmediate(autoRecieve);
   await renderApp();
 };
 
 exports.useLedger = useLedger;
+exports.getCurrentTime = getCurrentTime;
 exports.getAutoRecieveCountdown = getAutoRecieveCountdown;
 exports.getUseAutoRecieve = getUseAutoRecieve;
 exports.setAutoRecieve = setAutoRecieve;

@@ -549,7 +549,10 @@ class App extends React.Component {
                   <tr id="pending">
                     <td className="yellow_on_brown h20px darkgray_border bordered">
                       <Localization name="autoRecieve"/><br/>
-                      <Localization name="nextAutoRecieve"/>&nbsp;{app.getAutoRecieveCountdown()}<br/>
+                      <Localization name="nextAutoRecieve"/>
+                      &nbsp;{app.getAutoRecieveCountdown()}<br/>
+                      <Localization name="currentTime"/>
+                      &nbsp;{app.getCurrentTime()}<br/>
                       <AutoRecieveButton/>
                       <br/>
                       <div className="gray_on_yellow"><Localization name="pending"/></div>
