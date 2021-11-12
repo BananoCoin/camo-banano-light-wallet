@@ -1,11 +1,6 @@
 ## before doing a release
 
-  npm update;
-  npm outdated;
-  npm audit fix;
-
-  npm install package@latest;
-  npm audit fix;
+  npm run preflight;
 
 # to auto build a releases
 

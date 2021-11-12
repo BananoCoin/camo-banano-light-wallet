@@ -141,8 +141,10 @@ app.on( 'ready', () => {
   // and load the index.html of the app.
   mainWindow.loadFile( 'index.html' );
 
+  main.enable(mainWindow.webContents);
+
   // add right click menu to open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on( 'closed', function() {
