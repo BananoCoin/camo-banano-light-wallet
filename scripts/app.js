@@ -169,7 +169,9 @@ const init = async () => {
   balanceStatus = getLocalization('noBalanceRequestedYet');
   exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
 
+  /* eslint-disable no-invalid-this */
   bananojsErrorTrap.setApp(this);
+  /* eslint-enable no-invalid-this */
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   await requestLedgerDeviceInfo();
 
@@ -1406,7 +1408,7 @@ const setAutoRecieve = async (_useAutoRecieve) => {
   const store = getCleartextConfig();
   store.set('useAutoRecieve', useAutoRecieve);
   showAlert('auto recieve set to ' + useAutoRecieve);
-  if(useAutoRecieve) {
+  if (useAutoRecieve) {
     setImmediate(autoRecieve);
   }
   await renderApp();

@@ -1,14 +1,15 @@
 body {
-  background-image: url("artwork/bg-hero.svg");
+  background-image: url('artwork/bg-hero.svg');
   background-size: cover;
   background-repeat: no-repeat;
-  background-color: #DBA250;
+  background-color: #dba250;
   margin: 0;
   height: 100%;
 }
 
-select, input {
-  background-color: #FBDD11;
+select,
+input {
+  background-color: #fbdd11;
 }
 
 /* Style the tab */
@@ -38,7 +39,10 @@ select, input {
   background-color: #ccc;
 }
 
-table, tr, td, th {
+table,
+tr,
+td,
+th {
   font-family: monospace;
   font-size: 12px;
 }
@@ -143,37 +147,37 @@ p {
 
 .yellow_on_brown {
   background-color: rgba(130, 67, 13, 0.63);
-  color: #FAFBFD;
+  color: #fafbfd;
 }
 
 .yellow_on_brown_with_hover {
   background-color: rgba(130, 67, 13, 0.63);
-  color: #FAFBFD;
+  color: #fafbfd;
 }
 
 .yellow_on_brown_with_hover:hover {
   background-color: black;
-  color: #FBDD11;
+  color: #fbdd11;
 }
 
 .yellow_on_black {
   background-color: black;
-  color: #FBDD11;
+  color: #fbdd11;
 }
 
 .yellow_on_black:hover {
   background-color: gray;
-  color: #FBDD11;
+  color: #fbdd11;
   border-color: black;
 }
 
 .black_on_yellow_with_hover {
-  background-color: #FBDD11;
+  background-color: #fbdd11;
   color: black;
 }
 
 .black_on_yellow_with_hover:hover {
-  background-color: #FBDD11;
+  background-color: #fbdd11;
   color: gray;
   border-color: black;
 }

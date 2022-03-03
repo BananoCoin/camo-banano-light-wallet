@@ -31,7 +31,8 @@
     "npm-check-updates-all": "npm-check-updates -u",
     "npm-check-updates": "npm-check-updates --target minor -u",
     "postinstall": "electron-builder install-app-deps",
-    "preflight": "npm update;npm run npm-check-updates;npm i;npm audit fix;npm outdated;"
+    "preflight": "npm update && npm run npm-check-updates && npm i && npm audit fix && npm run eslint && npm run prettier && npm outdated",
+    "prettier": "prettier \"**/**.{ts,json,css,scss,html,jsx,md}\" --write"
   },
   "repository": {
     "type": "git",
@@ -47,11 +48,10 @@
   },
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
-    "@bananocoin/bananojs": "^2.4.24",
-    "@bananocoin/bananojs-hw": "^1.0.11",
-    "@electron/remote": "^2.0.1",
+    "@bananocoin/bananojs": "^2.5.3",
+    "@bananocoin/bananojs-hw": "^1.1.4",
+    "@electron/remote": "^2.0.5",
     "babel-polyfill": "^6.26.0",
-    "bs58": "^4.0.1",
     "check-node-version": "^4.2.1",
     "electron-store": "^8.0.1",
     "elliptic": "^6.5.4",
@@ -59,18 +59,19 @@
     "node-hid": "^2.1.1",
     "node-jsx": "^0.13.3",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.0.2",
+    "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.9",
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
-    "electron": "^15.3.1",
-    "electron-builder": "^22.14.7",
-    "eslint": "^8.2.0",
+    "chai": "^4.3.6",
+    "electron": "^17.1.0",
+    "electron-builder": "^22.14.13",
+    "eslint": "^8.10.0",
     "eslint-config-google": "^0.14.0",
-    "npm-check-updates": "^12.0.2",
-    "mocha": "^9.1.3"
+    "mocha": "^9.2.1",
+    "npm-check-updates": "^12.5.0",
+    "prettier": "^2.5.1"
   }
 }
