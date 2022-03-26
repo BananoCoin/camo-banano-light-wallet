@@ -1,6 +1,7 @@
 ## before doing a release
 
 npm run preflight;
+git commit -a -m 'bumping deps';
 
 # to auto build a releases
 
