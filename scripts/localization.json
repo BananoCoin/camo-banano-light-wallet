@@ -390,5 +390,25 @@
   "currentTime": {
     "en": "current time",
     "es": "tiempo actual"
+  },
+  "createPeelWorkbook": {
+      "en": "Create Peeling Excel Document",
+      "es": "Crear Documento de Excel Pelado"
+  },
+  "downloadPeelWorkbook": {
+    "en": "Download Peeling Excel Document",
+    "es": "Descargar Pelado Documento Excel"
+  },
+  "sendToWorkbook": {
+    "en": "Send to Excel Document",
+    "es": "Enviar a documento de Excel"
+  },
+  "exportTotalCount": {
+    "en": "Total Count of Peels",
+    "es": "Recuento total de cáscaras"
+  },
+  "exportIndividualAmount": {
+    "en": "Individual Amount to Peel",
+    "es": "Cantidad individual para pelar"
   }
 }

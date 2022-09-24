@@ -1028,16 +1028,49 @@ class App extends React.Component {
                       </td>
                     </tr>
                     <tr id="send-to-list-file-select">
-                      <td className="black_on_yellow h20px darkgray_border bordered">
+                      <td className="yellow_on_brown h20px darkgray_border bordered">
                         <div className="h20px">
                           <a download="send-to-list.xlsx" target="_blank" href={app.getExampleWorkbookURL()}>
                             <Localization name="downloadExampleWorkbook" />
                           </a>
                         </div>
+                        <div className="yellow_on_brown h20px">
+                          <LocalizationInput
+                            style={{
+                              fontFamily: 'monospace',
+                            }}
+                            type="text"
+                            size="65"
+                            id="exportTotalCount"
+                            placeholder="exportTotalCount"
+                          />
+                        </div>
+                        <div className="yellow_on_brown h20px">
+                          <LocalizationInput
+                            style={{
+                              fontFamily: 'monospace',
+                            }}
+                            type="text"
+                            size="65"
+                            id="exportIndividualAmount"
+                            placeholder="exportIndividualAmount"
+                          />
+                        </div>
+                        <div className="yellow_on_brown h20px">
+                          <DisableableButton name="createPeelWorkbook" onClick={(e) => app.setPeelWorkbookURL()} />
+                        </div>
+                        <div className="yellow_on_brown h20px">
+                          <a id="send-to-list-link" download="send-to-list.xlsx" target="_blank" href={app.getPeelWorkbookURL()}>
+                            <Localization name="downloadPeelWorkbook" />
+                          </a>
+                        </div>
                         <hr />
                         <Localization name="selectFileWithAccountAndAmountOfBananos" />
                         <br />
-                        <input id="exportExampleWorkbookFileDialog" type="file" />
+                        <input className="yellow_on_brown" id="exportExampleWorkbookFileDialog" type="file" />
+                        <br />
+                        <DisableableButton name="sendToWorkbook" onClick={(e) => app.sendToWorkbook()} />
+                        <br />
                       </td>
                     </tr>
                   </tbody>

@@ -29,6 +29,10 @@ const setApp = (_app) => {
   app = _app;
 };
 
+const setUseRateLimit = (flag) => {
+  return bananojs.setUseRateLimit(flag);
+}
+
 const setBananodeApiUrl = (rpcUrl) => {
   if (rpcUrl) {
     url = rpcUrl;
@@ -290,6 +294,7 @@ const setUseLedgerFlag = (_useLedgerFlag) => {
   useLedgerFlag = _useLedgerFlag;
 };
 
+exports.setUseRateLimit = setUseRateLimit;
 exports.setUseLedgerFlag = setUseLedgerFlag;
 exports.getLedgerInfo = getLedgerInfo;
 exports.getRawStrFromBananoStr = getRawStrFromBananoStr;

@@ -103,6 +103,8 @@ let alertMessage = '';
 
 let exampleWorkbookBase64 = '';
 
+let peelWorkbookBase64 = '';
+
 const blockchainState = {
   count: 0,
 };
@@ -168,10 +170,12 @@ const init = async () => {
   sendToAccountStatuses.push(getLocalization('noSendToAccountRequestedYet'));
   balanceStatus = getLocalization('noBalanceRequestedYet');
   exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
+  peelWorkbookBase64 = exampleWorkbookBase64;
 
   /* eslint-disable no-invalid-this */
   bananojsErrorTrap.setApp(this);
   /* eslint-enable no-invalid-this */
+  bananojsErrorTrap.setUseRateLimit(true);
   bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
   await requestLedgerDeviceInfo();
 
@@ -642,6 +646,7 @@ const hideEverything = () => {
   hide('please-wait');
   hide('alert');
   hide('send-to-list-file-select');
+  hide('send-to-list-link');
 };
 
 const copyToClipboard = () => {
@@ -1400,6 +1405,55 @@ const getExampleWorkbookURL = () => {
   return 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + exampleWorkbookBase64;
 };
 
+const setPeelWorkbookURL = async () => {
+  const totalCountElt = appDocument.getElementById('exportTotalCount');
+  const individualAmountElt = appDocument.getElementById('exportIndividualAmount');
+  const totalCount = parseInt(totalCountElt.value, 10);
+  const individualAmount = parseFloat(individualAmountElt.value)
+  const includePrivateKey = true;
+  const startSeedIx = 1;
+  peelWorkbookBase64 = await sendToListUtil.createPeelWorkbookBase64(seed, startSeedIx, totalCount, individualAmount, includePrivateKey);
+
+  show('send-to-list-link');
+  await renderApp();
+}
+
+const getPeelWorkbookURL = () => {
+    return 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + peelWorkbookBase64;
+}
+
+const sendToWorkbook = async () => {
+  const sendFromSeedIxElt = appDocument.getElementById('sendFromSeedIx');
+  const sendFromSeedIx = parseInt(sendFromSeedIxElt.value);
+  const exportExampleWorkbookFileDialogElt = appDocument.getElementById('exportExampleWorkbookFileDialog');
+  const file = exportExampleWorkbookFileDialogElt.files[0];
+  // console.log('file', file);
+  const fReader = new FileReader();
+  fReader.onloadend = async (event) => {
+    const workbookBase64 = event.target.result;
+    // console.log('workbookBase64', workbookBase64);
+    const regex = /^data:.+\/(.+);base64,(.*)$/;
+    const matches = workbookBase64.match(regex);
+    const ext = matches[1];
+    const data = matches[2];
+    const buffer = Buffer.from(data, 'base64');
+    const result = await sendToListUtil.sendWithdrawalFromSeed(seed, sendFromSeedIx, buffer);
+    let alert = `sent ${result.amountTotal} total to ${result.hashes.length} total accounts.`
+
+    if(!result.success) {
+      alert += '\n';
+      alert += `Error:${result.error}`;
+    }
+
+    for (const hash of result.hashes) {
+      alert += '\n';
+      alert += hash;
+    }
+    showAlert(alert);
+  }
+  fReader.readAsDataURL(exportExampleWorkbookFileDialogElt.files[0]);
+}
+
 const getUseAutoRecieve = () => {
   return useAutoRecieve;
 };
@@ -1543,4 +1597,7 @@ exports.getAlertMessage = getAlertMessage;
 exports.hideAlert = hideAlert;
 exports.showAlert = showAlert;
 exports.getExampleWorkbookURL = getExampleWorkbookURL;
+exports.getPeelWorkbookURL = getPeelWorkbookURL;
+exports.setPeelWorkbookURL = setPeelWorkbookURL;
+exports.sendToWorkbook = sendToWorkbook;
 exports.init = init;
