@@ -266,6 +266,7 @@ const changeNetwork = async (event) => {
 const get = (id) => {
   const elt = appDocument.getElementById(id);
   if (elt == null) {
+    console.log('appDocument', appDocument);
     throw new Error('elt is null:' + id);
   }
   return elt;

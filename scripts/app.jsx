@@ -2,7 +2,7 @@
 
 /** imports */
 const React = require('react');
-const ReactDOM = require('react-dom');
+const ReactDOMClient = require('react-dom/client');
 
 const electron = require('electron');
 const remote = require('@electron/remote');
@@ -1050,8 +1050,10 @@ class App extends React.Component {
     );
   }
 }
+const container = document.getElementById('main');
+const root = ReactDOMClient.createRoot(container);
 const renderApp = () => {
-  ReactDOM.render(<App />, document.getElementById('main'));
+  root.render(<App />);
 };
 const onLoad = () => {
   app.init();
@@ -1059,7 +1061,8 @@ const onLoad = () => {
   app.setAppDocument(document);
   app.setRenderApp(renderApp);
   renderApp();
-  app.showLogin();
+
+  setTimeout(app.showLogin,0);
 };
 
 /** call initialization functions */
