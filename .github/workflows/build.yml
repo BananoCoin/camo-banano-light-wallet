@@ -7,33 +7,33 @@ on:
       - "*"
 
 jobs:
-  release:
-    runs-on:            ${{ matrix.os }}
+  # release:
+    # runs-on:            ${{ matrix.os }}
 
     # Platforms to build on/for
-    strategy:
-      matrix:
-        os:             [macos-latest, windows-latest, ubuntu-latest]
+    # strategy:
+      # matrix:
+        # os:             [macos-latest, windows-latest, ubuntu-latest]
 
-    steps:
-      - name:           Check out Git repository
-        uses:           actions/checkout@v1
+    # steps:
+      # - name:           Check out Git repository
+        # uses:           actions/checkout@v1
 
-      - name:           Install Node.js and Yarn
-        uses:           actions/setup-node@v1
-        with:
-          node-version: 18.x
+      # - name:           Install Node.js and Yarn
+        # uses:           actions/setup-node@v1
+        # with:
+          # node-version: 18.x
 
-      - name:           Install libusb
-        run:            |
-          sudo apt-get -y update
-          sudo apt-get -y install libusb-1.0-0-dev libudev-dev
-        if:             startsWith(matrix.os, 'ubuntu')
+      # - name:           Install libusb
+        # run:            |
+          # sudo apt-get -y update
+          # sudo apt-get -y install libusb-1.0-0-dev libudev-dev
+        # if:             startsWith(matrix.os, 'ubuntu')
 
-      - name:           Install Snapcraft
-        uses:           samuelmeuli/action-snapcraft@v1
+      # - name:           Install Snapcraft
+        # uses:           samuelmeuli/action-snapcraft@v1
         # Only install Snapcraft on Ubuntu
-        if:             startsWith(matrix.os, 'ubuntu')
+        # if:             startsWith(matrix.os, 'ubuntu')
 
       # - name:           Build/release Electron app
         #uses:           samuelmeuli/action-electron-builder@master
@@ -48,6 +48,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        github_token: ${{ secrets.github_token }} # Automatically generated
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -62,13 +64,13 @@ jobs:
       run: npm install
     - name: build
       run: npm run dist-linux
-      with:
-          github_token: ${{ secrets.github_token }} # Automatically generated
 
   build_on_mac:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        github_token: ${{ secrets.github_token }} # Automatically generated
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -76,13 +78,13 @@ jobs:
       run: npm install
     - name: build
       run: npm run dist-mac
-      with:
-          github_token: ${{ secrets.github_token }} # Automatically generated
 
   build_on_win:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        github_token: ${{ secrets.github_token }} # Automatically generated
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -90,5 +92,3 @@ jobs:
       run: npm install
     - name: build
       run: npm run dist-win
-      with:
-          github_token: ${{ secrets.github_token }} # Automatically generated
