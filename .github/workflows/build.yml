@@ -48,8 +48,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        github_token: ${{ secrets.github_token }} # Automatically generated
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -64,13 +62,13 @@ jobs:
       run: npm install
     - name: build
       run: npm run dist-linux
+        env:
+          github_token: ${{ secrets.github_token }} # Automatically generated
 
   build_on_mac:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        github_token: ${{ secrets.github_token }} # Automatically generated
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -78,13 +76,13 @@ jobs:
       run: npm install
     - name: build
       run: npm run dist-mac
+        env:
+          github_token: ${{ secrets.github_token }} # Automatically generated
 
   build_on_win:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        github_token: ${{ secrets.github_token }} # Automatically generated
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -92,3 +90,5 @@ jobs:
       run: npm install
     - name: build
       run: npm run dist-win
+        env:
+          github_token: ${{ secrets.github_token }} # Automatically generated
