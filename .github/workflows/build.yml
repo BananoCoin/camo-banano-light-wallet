@@ -36,7 +36,8 @@ jobs:
         if:             startsWith(matrix.os, 'ubuntu')
 
       - name:           Build/release Electron app
-        uses:           samuelmeuli/action-electron-builder@master
+        #uses:           samuelmeuli/action-electron-builder@master
+        uses:           coparse-inc/action-electron-builder@v1.0.0
         with:
           github_token: ${{ secrets.github_token }} # Automatically generated
           # If the commit is tagged with a version (e.g. "v1.0.0"),
