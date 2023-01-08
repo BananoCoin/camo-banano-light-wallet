@@ -83,15 +83,38 @@
   },
   "config": {
     "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electron_publish_example"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
       "publishers": [
         {
           "name": "@electron-forge/publisher-github",
           "config": {
             "repository": {
               "owner": "coranos",
-              "name": "camo-banano-light-wallet"
-            },
-            "draft": true
+              "name": "camo-banano-light-wallet",
+              "draft": true
+            }
           }
         }
       ]
