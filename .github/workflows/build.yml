@@ -61,9 +61,9 @@ jobs:
     - name: install dependencies
       run: npm install
     - name: build
+      env:
+        github_token: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-linux
-        env:
-          github_token: ${{ secrets.github_token }} # Automatically generated
 
   build_on_mac:
     runs-on: macos-latest
@@ -75,9 +75,9 @@ jobs:
     - name: install dependencies
       run: npm install
     - name: build
+      env:
+        github_token: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-mac
-        env:
-          github_token: ${{ secrets.github_token }} # Automatically generated
 
   build_on_win:
     runs-on: windows-latest
@@ -89,6 +89,6 @@ jobs:
     - name: install dependencies
       run: npm install
     - name: build
+      env:
+        github_token: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-win
-        env:
-          github_token: ${{ secrets.github_token }} # Automatically generated
