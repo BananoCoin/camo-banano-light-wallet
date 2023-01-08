@@ -1,6 +1,6 @@
 {
   "name": "camo-banano-light-wallet",
-  "version": "1.1.20",
+  "version": "1.1.27",
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
@@ -75,5 +75,8 @@
     "mocha": "^10.2.0",
     "npm-check-updates": "^16.6.2",
     "prettier": "^2.8.2"
+  },
+  "override":{
+    "node-hid": "^2.1.2"
   }
 }
