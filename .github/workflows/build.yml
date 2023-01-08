@@ -10,6 +10,8 @@ jobs:
   build_release:
     name: build_release
     runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.step_upload_url.outputs.upload_url }}
     steps:
     - name: checkout
       uses: actions/checkout@v2
@@ -26,8 +28,6 @@ jobs:
         body_path: CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ github.token }}
-      outputs:
-        upload_url: ${{ steps.step_upload_url.outputs.upload_url }}
 
   build_on_linux:
     needs: build_release
