@@ -19,8 +19,8 @@
     }
   },
   "scripts": {
-    "start": "check-node-version --node 16 --npm 8 && electron . --enable-logging --remote-debugging-port=9222",
-    "test": "check-node-version --node 16 --npm 8 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
+    "start": "check-node-version --node 18 --npm 8 && electron . --enable-logging --remote-debugging-port=9222",
+    "test": "check-node-version --node 18 --npm 8 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
     "eslint": "eslint --fix 'scripts/**/*.js'",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -68,8 +68,8 @@
   "devDependencies": {
     "@electron/get": "^2.0.1",
     "chai": "^4.3.6",
-    "electron": "^20.2.0",
-    "electron-builder": "^23.5.1",
+    "electron": "^22.0.0",
+    "electron-builder": "^22.10.3",
     "eslint": "^8.24.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.0.0",
