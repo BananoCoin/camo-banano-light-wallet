@@ -57,7 +57,7 @@
     "elliptic": "^6.5.4",
     "exceljs": "^4.3.0",
     "https-rate-limit": "^1.0.9",
-    "node-hid": "^2.1.1",
+    "node-hid": "^2.1.2",
     "node-jsx": "^0.13.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
@@ -68,7 +68,7 @@
   "devDependencies": {
     "@electron/get": "^2.0.2",
     "chai": "^4.3.7",
-    "electron": "^20.2.0",
+    "electron": "^21.3.3",
     "electron-builder": "^23.5.1",
     "eslint": "^8.31.0",
     "eslint-config-google": "^0.14.0",
