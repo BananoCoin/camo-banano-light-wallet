@@ -7,8 +7,31 @@ on:
       - "*"
 
 jobs:
+  build_release:
+    name: build_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: version
+        run: echo "::set-output name=version::$(./bin/azblogfilter --version)"
+        id: version
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: true
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
   build_on_linux:
+    needs: build_release
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -29,11 +52,15 @@ jobs:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-linux
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        path: dist
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist
 
   build_on_mac:
+    needs: build_release
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -47,11 +74,15 @@ jobs:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-mac
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        path: dist
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist
 
   build_on_win:
+    needs: build_release
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -65,6 +96,9 @@ jobs:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-win
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        path: dist
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist
