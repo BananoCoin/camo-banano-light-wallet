@@ -66,6 +66,7 @@
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
+    "@electron-forge/publisher-github": "^6.0.4",
     "@electron/get": "^2.0.2",
     "chai": "^4.3.7",
     "electron": "^22.0.0",
@@ -78,5 +79,20 @@
   },
   "overrides": {
     "node-hid": "^2.1.2"
+  },
+  "config": {
+    "forge": {
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "coranos",
+              "name": "camo-banano-light-wallet"
+            }
+          }
+        }
+      ]
+    }
   }
 }
