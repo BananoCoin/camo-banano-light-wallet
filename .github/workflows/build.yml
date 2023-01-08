@@ -28,6 +28,10 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-linux
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: dist
 
   build_on_mac:
     runs-on: macos-latest
@@ -42,6 +46,10 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-mac
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: dist
 
   build_on_win:
     runs-on: windows-latest
@@ -56,3 +64,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-win
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: dist

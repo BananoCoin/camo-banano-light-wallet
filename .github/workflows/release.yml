@@ -1,8 +1,10 @@
 name: Release
 on:
-  push:
-    tags:
-      - 'v*'
+  # push:
+    # tags:
+      # - 'v*'
+
+# https://dev.to/erikhofer/build-and-publish-a-multi-platform-electron-app-on-github-3lnd
 
 jobs:
 
