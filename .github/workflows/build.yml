@@ -35,11 +35,54 @@ jobs:
         # Only install Snapcraft on Ubuntu
         if:             startsWith(matrix.os, 'ubuntu')
 
-      - name:           Build/release Electron app
+      # - name:           Build/release Electron app
         #uses:           samuelmeuli/action-electron-builder@master
-        uses:           coparse-inc/action-electron-builder@v1.0.0
-        with:
-          github_token: ${{ secrets.github_token }} # Automatically generated
+        # uses:           coparse-inc/action-electron-builder@v1.0.0
+        # with:
+          # github_token: ${{ secrets.github_token }} # Automatically generated
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
-          release:      ${{ startsWith(github.ref, 'refs/tags/v') }}
+          # release:      ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+  build_on_linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@master
+      with:
+        node-version: 18
+    - name:           Install libusb
+      run:            |
+        sudo apt-get -y update
+        sudo apt-get -y install libusb-1.0-0-dev libudev-dev
+    - name:           Install Snapcraft
+      uses:           samuelmeuli/action-snapcraft@v1
+      # Only install Snapcraft on Ubuntu
+    - name: install dependencies
+      run: npm install
+    - name: build
+      run: npm run dist-linux
+
+  build_on_mac:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@master
+      with:
+        node-version: 18
+    - name: install dependencies
+      run: npm install
+    - name: build
+      run: npm run dist-mac
+
+  build_on_win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@master
+      with:
+        node-version: 18
+    - name: install dependencies
+      run: npm install
+    - name: build
+      run: npm run dist-win
