@@ -89,7 +89,8 @@
             "repository": {
               "owner": "coranos",
               "name": "camo-banano-light-wallet"
-            }
+            },
+            "draft": true
           }
         }
       ]
