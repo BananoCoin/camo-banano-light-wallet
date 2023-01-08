@@ -69,7 +69,7 @@
     "@electron/get": "^2.0.2",
     "chai": "^4.3.7",
     "electron": "^22.0.0",
-    "electron-builder": "^22.10.3",
+    "electron-builder": "^23.6.0",
     "eslint": "^8.31.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.2.0",
