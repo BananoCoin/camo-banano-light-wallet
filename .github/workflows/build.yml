@@ -102,6 +102,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "dist/*-Setup*.exe"
+        file: "dist/*.exe"
         delete_file: "*.blockmap"
         release_id: ${{ needs.build_release.outputs.release_id }}
