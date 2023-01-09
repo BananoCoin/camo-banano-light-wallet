@@ -22,11 +22,11 @@ jobs:
       uses: actions/create-release@v1
       id: create_release
       with:
-        draft: false
+        draft: true
         prerelease: false
         release_name: ${{ github.ref }}
         tag_name: ${{ github.ref }}
-        body_path: CHANGELOG.md
+        body_path: ${{ github.ref }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - id: step_upload_url
