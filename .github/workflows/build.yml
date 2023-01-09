@@ -22,7 +22,7 @@ jobs:
       uses: actions/create-release@v1
       id: create_release
       with:
-        draft: true
+        draft: false
         prerelease: false
         release_name: ${{ github.ref }}
         tag_name: ${{ github.ref }}
@@ -60,7 +60,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "dist/*"
+        file: "dist/*.AppImage"
         release_id: ${{ needs.build_release.outputs.release_id }}
 
   build_on_mac:
@@ -82,7 +82,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "dist/*"
+        file: "dist/*.dmg"
         release_id: ${{ needs.build_release.outputs.release_id }}
 
   build_on_win:
@@ -104,5 +104,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "dist/*"
+        file: "dist/*.exe"
         release_id: ${{ needs.build_release.outputs.release_id }}
