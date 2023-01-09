@@ -11,6 +11,9 @@ git push --tags;
 
 ## to delete release tags
 
+git push -d origin $(git tag -l "v1.1.2*");
+git tag -d $(git tag -l "v1.1.2*");
+
 git push --delete origin [tag];
 git tag -d [tag];
 git pull;
