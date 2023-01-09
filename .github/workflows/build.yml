@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.step_upload_url.outputs.upload_url }}
+      release_id: ${{ steps.step_release_id.outputs.release_id }}
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: release
@@ -30,12 +31,14 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
     - id: step_upload_url
       run: echo "::set-output name=upload_url::${{ steps.create_release.outputs.upload_url }}"
+    - id: step_release_id
+      run: echo "::set-output name=release_id::${{ steps.create_release.outputs.id }}"
 
   build_on_linux:
     needs: build_release
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -44,7 +47,7 @@ jobs:
         sudo apt-get -y update
         sudo apt-get -y install libusb-1.0-0-dev libudev-dev
     - name:           Install Snapcraft
-      uses:           samuelmeuli/action-snapcraft@v1
+      uses:           snapcore/action-build@v1
       # Only install Snapcraft on Ubuntu
     - name: install dependencies
       run: npm install
@@ -58,13 +61,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         file: "dist/*"
-        draft: true
+        release_id: ${{ needs.build_release.outputs.release_id }}
 
   build_on_mac:
     needs: build_release
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -80,13 +83,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         file: "dist/*"
-        draft: true
+        release_id: ${{ needs.build_release.outputs.release_id }}
 
   build_on_win:
     needs: build_release
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@master
       with:
         node-version: 18
@@ -102,4 +105,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         file: "dist/*"
-        draft: true
+        release_id: ${{ needs.build_release.outputs.release_id }}
