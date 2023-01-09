@@ -10,3 +10,8 @@ base: core22
 apps:
   camo-banano-light-wallet:
     command: bin/camo-banano-light-wallet
+    plugs: []
+
+parts:
+  camo-banano-light-wallet:
+    plugin: nil
