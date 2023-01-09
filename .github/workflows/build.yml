@@ -11,8 +11,8 @@ jobs:
     name: build_release
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.step_upload_url.outputs.upload_url }}
-      release_id: ${{ steps.step_release_id.outputs.release_id }}
+      upload_url: ${{ env.upload_url }}
+      release_id: ${{ env.release_id }}
     steps:
     - name: checkout
       uses: actions/checkout@v3
@@ -26,9 +26,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - id: step_upload_url
-      run: echo "::set-output name=upload_url::${{ steps.create_release.outputs.upload_url }}"
+      #run: echo "::set-output name=upload_url::${{ steps.create_release.outputs.upload_url }}"
+      run: echo "upload_url=${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_ENV
     - id: step_release_id
-      run: echo "::set-output name=release_id::${{ steps.create_release.outputs.id }}"
+      # run: echo "::set-output name=release_id::${{ steps.create_release.outputs.id }}"
+      run: echo "release_id=${{ steps.create_release.outputs.id }}" >> $GITHUB_ENV
 
   build_on_linux:
     needs: build_release
@@ -58,7 +60,7 @@ jobs:
       with:
         file: "dist/*.AppImage"
         delete_file: "*.blockmap"
-        release_id: ${{ needs.build_release.outputs.release_id }}
+        release_id: ${{ env.release_id }}
 
   build_on_mac:
     needs: build_release
@@ -81,7 +83,7 @@ jobs:
       with:
         file: "dist/*.dmg"
         delete_file: "*.blockmap"
-        release_id: ${{ needs.build_release.outputs.release_id }}
+        release_id: ${{ env.release_id }}
 
   build_on_win:
     needs: build_release
@@ -104,4 +106,4 @@ jobs:
       with:
         file: "dist/*.exe"
         delete_file: "*.blockmap"
-        release_id: ${{ needs.build_release.outputs.release_id }}
+        release_id: ${{ env.release_id }}
