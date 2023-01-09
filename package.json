@@ -1,6 +1,6 @@
 {
   "name": "camo-banano-light-wallet",
-  "version": "1.2.1",
+  "version": "1.2.0",
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
@@ -50,7 +50,7 @@
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
     "@bananocoin/bananojs": "^2.7.12",
-    "@bananocoin/bananojs-hw": "^1.4.7",
+    "@bananocoin/bananojs-hw": "^1.4.8",
     "@electron/remote": "^2.0.9",
     "babel-polyfill": "^6.26.0",
     "check-node-version": "^4.2.1",
