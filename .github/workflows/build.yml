@@ -60,6 +60,7 @@ jobs:
         upload_url: ${{ needs.build_release.outputs.upload_url }}
         asset_path: dist
         asset_name: dist
+        asset_content_type: application/zip
 
   build_on_mac:
     needs: build_release
@@ -83,6 +84,7 @@ jobs:
         upload_url: ${{ needs.build_release.outputs.upload_url }}
         asset_path: dist
         asset_name: dist
+        asset_content_type: application/zip
 
   build_on_win:
     needs: build_release
@@ -106,3 +108,4 @@ jobs:
         upload_url: ${{ needs.build_release.outputs.upload_url }}
         asset_path: dist
         asset_name: dist
+        asset_content_type: application/zip
