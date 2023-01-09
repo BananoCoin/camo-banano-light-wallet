@@ -52,15 +52,13 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-linux
-    - name: Archive production artifacts
-      uses: actions/upload-release-asset@v1
+    - name: Upload binaries to release
+      uses: xresloader/upload-to-github-release@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.build_release.outputs.upload_url }}
-        asset_path: dist
-        asset_name: dist/*
-        asset_content_type: application/zip
+        file: "dist/*"
+        draft: true
 
   build_on_mac:
     needs: build_release
@@ -76,15 +74,13 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-mac
-    - name: Archive production artifacts
-      uses: actions/upload-release-asset@v1
+    - name: Upload binaries to release
+      uses: xresloader/upload-to-github-release@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.build_release.outputs.upload_url }}
-        asset_path: dist
-        asset_name: dist/*
-        asset_content_type: application/zip
+        file: "dist/*"
+        draft: true
 
   build_on_win:
     needs: build_release
@@ -100,12 +96,10 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.github_token }} # Automatically generated
       run: npm run dist-win
-    - name: Archive production artifacts
-      uses: actions/upload-release-asset@v1
+    - name: Upload binaries to release
+      uses: xresloader/upload-to-github-release@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.build_release.outputs.upload_url }}
-        asset_path: dist
-        asset_name: dist/*
-        asset_content_type: application/zip
+        file: "dist/*"
+        draft: true
