@@ -45,7 +45,7 @@ jobs:
         sudo apt-get -y update
         sudo apt-get -y install libusb-1.0-0-dev libudev-dev
     - name:           Install Snapcraft
-      uses: samuelmeuli/action-snapcraft@v1
+      uses: samuelmeuli/action-snapcraft@master
       # uses: snapcore/action-build@v1
       # Only install Snapcraft on Ubuntu
     - name: install dependencies

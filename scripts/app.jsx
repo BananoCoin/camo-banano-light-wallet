@@ -1095,7 +1095,7 @@ const onLoad = () => {
   app.setRenderApp(renderApp);
   renderApp();
 
-  setTimeout(app.showLogin,0);
+  setTimeout(app.showLogin, 0);
 };
 
 /** call initialization functions */

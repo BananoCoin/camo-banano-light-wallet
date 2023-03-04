@@ -1409,18 +1409,18 @@ const setPeelWorkbookURL = async () => {
   const totalCountElt = appDocument.getElementById('exportTotalCount');
   const individualAmountElt = appDocument.getElementById('exportIndividualAmount');
   const totalCount = parseInt(totalCountElt.value, 10);
-  const individualAmount = parseFloat(individualAmountElt.value)
+  const individualAmount = parseFloat(individualAmountElt.value);
   const includePrivateKey = true;
   const startSeedIx = 1;
   peelWorkbookBase64 = await sendToListUtil.createPeelWorkbookBase64(seed, startSeedIx, totalCount, individualAmount, includePrivateKey);
 
   show('send-to-list-link');
   await renderApp();
-}
+};
 
 const getPeelWorkbookURL = () => {
-    return 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + peelWorkbookBase64;
-}
+  return 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + peelWorkbookBase64;
+};
 
 const sendToWorkbook = async () => {
   const sendFromSeedIxElt = appDocument.getElementById('sendFromSeedIx');
@@ -1428,19 +1428,19 @@ const sendToWorkbook = async () => {
   const exportExampleWorkbookFileDialogElt = appDocument.getElementById('exportExampleWorkbookFileDialog');
   const file = exportExampleWorkbookFileDialogElt.files[0];
   // console.log('file', file);
-  const fReader = new FileReader();
+  const fReader = new FileReader(file);
   fReader.onloadend = async (event) => {
     const workbookBase64 = event.target.result;
     // console.log('workbookBase64', workbookBase64);
     const regex = /^data:.+\/(.+);base64,(.*)$/;
     const matches = workbookBase64.match(regex);
-    const ext = matches[1];
+    // const ext = matches[1];
     const data = matches[2];
     const buffer = Buffer.from(data, 'base64');
     const result = await sendToListUtil.sendWithdrawalFromSeed(seed, sendFromSeedIx, buffer);
-    let alert = `sent ${result.amountTotal} total to ${result.hashes.length} total accounts.`
+    let alert = `sent ${result.amountTotal} total to ${result.hashes.length} total accounts.`;
 
-    if(!result.success) {
+    if (!result.success) {
       alert += '\n';
       alert += `Error:${result.error}`;
     }
@@ -1450,9 +1450,9 @@ const sendToWorkbook = async () => {
       alert += hash;
     }
     showAlert(alert);
-  }
+  };
   fReader.readAsDataURL(exportExampleWorkbookFileDialogElt.files[0]);
-}
+};
 
 const getUseAutoRecieve = () => {
   return useAutoRecieve;

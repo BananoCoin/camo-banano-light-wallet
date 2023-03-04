@@ -31,7 +31,7 @@ const setApp = (_app) => {
 
 const setUseRateLimit = (flag) => {
   return bananojs.setUseRateLimit(flag);
-}
+};
 
 const setBananodeApiUrl = (rpcUrl) => {
   if (rpcUrl) {

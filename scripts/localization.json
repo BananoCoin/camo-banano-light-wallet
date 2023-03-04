@@ -392,8 +392,8 @@
     "es": "tiempo actual"
   },
   "createPeelWorkbook": {
-      "en": "Create Peeling Excel Document",
-      "es": "Crear Documento de Excel Pelado"
+    "en": "Create Peeling Excel Document",
+    "es": "Crear Documento de Excel Pelado"
   },
   "downloadPeelWorkbook": {
     "en": "Download Peeling Excel Document",
