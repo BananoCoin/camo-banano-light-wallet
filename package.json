@@ -19,8 +19,8 @@
     }
   },
   "scripts": {
-    "start": "check-node-version --node 18 --npm 8 && electron . --enable-logging --remote-debugging-port=9222",
-    "test": "check-node-version --node 18 --npm 8 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
+    "start": "check-node-version --node 18 --npm 9 && electron . --enable-logging --remote-debugging-port=9222",
+    "test": "check-node-version --node 18 --npm 9 && ./node_modules/mocha/bin/mocha --timeout 100000 test",
     "eslint": "eslint --fix 'scripts/**/*.js'",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -49,9 +49,9 @@
   },
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
-    "@bananocoin/bananojs": "^2.8.8",
+    "@bananocoin/bananojs": "^2.8.9",
     "@bananocoin/bananojs-hw": "^1.5.7",
-    "@electron/remote": "^2.0.9",
+    "@electron/remote": "^2.0.10",
     "babel-polyfill": "^6.26.0",
     "check-node-version": "^4.2.1",
     "electron-store": "^8.1.0",
@@ -61,22 +61,23 @@
     "node-hid": "^2.1.2",
     "node-jsx": "^0.13.3",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.7.4",
+    "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.13.11",
+    "semver": "^7.5.4",
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
-    "@electron-forge/publisher-github": "^6.1.1",
+    "@electron-forge/publisher-github": "^6.2.1",
     "@electron/get": "^2.0.2",
     "chai": "^4.3.7",
-    "electron": "^24.1.2",
+    "electron": "^25.2.0",
     "electron-builder": "^23.6.0",
-    "eslint": "^8.38.0",
+    "eslint": "^8.44.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.2.0",
-    "npm-check-updates": "^16.10.8",
-    "prettier": "^2.8.7"
+    "npm-check-updates": "^16.10.15",
+    "prettier": "^3.0.0"
   },
   "!overrides": {
     "node-hid": "^2.1.2"
