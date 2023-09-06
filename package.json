@@ -49,9 +49,9 @@
   },
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
-    "@bananocoin/bananojs": "^2.8.9",
-    "@bananocoin/bananojs-hw": "^1.5.7",
-    "@electron/remote": "^2.0.10",
+    "@bananocoin/bananojs": "^2.10.0",
+    "@bananocoin/bananojs-hw": "^1.5.9",
+    "@electron/remote": "^2.0.11",
     "babel-polyfill": "^6.26.0",
     "check-node-version": "^4.2.1",
     "electron-store": "^8.1.0",
@@ -63,21 +63,21 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
-    "regenerator-runtime": "^0.13.11",
+    "regenerator-runtime": "^0.14.0",
     "semver": "^7.5.4",
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
-    "@electron-forge/publisher-github": "^6.2.1",
-    "@electron/get": "^2.0.2",
-    "chai": "^4.3.7",
-    "electron": "^25.2.0",
-    "electron-builder": "^23.6.0",
-    "eslint": "^8.44.0",
+    "@electron-forge/publisher-github": "^6.4.1",
+    "@electron/get": "^2.0.3",
+    "chai": "^4.3.8",
+    "electron": "^26.1.0",
+    "electron-builder": "^24.6.4",
+    "eslint": "^8.48.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.2.0",
-    "npm-check-updates": "^16.10.15",
-    "prettier": "^3.0.0"
+    "npm-check-updates": "^16.13.2",
+    "prettier": "^3.0.3"
   },
   "!overrides": {
     "node-hid": "^2.1.2"
