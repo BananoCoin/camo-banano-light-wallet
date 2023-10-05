@@ -71,7 +71,7 @@
     "@electron-forge/publisher-github": "^6.4.2",
     "@electron/get": "^2.0.3",
     "chai": "^4.3.8",
-    "electron": "^26.2.1",
+    "electron": "^26.2.4",
     "electron-builder": "^24.6.5",
     "eslint": "^8.49.0",
     "eslint-config-google": "^0.14.0",
