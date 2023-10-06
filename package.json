@@ -49,8 +49,8 @@
   },
   "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
   "dependencies": {
-    "@bananocoin/bananojs": "^2.10.0",
-    "@bananocoin/bananojs-hw": "^1.5.9",
+    "@bananocoin/bananojs": "^2.10.1",
+    "@bananocoin/bananojs-hw": "^1.5.10",
     "@electron/remote": "^2.0.11",
     "babel-polyfill": "^6.26.0",
     "check-node-version": "^4.2.1",
@@ -61,7 +61,7 @@
     "node-hid": "^2.1.2",
     "node-jsx": "^0.13.3",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.8.0",
+    "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.14.0",
     "semver": "^7.5.4",
@@ -70,13 +70,13 @@
   "devDependencies": {
     "@electron-forge/publisher-github": "^6.4.2",
     "@electron/get": "^2.0.3",
-    "chai": "^4.3.8",
-    "electron": "^26.2.1",
-    "electron-builder": "^24.6.5",
-    "eslint": "^8.49.0",
+    "chai": "^4.3.10",
+    "electron": "^26.3.0",
+    "electron-builder": "^24.7.0",
+    "eslint": "^8.51.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.2.0",
-    "npm-check-updates": "^16.14.4",
+    "npm-check-updates": "^16.14.5",
     "prettier": "^3.0.3"
   },
   "!overrides": {
