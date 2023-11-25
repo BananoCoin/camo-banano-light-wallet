@@ -65,6 +65,18 @@ const BalancesTable = () => {
           </td>
           <td>{totals.camoPendingBalance}</td>
         </tr>
+        <tr>
+          <td>
+            <Localization name="blocks" />
+          </td>
+          <td>{app.getBlockchainState().count + ' '}</td>
+        </tr>
+        <tr>
+          <td>
+            <Localization name="rpcUrl" />
+          </td>
+          <td>{app.getRpcUrl()}</td>
+        </tr>
       </tbody>
     </table>
   );
@@ -435,7 +447,13 @@ class App extends React.Component {
                       </td>
                     </tr>
                     <tr>
-                      <td className="yellow_on_brown h180px no_border"></td>
+                      <td id="customNetwork" className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showCustomNetwork()}>
+                        <img className="valign_middle svg" src="artwork/representatives.svg"></img>&nbsp;
+                        <Localization name="customNetwork" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="yellow_on_brown h120px no_border"></td>
                     </tr>
                     <tr>
                       <td className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.requestAllBlockchainDataAndRenderApp()}>
@@ -593,6 +611,48 @@ class App extends React.Component {
                           <LedgerMessage />
                         </p>
                         <UseLedgerButton />
+                      </td>
+                    </tr>
+                    <tr id="custom-network-rpc-url">
+                      <td className="yellow_on_brown h20px darkgray_border bordered">
+                        <div className="gray_on_yellow">
+                          <Localization name="newCustomNetworkRpcUrl" />
+                          <br />
+                          Example:
+                          <br />
+                          https://kaliumapi.appditto.com/api
+                          <br />
+                          https://booster.dev-ptera.com/banano-rpc
+                        </div>
+                        <br />
+                        <LocalizationInput
+                          className="monospace no_pad"
+                          type="text"
+                          size="67"
+                          maxLength="65"
+                          id="newCustomNetworkRpcUrl"
+                          placeholder="CustomNetworkRpcUrl"
+                        />
+                        <hr />
+                        <div
+                          className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px"
+                          onClick={(e) => app.updateCustomNetworkRpcUrl()}
+                        >
+                          <Localization name="updateCustomNetworkRpcUrl" />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr id="update-custom-network-rpc-url">
+                      <td className="yellow_on_brown h20px darkgray_border bordered">
+                        <div className="gray_on_yellow">
+                          <Localization name="yourCustomNetworkRpc" />
+                        </div>
+                        <br />
+                        {app.getCustomNetworkRpcUrl()}
+                        <div className="gray_on_yellow">
+                          <Localization name="yourCustomNetworkRpc" />
+                        </div>
+                        <br />
                       </td>
                     </tr>
                     <tr id="your-account">

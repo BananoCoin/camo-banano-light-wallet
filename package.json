@@ -1,6 +1,6 @@
 {
   "name": "camo-banano-light-wallet",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "description": "camo banano light wallet",
   "productName": "camo-banano-light-wallet",
   "main": "index.js",
@@ -57,7 +57,7 @@
     "electron-store": "^8.1.0",
     "elliptic": "^6.5.4",
     "exceljs": "^4.4.0",
-    "https-rate-limit": "^1.0.10",
+    "https-rate-limit": "^1.0.11",
     "node-hid": "^2.1.2",
     "node-jsx": "^0.13.3",
     "react": "^18.2.0",
@@ -68,16 +68,16 @@
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
-    "@electron-forge/publisher-github": "^6.4.2",
+    "@electron-forge/publisher-github": "^7.1.0",
     "@electron/get": "^3.0.0",
     "chai": "^4.3.10",
-    "electron": "^27.0.4",
-    "electron-builder": "^24.6.4",
-    "eslint": "^8.53.0",
+    "electron": "^27.1.2",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.54.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.2.0",
-    "npm-check-updates": "^16.14.6",
-    "prettier": "^3.0.3"
+    "npm-check-updates": "^16.14.11",
+    "prettier": "^3.1.0"
   },
   "!overrides": {
     "node-hid": "^2.1.2"

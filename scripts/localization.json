@@ -315,10 +315,6 @@
     "en": "getting camo shared account balance.",
     "es": "obtener saldo de cuenta compartida de camuflaje."
   },
-  "gettingCamoPending": {
-    "en": "getting camo pending.",
-    "es": "obtener camuflaje pendiente."
-  },
   ",": {
     "en": ",",
     "es": ","
@@ -410,5 +406,29 @@
   "exportIndividualAmount": {
     "en": "Individual Amount to Peel",
     "es": "Cantidad individual para pelar"
+  },
+  "customNetwork": {
+    "en": "Custom Network",
+    "es": "Custom Network"
+  },
+  "newCustomNetworkRpcUrl": {
+    "en": "New Custom Network Rpc Url",
+    "es": "New Custom Network Rpc Url"
+  },
+  "updateCustomNetworkRpcUrl": {
+    "en": "Update Custom Network Rpc Url",
+    "es": "Update Custom Network Rpc Url"
+  },
+  "yourCustomNetworkRpc": {
+    "en": "Your Custom Network Rpc",
+    "es": "Your Custom Network Rpc"
+  },
+  "CustomNetworkRpcUrl": {
+    "en": "Enter New Custom Network Rpc Url Here ...",
+    "es": "Enter New Custom Network Rpc Url Here ..."
+  },
+  "rpcUrl": {
+    "en": "RPC URL",
+    "es": "RPC URL"
   }
 }

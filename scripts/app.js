@@ -31,12 +31,17 @@ const LOG_ALERTS = true;
 
 const ACCOUNT_HISTORY_SIZE = 20;
 
-/** networks */
-const NETWORKS = [{
+const CREEPER_EXPLORER_URL = 'https://creeper.banano.cc/';
+
+const KALIUM_MAINNET_NETWORK = {
   NAME: 'Kalium Mainnet',
-  EXPLORER: 'https://creeper.banano.cc/',
+  EXPLORER: CREEPER_EXPLORER_URL,
   RPC_URL: 'https://kaliumapi.appditto.com/api',
-},
+};
+
+/** networks */
+const NETWORKS = [
+  KALIUM_MAINNET_NETWORK,
 // , {
 //   NAME: 'Error Testnet',
 //   EXPLORER: 'https://creeper.banano.cc/',
@@ -165,6 +170,11 @@ const init = async () => {
         accountBook.push(bookAccount);
       }
     });
+  }
+  if (conf.has('customNetwork')) {
+    const customNetwork = conf.get('customNetwork');
+    NETWORKS.push(customNetwork);
+    currentNetworkIx = 1;
   }
 
   sendToAccountStatuses.push(getLocalization('noSendToAccountRequestedYet'));
@@ -430,6 +440,42 @@ const updateRepresentative = async () => {
   updateLocalizedPleaseWaitStatus();
 };
 
+const getCustomNetworkRpcUrl = () => {
+  const store = getCleartextConfig();
+  if (store.has('customNetwork')) {
+    const customNetwork = store.get('customNetwork');
+    // mainConsole.trace('getCustomNetworkRpcUrl', customNetwork);
+    return customNetwork.RPC_URL;
+  }
+};
+
+const updateCustomNetworkRpcUrl = async () => {
+  const elt = appDocument.getElementById('newCustomNetworkRpcUrl');
+  const customNetworkRpcUrl = elt.value;
+  // mainConsole.trace('updateCustomNetworkRpcUrl', customNetworkRpcUrl);
+  const store = getCleartextConfig();
+  if (customNetworkRpcUrl == '') {
+    store.delete('customNetwork');
+    NETWORKS.length = 0;
+    NETWORKS.push(KALIUM_MAINNET_NETWORK);
+    currentNetworkIx = 0;
+  } else {
+    const customNetwork = {
+      NAME: 'Custom',
+      EXPLORER: CREEPER_EXPLORER_URL,
+      RPC_URL: customNetworkRpcUrl,
+    };
+    NETWORKS.length = 0;
+    NETWORKS.push(KALIUM_MAINNET_NETWORK);
+    NETWORKS.push(customNetwork);
+    currentNetworkIx = 1;
+    store.set('customNetwork', customNetwork);
+  }
+  await requestAllBlockchainData();
+  setImmediate(autoRecieve);
+  renderApp();
+};
+
 const updateAmount = () => {
   const sendAmountElt = appDocument.getElementById('sendAmount');
 
@@ -584,14 +630,15 @@ const requestBlockchainState = async () => {
     return;
   }
   updateLocalizedPleaseWaitStatus('gettingBlockchainState');
-  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
+  const rpcUrl = getRpcUrl();
+  bananojsErrorTrap.setBananodeApiUrl(rpcUrl);
   const blockCount = await bananojsErrorTrap.getBlockCount();
   if (blockCount) {
     blockchainState.count = blockCount.count;
   } else {
     blockchainState.count = '';
   }
-  mainConsole.debug('blockchainState', blockchainState);
+  mainConsole.log('blockchainState', rpcUrl, blockchainState);
   updateLocalizedPleaseWaitStatus();
   renderApp();
 };
@@ -622,6 +669,7 @@ const hideEverything = () => {
   clearButtonSelection('representatives');
   clearButtonSelection('accounts');
   clearButtonSelection('sendToList');
+  clearButtonSelection('customNetwork');
   hide('seed-reuse');
   hide('seed-reuse-entry');
   hide('seed-entry');
@@ -647,6 +695,8 @@ const hideEverything = () => {
   hide('alert');
   hide('send-to-list-file-select');
   hide('send-to-list-link');
+  hide('custom-network-rpc-url');
+  hide('update-custom-network-rpc-url');
 };
 
 const copyToClipboard = () => {
@@ -678,6 +728,18 @@ const showHome = () => {
   show('camo-banano-branding');
   selectButton('home');
 };
+
+const showCustomNetwork = () => {
+  if (!isLoggedIn) {
+    return;
+  }
+  hideEverything();
+  clearSendData();
+  show('custom-network-rpc-url');
+  show('update-custom-network-rpc-url');
+  selectButton('customNetwork');
+};
+
 
 const showSend = () => {
   if (!isLoggedIn) {
@@ -1600,4 +1662,8 @@ exports.getExampleWorkbookURL = getExampleWorkbookURL;
 exports.getPeelWorkbookURL = getPeelWorkbookURL;
 exports.setPeelWorkbookURL = setPeelWorkbookURL;
 exports.sendToWorkbook = sendToWorkbook;
+exports.showCustomNetwork = showCustomNetwork;
+exports.updateCustomNetworkRpcUrl = updateCustomNetworkRpcUrl;
+exports.getCustomNetworkRpcUrl = getCustomNetworkRpcUrl;
+exports.getRpcUrl = getRpcUrl;
 exports.init = init;
