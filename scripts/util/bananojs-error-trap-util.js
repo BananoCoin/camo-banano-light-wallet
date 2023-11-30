@@ -27,11 +27,54 @@ const isErrorUrl = () => {
 
 const setApp = (_app) => {
   app = _app;
+  // setLocalWorkApi();
 };
 
 const setUseRateLimit = (flag) => {
   return bananojs.setUseRateLimit(flag);
 };
+
+const setLocalWorkApi = () => {
+  const localWorkApi = {};
+
+  localWorkApi.getBlockCount = () => {
+    mainConsole.log('localWorkApi','getBlockCount');
+    return bananojs.realBananodeApi.getBlockCount();
+  }
+  localWorkApi.getGeneratedWork = (hash) => {
+    mainConsole.log('localWorkApi','getGeneratedWork', 'hash', hash);
+    const workBytes = bananojs.getZeroedWorkBytes();
+    const work = bananojs.getWorkUsingCpu(hash, workBytes);
+    mainConsole.log('localWorkApi','getGeneratedWork', 'hash', hash, 'work', work);
+    return work;
+  }
+
+
+  localWorkApi.setUrl = bananojs.realBananodeApi.setUrl;
+  localWorkApi.delay = bananojs.realBananodeApi.delay;
+  localWorkApi.setModuleRef = bananojs.realBananodeApi.setModuleRef;
+  localWorkApi.getModuleRef = bananojs.realBananodeApi.getModuleRef;
+  localWorkApi.setLogRequestErrors = bananojs.realBananodeApi.setLogRequestErrors;
+  localWorkApi.setUseRateLimit = bananojs.realBananodeApi.setUseRateLimit;
+  localWorkApi.getFrontiers = bananojs.realBananodeApi.getFrontiers;
+  localWorkApi.getBlockAccount = bananojs.realBananodeApi.getBlockAccount;
+  localWorkApi.getAccountsPending = bananojs.realBananodeApi.getAccountsPending;
+  localWorkApi.getAccountBalanceRaw = bananojs.realBananodeApi.getAccountBalanceRaw;
+  localWorkApi.getAccountBalanceAndPendingRaw = bananojs.realBananodeApi.getAccountBalanceAndPendingRaw;
+  localWorkApi.getAccountsBalances = bananojs.realBananodeApi.getAccountsBalances;
+  localWorkApi.getAccountRepresentative = bananojs.realBananodeApi.getAccountRepresentative;
+  localWorkApi.getPrevious = bananojs.realBananodeApi.getPrevious;
+  localWorkApi.process = bananojs.realBananodeApi.process;
+  localWorkApi.getAccountHistory = bananojs.realBananodeApi.getAccountHistory;
+  localWorkApi.getAccountInfo = bananojs.realBananodeApi.getAccountInfo;
+  localWorkApi.getBlocks = bananojs.realBananodeApi.getBlocks;
+  localWorkApi.sendRequest = bananojs.realBananodeApi.sendRequest;
+  localWorkApi.log = bananojs.realBananodeApi.log;
+  localWorkApi.trace = bananojs.realBananodeApi.trace;
+  localWorkApi.setAuth = bananojs.realBananodeApi.setAuth;
+  
+  bananojs.setBananodeApi(localWorkApi);
+}
 
 const setBananodeApiUrl = (rpcUrl) => {
   if (rpcUrl) {
