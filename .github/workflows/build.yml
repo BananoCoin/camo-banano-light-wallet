@@ -66,8 +66,10 @@ jobs:
 
   build_on_mac:
     needs: build_release
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
+    - name: Install setuptools
+      run: pip install setuptools
     - uses: actions/checkout@v3
     - uses: actions/setup-node@master
       with:
