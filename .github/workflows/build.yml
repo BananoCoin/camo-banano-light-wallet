@@ -66,7 +66,7 @@ jobs:
 
   build_on_mac:
     needs: build_release
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@master
