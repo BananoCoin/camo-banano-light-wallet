@@ -613,6 +613,7 @@ const requestBalanceAndRepresentative = async () => {
         accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
         accountDataElt.representative = accountInfo.representative;
         totalBalance += parseInt(accountDataElt.balance);
+        setPrevious(accountInfo.frontier);
       }
     } else {
       balanceStatus = 'no account info returned.';
@@ -670,6 +671,7 @@ const hideEverything = () => {
   clearButtonSelection('accounts');
   clearButtonSelection('sendToList');
   clearButtonSelection('customNetwork');
+  clearButtonSelection('clientWork');
   hide('seed-reuse');
   hide('seed-reuse-entry');
   hide('seed-entry');
@@ -697,6 +699,7 @@ const hideEverything = () => {
   hide('send-to-list-link');
   hide('custom-network-rpc-url');
   hide('update-custom-network-rpc-url');
+  hide('client-work');
 };
 
 const copyToClipboard = () => {
@@ -740,6 +743,15 @@ const showCustomNetwork = () => {
   selectButton('customNetwork');
 };
 
+const showClientWork = () => {
+  if (!isLoggedIn) {
+    return;
+  }
+  hideEverything();
+  clearSendData();
+  show('client-work');
+  selectButton('clientWork');
+};
 
 const showSend = () => {
   if (!isLoggedIn) {
@@ -1592,6 +1604,26 @@ const requestAllBlockchainDataAndRenderApp = async () => {
   await renderApp();
 };
 
+const getExpectedWorkStart = () => {
+  const expectedWorkStartElt = appDocument.getElementById('work');
+  return expectedWorkStartElt.innerText;
+};
+
+const setExpectedWorkStart = (work) => {
+  const expectedWorkStartElt = appDocument.getElementById('work');
+  expectedWorkStartElt.innerText = work;
+};
+
+const setPrevious = async (previous) => {
+  const previousElt = appDocument.getElementById('previous');
+  previousElt.innerText = previous;
+  mainConsole.log('setPrevious', previous);
+  await renderApp();
+};
+
+exports.setPrevious = setPrevious;
+exports.getExpectedWorkStart = getExpectedWorkStart;
+exports.setExpectedWorkStart = setExpectedWorkStart;
 exports.useLedger = useLedger;
 exports.getCurrentTime = getCurrentTime;
 exports.getAutoRecieveCountdown = getAutoRecieveCountdown;
@@ -1663,6 +1695,7 @@ exports.getPeelWorkbookURL = getPeelWorkbookURL;
 exports.setPeelWorkbookURL = setPeelWorkbookURL;
 exports.sendToWorkbook = sendToWorkbook;
 exports.showCustomNetwork = showCustomNetwork;
+exports.showClientWork = showClientWork;
 exports.updateCustomNetworkRpcUrl = updateCustomNetworkRpcUrl;
 exports.getCustomNetworkRpcUrl = getCustomNetworkRpcUrl;
 exports.getRpcUrl = getRpcUrl;

@@ -27,7 +27,8 @@ const isErrorUrl = () => {
 
 const setApp = (_app) => {
   app = _app;
-  // setLocalWorkApi();
+  setLocalWorkApi();
+  // d1d4973a3944856d67775cf518ff0ae283d14f2456c07c9dda6add82d6019aee
 };
 
 const setUseRateLimit = (flag) => {
@@ -38,17 +39,28 @@ const setLocalWorkApi = () => {
   const localWorkApi = {};
 
   localWorkApi.getBlockCount = () => {
-    mainConsole.log('localWorkApi','getBlockCount');
+    // mainConsole.log('localWorkApi','getBlockCount');
     return bananojs.realBananodeApi.getBlockCount();
-  }
+  };
   localWorkApi.getGeneratedWork = (hash) => {
-    mainConsole.log('localWorkApi','getGeneratedWork', 'hash', hash);
-    const workBytes = bananojs.getZeroedWorkBytes();
-    const work = bananojs.getWorkUsingCpu(hash, workBytes);
-    mainConsole.log('localWorkApi','getGeneratedWork', 'hash', hash, 'work', work);
+    // mainConsole.log('localWorkApi','getGeneratedWork', 'hash', hash);
+    const expectedWorkStart = app.getExpectedWorkStart();
+    if ((expectedWorkStart === undefined) || (expectedWorkStart.length == 0)) {
+      app.showAlert('no client work generated, using server.');
+      return bananojs.realBananodeApi.getGeneratedWork(hash);
+    }
+    const hashBytes = bananojs.getBytesFromHex(hash);
+    const workBytes = bananojs.getBytesFromHex(expectedWorkStart).reverse();
+    const isWorkValidFlag = bananojs.isWorkValid(hashBytes, workBytes);
+    if (!isWorkValidFlag) {
+      app.showAlert(`client work '${expectedWorkStart}' is invalid for hash '${hash}', using server`);
+    }
+    const work = bananojs.getHexFromBytes(workBytes.reverse());
+    app.showAlert(`using client work '${work}' for hash '${hash}'`);
+    mainConsole.log('localWorkApi', 'getGeneratedWork', 'hash', hash, 'work', work);
+    app.setExpectedWorkStart('');
     return work;
-  }
-
+  };
 
   localWorkApi.setUrl = bananojs.realBananodeApi.setUrl;
   localWorkApi.delay = bananojs.realBananodeApi.delay;
@@ -72,9 +84,9 @@ const setLocalWorkApi = () => {
   localWorkApi.log = bananojs.realBananodeApi.log;
   localWorkApi.trace = bananojs.realBananodeApi.trace;
   localWorkApi.setAuth = bananojs.realBananodeApi.setAuth;
-  
+
   bananojs.setBananodeApi(localWorkApi);
-}
+};
 
 const setBananodeApiUrl = (rpcUrl) => {
   if (rpcUrl) {
@@ -158,6 +170,7 @@ const changeBananoRepresentativeForSeed = async (seed, seedIx, representative) =
     }
     return await bananojs.changeBananoRepresentativeForSeed(seed, seedIx, representative);
   } catch (error) {
+    mainConsole.trace(error);
     app.showAlert('error changing rep:' + error.message);
     return;
   }

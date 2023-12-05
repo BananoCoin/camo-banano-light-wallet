@@ -453,6 +453,12 @@ class App extends React.Component {
                       </td>
                     </tr>
                     <tr>
+                      <td id="clientWork" className="yellow_on_brown_with_hover h20px fake_button" onClick={(e) => app.showClientWork()}>
+                        <img className="valign_middle svg" src="artwork/representatives.svg"></img>&nbsp;
+                        <Localization name="clientWork" />
+                      </td>
+                    </tr>
+                    <tr>
                       <td className="yellow_on_brown h120px no_border"></td>
                     </tr>
                     <tr>
@@ -487,6 +493,39 @@ class App extends React.Component {
                           <BalancesTable />
                         </div>
                       </td>
+                    </tr>
+                    <tr id="client-work">
+                      <div>
+                        <table className="yellow_on_brown h20px darkgray_border bordered">
+                          <tbody>
+                            <tr>
+                              <td>Previous</td>
+                              <td>
+                                <p id="previous" className="monospace small bg_white" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Work Status</td>
+                              <td>
+                                <p id="workStatus" className="monospace small bg_white" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Work</td>
+                              <td>
+                                <p id="work" className="monospace small bg_white" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan="2">
+                                <div className="yellow_on_black bordered display_inline_block float_right fake_button rounded padding_5px" onClick={(e) => calcuatePow()}>
+                                  Calculate Pow
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </tr>
                     <tr id="seed-login">
                       <td className="yellow_on_brown h20px darkgray_border bordered">
