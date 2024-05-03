@@ -69,7 +69,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Install setuptools
-      run: sudo -H pip install setuptools
+      run: pip install setuptools;python -m pip install --upgrade setuptools
     - uses: actions/checkout@v3
     - uses: actions/setup-node@master
       with:
